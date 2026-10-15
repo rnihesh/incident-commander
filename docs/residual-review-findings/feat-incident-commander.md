@@ -26,8 +26,9 @@ follow-up pass. Kept as a record of what changed and what remains.
   the same FalkorDB no longer fails it.
 
 ## Remaining
-- A run cancelled after its verdict keeps its state (the state machine has no edge from
-  DIAGNOSED or remediation states to FAILED).
+- A run cancelled after its verdict keeps its state. Partly resolved: a run cancelled
+  mid-rehearsal now hands the claim back (REHEARSING -> DIAGNOSED) instead of stranding the
+  incident; DIAGNOSED, ACTING (retryable) and later states are kept on purpose.
 - Haiku 5.5's price in `llm_prices` is Haiku 4.5's list price until the official rate is confirmed.
 
 ### Found while capturing the wow-pack media (U10, Oct 10)

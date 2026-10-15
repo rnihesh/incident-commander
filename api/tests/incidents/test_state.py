@@ -58,3 +58,11 @@ async def test_concurrent_claim_exactly_one_wins(ledger):
     )
     assert sorted(res) == [False, True]
     assert await get_state(ledger, "inc-1") == State.REHEARSING
+
+
+async def test_rehearsal_claim_can_be_released(ledger):
+    """A cancelled rehearsal hands the claim back: DIAGNOSED again, and claimable again."""
+    for s in ("TRIAGING", "DIAGNOSED", "REHEARSING"):
+        await transition(ledger, "inc-1", s)
+    assert await claim(ledger, "inc-1", State.REHEARSING, State.DIAGNOSED)
+    assert await claim(ledger, "inc-1", State.DIAGNOSED, State.REHEARSING)

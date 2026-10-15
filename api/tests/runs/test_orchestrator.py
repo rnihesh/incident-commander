@@ -284,6 +284,44 @@ async def test_cancelled_run_fails_the_incident_and_releases_the_session(env, mo
     assert await st.get_state(naming.ledger(sess.sid), f.incident_id) == st.State.FAILED
 
 
+async def test_run_cancelled_mid_rehearsal_releases_the_claim(env, monkeypatch):
+    """Cancelled after REHEARSING was claimed: the verdict stands, the claim goes back to
+    DIAGNOSED (so remediation can claim it again), then error, then done."""
+    store, s, sessions, deps, made = env
+    sess = await new_session(sessions, made)
+    world = naming.session_world(sess.sid)
+    f = await inject_fault(
+        world, session_id=sess.sid, fault_class="flag_flip", rng_seed=SEED, store=store
+    )
+    inside = asyncio.Event()
+
+    async def stuck(*, sid, iid, **kw):
+        assert await st.claim(naming.ledger(sid), iid, st.State.DIAGNOSED, st.State.REHEARSING)
+        inside.set()
+        await asyncio.Event().wait()  # a rehearsal that never finishes
+
+    monkeypatch.setattr(orchestrator, "run_remediation", stuck)
+    run_id = await start_run(
+        sess,
+        f.incident_id,
+        f.alert_time,
+        f.alert_service_id,
+        llm=None,
+        store=store,
+        settings=s,
+        deps=deps,
+    )
+    run = deps.runs.get(run_id)
+    await asyncio.wait_for(inside.wait(), 60)
+    run.task.cancel()
+    with pytest.raises(asyncio.CancelledError):
+        await run.task
+    assert run.types[-3:] == ["state", "error", "done"]
+    assert run.of(EventType.STATE)[-1] == {"state": "DIAGNOSED"}
+    assert sessions.get(sess.sid).active_runs == 0
+    assert await st.get_state(naming.ledger(sess.sid), f.incident_id) == st.State.DIAGNOSED
+
+
 async def test_run_cancelled_before_triage_still_closes(env, monkeypatch):
     store, s, sessions, deps, made = env
     sess = await new_session(sessions, made)

@@ -28,7 +28,8 @@ ALLOWED: dict[State, frozenset[State]] = {
     State.DIAGNOSED: frozenset({State.REHEARSING}),
     State.INCONCLUSIVE: frozenset(),
     State.FAILED: frozenset(),
-    State.REHEARSING: frozenset({State.REFUSED, State.ACTING}),
+    # -> DIAGNOSED releases the claim when a run is cancelled mid-rehearsal (nothing acted yet).
+    State.REHEARSING: frozenset({State.REFUSED, State.ACTING, State.DIAGNOSED}),
     State.REFUSED: frozenset(),
     State.ACTING: frozenset({State.PR_OPEN}),
     State.PR_OPEN: frozenset({State.RESOLVED}),

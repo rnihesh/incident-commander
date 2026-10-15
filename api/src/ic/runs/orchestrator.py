@@ -19,8 +19,8 @@ postmortem, learned couplings) and the incident moves to LEARNED.
 A rehearsal that does not clear the fault ends ``rehearsal(REFUSED), state(REFUSED),
 action(page)`` with no PR (AE4). INCONCLUSIVE / FAILED page the on-call (``action(page)``)
 and open no PR. Every run ends with ``done``; an unexpected exception emits ``error`` first.
-A cancelled run also moves an incident still in triage to FAILED (``state(FAILED)``) before
-its ``error`` and ``done``.
+A cancelled run also moves an incident still in triage to FAILED (``state(FAILED)``), or
+hands a rehearsal claim back (``state(DIAGNOSED)``), before its ``error`` and ``done``.
 
 Remediation (``ic.agent.remediation``) gets ids and the trusted alert frame only; it reads
 the verdict, suspect and proofs back from the ledger graph (R22).
@@ -502,9 +502,10 @@ async def execute_run(
 
 
 async def _fail_cancelled(run: Run, runs: RunRegistry, sid: str, iid: str) -> None:
-    """A cancelled run leaves no incident mid-triage: OPEN / TRIAGING move to FAILED, the
-    terminal state the state machine allows from there. An incident past its verdict keeps
-    its state (FAILED is not reachable from DIAGNOSED or the remediation states)."""
+    """A cancelled run leaves no incident mid-flight: OPEN / TRIAGING move to FAILED, the
+    terminal state the state machine allows from there, and REHEARSING hands its claim back
+    to DIAGNOSED (the verdict stands and nothing was acted on; the rehearsal clone is deleted
+    by the rehearsal itself). DIAGNOSED, ACTING (retryable) and later states are kept."""
     graph = naming.ledger(sid)
     try:
         if not await graph_exists(graph):
@@ -519,10 +520,9 @@ async def _fail_cancelled(run: Run, runs: RunRegistry, sid: str, iid: str) -> No
         cur = st.State(rows[0][0])
         if cur == st.State.OPEN:  # opened, triage not yet started: the only way on is TRIAGING
             cur = await st.transition(graph, iid, st.State.TRIAGING)
-        if cur == st.State.TRIAGING and await st.claim(graph, iid, cur, st.State.FAILED):
-            await runs.emit(
-                run, EventType.STATE, {"state": st.State.FAILED.value}, agent=Agent.SYSTEM
-            )
+        to = {st.State.TRIAGING: st.State.FAILED, st.State.REHEARSING: st.State.DIAGNOSED}.get(cur)
+        if to is not None and await st.claim(graph, iid, cur, to):
+            await runs.emit(run, EventType.STATE, {"state": to.value}, agent=Agent.SYSTEM)
     except Exception:
         log.exception("could not fail the incident of cancelled run %s", run.id)
 
