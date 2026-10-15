@@ -239,7 +239,7 @@ the UI shows.
 | `CREATE INDEX`, `CREATE FULLTEXT INDEX`, `CREATE VECTOR INDEX ... OPTIONS {dimension, similarityFunction:'cosine'}` | `graph/schema.py:index_statements` | Lookups, precedent search |
 | `UNWIND $rows AS r CREATE (n:Label) SET n += r` and the edge equivalent | `world/loader.py:load_world` | Bulk load |
 | Candidates in window: `MATCH (c:Change)-[:CHANGES]->(s) WHERE $lo <= c.valid_from <= $hi ... UNION ALL MATCH (e:Expiry)...` | `tools/predicate.py:CANDIDATES` / `candidates_in_window` | Funnel input, necessity (`$exclude`) |
-| KTD23 predicate: `WITH c, home, sym, s, shortestPath((c)-[:IMPACTS*]->(s)) AS path ... CASE WHEN ... END AS failed_clause` | `tools/predicate.py:EXPLAINS` / `explain` | Funnel, certificate, necessity, exonerate, every proof |
+| Explanation predicate: `WITH c, home, sym, s, shortestPath((c)-[:IMPACTS*]->(s)) AS path ... CASE WHEN ... END AS failed_clause` | `tools/predicate.py:EXPLAINS` / `explain` | Funnel, certificate, necessity, exonerate, every proof |
 | Partial predicate with `overlap` / `independent` clauses | `tools/rehearse.py:SUBSET_EXPLAINS` / `partial` | Rollback rehearsal |
 | Storm predicate (pages as symptoms, reuses `EXPLAINS`) | `tools/storm.py:STORM_EXPLAINS` | Storm collapse |
 | `CALL algo.BFS(n, $max_depth, 'IMPACTS') YIELD nodes` | `tools/investigate.py:CLOSURE` / `impact_closure`. Also `bench/pg_twin.py`, `bench/scale.py` | Blast-radius closure, Postgres comparison |
@@ -411,7 +411,7 @@ run uses no LLM.
 │   ├── src/ic/
 │   │   ├── graph/            client, naming (all graph names), schema, snapshots (as-of + IMPACTS)
 │   │   ├── world/            generator, faults (+ decoys, storms), causality oracle, loader, embed
-│   │   ├── tools/            registry, predicate (KTD23), investigate, reflex, precedent,
+│   │   ├── tools/            registry, predicate (explanation rule), investigate, reflex, precedent,
 │   │   │                     fingerprint, recall, rehearse, storm, claims (verify_claim),
 │   │   │                     fragility
 │   │   ├── proof/            ledger (hash chain), verify, canonical

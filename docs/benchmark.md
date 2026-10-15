@@ -123,7 +123,7 @@ had too few downstream alert services was discarded and is listed in the JSON.
 **Read these numbers with care:**
 
 - **Two runs, two settings.** The headline table, with latency, scale and learning curve, comes
-  from a run with no LLM. There "graph" is the deterministic graph agent (the KTD23 funnel plus
+  from a run with no LLM. There "graph" is the deterministic graph agent (the explanation-predicate funnel plus
   the proof chain, same verdict gate) and the baselines are stand-ins: `vector_rag` picks the
   nearest candidate by hashing-embedder cosine similarity, and `full_context` picks the most
   recent change before the first symptom on the alert service or its declared direct
