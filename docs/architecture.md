@@ -1,6 +1,6 @@
 # Incident Commander: architecture
 
-This document describes the code as it is on `feat/incident-commander`. All paths are relative
+This document describes the code on `main`. All paths are relative
 to `api/src/ic/` unless they start with `web/`. Design rationale lives in the plan
 (`docs/plans/2026-10-05-001-feat-incident-commander-plan.md`). Each KTD-n reference below
 points to a key technical decision there.
@@ -32,7 +32,7 @@ flowchart TB
     Store[("SQLite store: sessions, limits, answer_key, chain_anchor, judge_rounds, runs, pr_graphs, mcp_tokens, llm_usage")]
   end
   Falkor[("FalkorDB: seed:world, s:{sid}:*, pr:{sid}:{iid}:*")]
-  LLM["OpenAI / Gemini / Ollama (optional)"]
+  LLM["OpenAI / Anthropic / Gemini / Ollama (optional)"]
   GH["GitHub sandbox repo (optional)"]
   DC["Discord webhook (optional)"]
   PG[("Postgres + pgvector (benchmark only)")]
@@ -161,6 +161,7 @@ stateDiagram-v2
   DIAGNOSED --> REHEARSING: remediation claim
   REHEARSING --> REFUSED: rehearsal or verify fails
   REHEARSING --> ACTING: rehearsal CLEARED
+  REHEARSING --> DIAGNOSED: run cancelled (claim released)
   ACTING --> PR_OPEN
   PR_OPEN --> RESOLVED: PR exists and status posted
   RESOLVED --> LEARNED: memory write-back

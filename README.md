@@ -81,6 +81,28 @@ Tamper to FALSIFIED, recorded live:
 
 ![Judge applies a suggested edit, Verify flips the proof to FALSIFIED](docs/media/judge-tamper-falsified.gif)
 
+## How it works
+
+```mermaid
+flowchart LR
+  Alert["Alert"] --> Snap["As-of snapshots<br/>GRAPH.COPY + prune to time T"]
+  Snap --> Triage["Triage agent<br/>(LLM or deterministic)"]
+  Triage -->|"registers hypotheses,<br/>runs Cypher falsifiers"| Ledger[("Ledger graph<br/>hash-chained proofs")]
+  Ledger -->|"DIAGNOSED verdict<br/>(only handoff)"| Remed["Remediation agent"]
+  Remed --> Rehearse["Rehearse rollback<br/>on a GRAPH.COPY clone"]
+  Rehearse -->|"CLEARED"| Act["Rollback PR + proof status + page"]
+  Act --> Memory["LEARNED_DEPENDS_ON<br/>write-back"]
+  Memory -.->|"seeds next triage"| Triage
+  Judge["Judge: tamper / challenge"] -.-> World[("Session world graph")]
+  World --> Snap
+  Ledger -->|"Verify re-runs every proof"| World
+```
+
+Each visitor gets their own copy of the world graph in FalkorDB. Each alert is investigated
+on snapshots of that world as it stood, and as it was known, at alert time. The two agents
+share no memory: the ledger graph is the only channel between them. Component, state-machine
+and security diagrams are in [docs/architecture.md](docs/architecture.md).
+
 ## Why a graph
 
 - **"You planted the path."** In judge mode the judge picks the target and the fault class.
