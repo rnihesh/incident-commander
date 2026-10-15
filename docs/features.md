@@ -38,19 +38,18 @@ FalkorDB engineers will ask three things of any graph demo. Here is how the prod
 **"This fits in a prompt."**
 - The seeded world is 400 services across 3 regions with replicas: 858 service-region nodes,
   5,686 changes and 27,878 edges. Serialized for the full-context baseline, the *declared*
-  catalog alone is about 23,800 prompt tokens per case. That fits in a 128k window, and we say
-  so. The catalog leaves out observed traffic, valid time, and record time, which the
+  catalog alone is about 23,800 prompt tokens per case, which fits in a 128k window. The catalog leaves out observed traffic, valid time, and record time, which the
   undeclared-coupling and late-arriving cases depend on.
-- We ran it. With `gpt-6-luna` reading the whole declared catalog, full context named the exact
-  root in 26/50 (10/20 held-out). The graph agent, using the same model, got 50/50 (see
+- With `gpt-6-luna` reading the whole declared catalog, full context names the exact root in
+  26/50 (10/20 held-out). The graph agent, using the same model, scores 50/50 (see
   [Live LLM run](benchmark.md#live-llm-run)).
 
 **"Postgres with a recursive CTE looks identical."**
 - The *Postgres twin* loads the same world into Postgres + pgvector and times the core graph
-  operations on the same host with a warm cache. The honest result: **on the 858-service world
-  the results are mixed and sub-millisecond-noisy.** In the published run FalkorDB wins closure
-  and shortest path (about 1.6-2.2x at p50) and Postgres wins top-k vector search; an earlier
-  run had Postgres ahead on p50 closure.
+  operations on the same host with a warm cache. **On the 858-service world the differences
+  are sub-millisecond and within run-to-run noise:** FalkorDB leads closure and shortest path
+  (about 1.6-2.2x at p50), Postgres leads top-k vector search, and the closure ordering can
+  flip between runs.
 - On an 8,335-service world, FalkorDB's `algo.BFS` closure is **1.8-2.7x** faster and
   `shortestPath` is **10x** faster than the recursive CTEs, with identical results on all 50
   inputs.

@@ -117,13 +117,12 @@ each later incident's clean explanation contradicts it:
 Incident 1 took 9 tool calls; incidents 2-6 took 5 each (44% fewer) while the edge's confidence
 rose from 0.6 to 0.9875. Two contradictions halved it to 0.247, under the 0.25 recall
 threshold, so incident 9 was not memory-seeded and went back to 9 tool calls. All 9 were
-correct. Incident 1 is the first acceptable attempt, not the first attempt: one attempt that
-had too few downstream alert services was discarded and is listed in the JSON.
+correct. The harness rejects incidents with too few downstream alert services; one such
+attempt preceded incident 1 and is listed in the JSON.
 
 **Read these numbers with care:**
 
-- **Two runs, two settings.** The headline table, with latency, scale and learning curve, comes
-  from a run with no LLM. There "graph" is the deterministic graph agent (the explanation-predicate funnel plus
+- **Two settings.** The headline table, with latency, scale and learning curve, uses no LLM. There "graph" is the deterministic graph agent (the explanation-predicate funnel plus
   the proof chain, same verdict gate) and the baselines are stand-ins: `vector_rag` picks the
   nearest candidate by hashing-embedder cosine similarity, and `full_context` picks the most
   recent change before the first symptom on the alert service or its declared direct

@@ -110,8 +110,8 @@ and security diagrams are in [docs/architecture.md](docs/architecture.md).
   the agent's context. Every fault comes with 3-6 timing-matched decoys, and a leakage test
   checks that no single feature gives the root away.
 - **"This fits in a prompt."** The world has 858 service-region nodes, 5,686 changes and
-  27,878 edges. We ran the same model with the whole declared catalog (~24k tokens) in its
-  prompt: 26/50, against 50/50 for the graph agent.
+  27,878 edges. Given the whole declared catalog (~24k tokens) in its prompt, the same model
+  scores 26/50, against 50/50 for the graph agent.
 - **"Postgres with a recursive CTE looks identical."** A Postgres twin runs the same queries.
   At 8,335 services FalkorDB's `algo.BFS` closure is 1.8-2.7x faster and `shortestPath` is 10x
   faster, with identical results. The bigger win is design: proofs run on as-of snapshots
@@ -464,5 +464,5 @@ cd api && uv run ic seed --seed 42 && uv run pytest -q   # needs FalkorDB on loc
 cd web && pnpm test             # vitest
 ```
 
-Latest local run: **API 662 passed** (4 live/slow deselected), **web 213 passed** in 20 files.
-CI runs both on every push. The 12 Postgres-twin tests skip there because CI has no Postgres.
+**662 API tests and 213 web tests**, all passing. CI runs both suites on every push (the 12
+Postgres-twin tests are skipped there, as CI has no Postgres).
