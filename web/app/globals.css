@@ -1,0 +1,127 @@
+@import "tailwindcss";
+
+@theme {
+  --color-void: #090d12;
+  --color-deck: #0e141b;
+  --color-raise: #141c26;
+  --color-rule: #202d3c;
+  --color-rule-hi: #33465c;
+  --color-ink: #d7e0ea;
+  --color-dim: #8394a8;
+  --color-faint: #526379;
+
+  /* verdict states: the console's main accents */
+  --color-verified: #3ee59b;
+  --color-drifted: #f2b134;
+  --color-falsified: #ff5a5f;
+  --color-tampered: #e254e8;
+  --color-degraded: #8a96a3;
+
+  /* graph roles that are not verdicts */
+  --color-symptom: #4cc9f0;
+  --color-late: #a78bfa;
+
+  /* graph canvas: background nodes, eliminated nodes, the alerting service, path particles */
+  --color-node: #35475c;
+  --color-node-out: #2a3849;
+  --color-node-out-mark: #4a5d73;
+  --color-alert: #f4f7fb;
+  --color-verified-hi: #b8ffe0;
+
+  /* Type scale; nothing in the UI uses a size outside it.
+     meta: captions, legends, table meta. label: controls and data rows.
+     body: prose. title: page and section titles. display: the verdict's change id.
+     hero: the storm's pages-to-incidents count only. */
+  --text-meta: 11px;
+  --text-meta--line-height: 1.4;
+  --text-label: 12px;
+  --text-label--line-height: 1.45;
+  --text-body: 13px;
+  --text-body--line-height: 1.5;
+  --text-title: 15px;
+  --text-title--line-height: 1.3;
+  --text-display: 22px;
+  --text-display--line-height: 1.1;
+  --text-hero: 40px;
+  --text-hero--line-height: 1;
+
+  /* Spacing rhythm: inset = panel content padding, gutter = gap between panels. */
+  --spacing-inset: 1rem;
+  --spacing-gutter: 0.75rem;
+
+  /* Controls (buttons, fields, chips, badges) get a small radius; panels stay square. */
+  --radius-ctl: 3px;
+
+  --font-sans: var(--font-body), system-ui, sans-serif;
+  --font-mono: var(--font-data), ui-monospace, monospace;
+}
+
+/* Tailwind only emits theme variables some utility uses. The graph canvas reads every colour
+   token at runtime (GraphCanvasInner readPalette), so reference the canvas-only ones here. */
+:root {
+  --graph-node: var(--color-node);
+  --graph-particle: var(--color-verified-hi);
+}
+
+html,
+body {
+  background: var(--color-void);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: var(--text-body);
+  line-height: 1.5;
+  height: 100%;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-rule-hi) transparent;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-symptom);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* DEGRADED reads as grey hatching rather than a colour. */
+.stripe {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    rgb(138 150 163 / 0.16) 0 6px,
+    transparent 6px 12px
+  );
+}
+
+/* A new panel entry gets one short rule flash; nothing else animates unprompted. */
+@keyframes arrive {
+  from {
+    box-shadow: inset 3px 0 0 var(--color-symptom);
+    background-color: rgb(76 201 240 / 0.1);
+  }
+  to {
+    box-shadow: inset 3px 0 0 transparent;
+    background-color: transparent;
+  }
+}
+.arrive {
+  animation: arrive 1.2s ease-out 1;
+}
+
+@keyframes pulse-ring {
+  0% { opacity: 0.9; }
+  100% { opacity: 0.25; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .arrive {
+    animation: none;
+  }
+  * {
+    scroll-behavior: auto !important;
+  }
+}
+
+.hash-tail {
+  color: var(--color-faint);
+}
