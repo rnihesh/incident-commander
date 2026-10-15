@@ -1,36 +1,38 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Incident Commander Web
 
-## Getting Started
+Next.js 16 console for Incident Commander: watch an investigation stream in, inspect the
+proofs, and try to break them.
 
-First, run the development server:
+See the [root README](../README.md) for the full story and setup.
+
+## Run
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
+pnpm dev          # http://localhost:3001, expects the API on http://localhost:8000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Set `NEXT_PUBLIC_API_URL` if the API runs elsewhere.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Pages
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Route | What it shows |
+|---|---|
+| `/` | Investigation console: reflex answer, elimination funnel, clause-bar certificate, response, Ask-the-graph drawer |
+| `/judge` | Judge chaos monkey: blind commit-reveal fault, tamper panel, live re-verify that flips proofs to FALSIFIED |
+| `/benchmark` | Benchmark results, learning and forgetting curves |
+| `/replay/[incident]` | Time machine: scrub the graph as known at each moment of the incident |
+| `/proof/[ref]` | A single proof with its Cypher, ledger hash and Verify button |
 
-## Learn More
+## Layout
 
-To learn more about Next.js, take a look at the following resources:
+- `app/` routes, `components/` UI (Funnel, Certificate, TamperPanel, Storm, ProofPage, ...)
+- `lib/` API client, SSE stream, run reducer, autoplay and mock fixtures
+- `tests/` vitest suites
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Test
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+pnpm test
+pnpm lint
+```

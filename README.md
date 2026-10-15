@@ -800,7 +800,7 @@ cd api && uv run pytest -q      # needs FalkorDB on localhost:16379; live/slow m
 cd web && pnpm test             # vitest
 ```
 
-On this branch (Oct 10): **API 594 passed, 4 deselected** (live/slow) in about 5.2 min;
+On `main` (last full run Oct 10): **API 594 passed, 4 deselected** (live/slow) in about 5.2 min;
 **web 178 tests in 16 files passed**.
 
 More detail: [docs/architecture.md](docs/architecture.md) ·

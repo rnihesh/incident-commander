@@ -1,7 +1,7 @@
 [project]
 name = "ic"
 version = "0.1.0"
-description = "Add your description here"
+description = "Incident Commander API: graph root-cause analysis with re-runnable Cypher proofs on FalkorDB"
 readme = "README.md"
 authors = [
     { name = "Nihesh Rachakonda", email = "niheshr03@gmail.com" }
