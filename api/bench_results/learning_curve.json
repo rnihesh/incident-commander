@@ -1,0 +1,601 @@
+{
+ "incidents": [
+  {
+   "alert_service": "svc-tracking-bff@us-east",
+   "alert_time": 1790826900,
+   "contradicted": false,
+   "correct": true,
+   "coupling_confirmed": null,
+   "edge_action": "created",
+   "edge_confidence": 0.6,
+   "edge_confidence_before": null,
+   "edge_seeded": false,
+   "final_state": "LEARNED",
+   "incident_id": "inc-041",
+   "learned": [
+    {
+     "action": "created",
+     "callee": "svc-elasticsearch-users@eu-west",
+     "caller": "svc-catalog-events@eu-west",
+     "confidence": 0.6,
+     "confirmations": 0,
+     "contradictions": 0,
+     "first_learned_incident": "inc-041"
+    }
+   ],
+   "memory_seeded": false,
+   "ms": 1237.1,
+   "phase": "learn",
+   "recall_used": false,
+   "recommendations_on_path": [],
+   "root_id": "chg-05689",
+   "selected": true,
+   "states": [
+    "TRIAGING",
+    "DIAGNOSED",
+    "REHEARSING",
+    "ACTING",
+    "PR_OPEN",
+    "RESOLVED",
+    "LEARNED"
+   ],
+   "steps": 0,
+   "suspect_id": "chg-05689",
+   "symptomatic": [
+    "svc-catalog-events@eu-west",
+    "svc-elasticsearch-users@eu-west",
+    "svc-tracking-bff@us-east"
+   ],
+   "tool_calls": 9,
+   "verdict": "DIAGNOSED"
+  },
+  {
+   "alert_service": "svc-commerce-gateway-5@ap-south",
+   "alert_time": 1790844182,
+   "contradicted": false,
+   "correct": true,
+   "coupling_confirmed": true,
+   "edge_action": "confirmed",
+   "edge_confidence": 0.8,
+   "edge_confidence_before": 0.6,
+   "edge_seeded": true,
+   "final_state": "LEARNED",
+   "incident_id": "inc-042",
+   "learned": [
+    {
+     "action": "confirmed",
+     "callee": "svc-elasticsearch-users@eu-west",
+     "caller": "svc-catalog-events@eu-west",
+     "confidence": 0.8,
+     "confirmations": 1,
+     "contradictions": 0,
+     "first_learned_incident": "inc-041"
+    }
+   ],
+   "memory_seeded": true,
+   "ms": 1263.2,
+   "phase": "learn",
+   "recall_used": true,
+   "recommendations_on_path": [
+    "rec-082"
+   ],
+   "root_id": "chg-05692",
+   "states": [
+    "TRIAGING",
+    "DIAGNOSED",
+    "REHEARSING",
+    "ACTING",
+    "PR_OPEN",
+    "RESOLVED",
+    "LEARNED"
+   ],
+   "steps": 0,
+   "suspect_id": "chg-05692",
+   "symptomatic": [
+    "svc-catalog-events@eu-west",
+    "svc-commerce-gateway-5@ap-south",
+    "svc-elasticsearch-users@eu-west",
+    "svc-tracking-bff@us-east"
+   ],
+   "tool_calls": 5,
+   "verdict": "DIAGNOSED"
+  },
+  {
+   "alert_service": "svc-tracking-bff@ap-south",
+   "alert_time": 1790856364,
+   "contradicted": false,
+   "correct": true,
+   "coupling_confirmed": true,
+   "edge_action": "confirmed",
+   "edge_confidence": 0.9,
+   "edge_confidence_before": 0.8,
+   "edge_seeded": true,
+   "final_state": "LEARNED",
+   "incident_id": "inc-043",
+   "learned": [
+    {
+     "action": "confirmed",
+     "callee": "svc-elasticsearch-users@eu-west",
+     "caller": "svc-catalog-events@eu-west",
+     "confidence": 0.9,
+     "confirmations": 2,
+     "contradictions": 0,
+     "first_learned_incident": "inc-041"
+    }
+   ],
+   "memory_seeded": true,
+   "ms": 1259.9,
+   "phase": "learn",
+   "recall_used": true,
+   "recommendations_on_path": [
+    "rec-082"
+   ],
+   "root_id": "chg-05702",
+   "states": [
+    "TRIAGING",
+    "DIAGNOSED",
+    "REHEARSING",
+    "ACTING",
+    "PR_OPEN",
+    "RESOLVED",
+    "LEARNED"
+   ],
+   "steps": 0,
+   "suspect_id": "chg-05702",
+   "symptomatic": [
+    "svc-catalog-events@eu-west",
+    "svc-commerce-gateway-5@ap-south",
+    "svc-elasticsearch-users@eu-west",
+    "svc-tax-api@eu-west",
+    "svc-tracking-bff@ap-south"
+   ],
+   "tool_calls": 5,
+   "verdict": "DIAGNOSED"
+  },
+  {
+   "alert_service": "svc-pricing-api@eu-west",
+   "alert_time": 1790869146,
+   "contradicted": false,
+   "correct": true,
+   "coupling_confirmed": true,
+   "edge_action": "confirmed",
+   "edge_confidence": 0.95,
+   "edge_confidence_before": 0.9,
+   "edge_seeded": true,
+   "final_state": "LEARNED",
+   "incident_id": "inc-044",
+   "learned": [
+    {
+     "action": "confirmed",
+     "callee": "svc-elasticsearch-users@eu-west",
+     "caller": "svc-catalog-events@eu-west",
+     "confidence": 0.95,
+     "confirmations": 3,
+     "contradictions": 0,
+     "first_learned_incident": "inc-041"
+    },
+    {
+     "action": "created",
+     "callee": "svc-audit-log-replica@eu-west",
+     "caller": "svc-pricing-api@eu-west",
+     "confidence": 0.6,
+     "confirmations": 0,
+     "contradictions": 0,
+     "first_learned_incident": "inc-044"
+    }
+   ],
+   "memory_seeded": true,
+   "ms": 1157.4,
+   "phase": "learn",
+   "recall_used": true,
+   "recommendations_on_path": [
+    "rec-004",
+    "rec-082"
+   ],
+   "root_id": "chg-05706",
+   "states": [
+    "TRIAGING",
+    "DIAGNOSED",
+    "REHEARSING",
+    "ACTING",
+    "PR_OPEN",
+    "RESOLVED",
+    "LEARNED"
+   ],
+   "steps": 0,
+   "suspect_id": "chg-05706",
+   "symptomatic": [
+    "svc-catalog-events@eu-west",
+    "svc-elasticsearch-users@eu-west",
+    "svc-pricing-api@eu-west"
+   ],
+   "tool_calls": 5,
+   "verdict": "DIAGNOSED"
+  },
+  {
+   "alert_service": "svc-tax-api@us-east",
+   "alert_time": 1790880308,
+   "contradicted": false,
+   "correct": true,
+   "coupling_confirmed": true,
+   "edge_action": "confirmed",
+   "edge_confidence": 0.975,
+   "edge_confidence_before": 0.95,
+   "edge_seeded": true,
+   "final_state": "LEARNED",
+   "incident_id": "inc-045",
+   "learned": [
+    {
+     "action": "confirmed",
+     "callee": "svc-elasticsearch-users@eu-west",
+     "caller": "svc-catalog-events@eu-west",
+     "confidence": 0.975,
+     "confirmations": 4,
+     "contradictions": 0,
+     "first_learned_incident": "inc-041"
+    },
+    {
+     "action": "confirmed",
+     "callee": "svc-audit-log-replica@eu-west",
+     "caller": "svc-pricing-api@eu-west",
+     "confidence": 0.8,
+     "confirmations": 1,
+     "contradictions": 0,
+     "first_learned_incident": "inc-044"
+    }
+   ],
+   "memory_seeded": true,
+   "ms": 1222.4,
+   "phase": "learn",
+   "recall_used": true,
+   "recommendations_on_path": [
+    "rec-082"
+   ],
+   "root_id": "chg-05713",
+   "states": [
+    "TRIAGING",
+    "DIAGNOSED",
+    "REHEARSING",
+    "ACTING",
+    "PR_OPEN",
+    "RESOLVED",
+    "LEARNED"
+   ],
+   "steps": 0,
+   "suspect_id": "chg-05713",
+   "symptomatic": [
+    "svc-catalog-events@eu-west",
+    "svc-elasticsearch-users@eu-west",
+    "svc-pricing-api@eu-west",
+    "svc-tax-api@us-east",
+    "svc-wishlist@eu-west"
+   ],
+   "tool_calls": 5,
+   "verdict": "DIAGNOSED"
+  },
+  {
+   "alert_service": "svc-tax-api@eu-west",
+   "alert_time": 1790898730,
+   "contradicted": false,
+   "correct": true,
+   "coupling_confirmed": true,
+   "edge_action": "confirmed",
+   "edge_confidence": 0.9875,
+   "edge_confidence_before": 0.975,
+   "edge_seeded": true,
+   "final_state": "LEARNED",
+   "incident_id": "inc-046",
+   "learned": [
+    {
+     "action": "confirmed",
+     "callee": "svc-elasticsearch-users@eu-west",
+     "caller": "svc-catalog-events@eu-west",
+     "confidence": 0.9875,
+     "confirmations": 5,
+     "contradictions": 0,
+     "first_learned_incident": "inc-041"
+    }
+   ],
+   "memory_seeded": true,
+   "ms": 1281.5,
+   "phase": "learn",
+   "recall_used": true,
+   "recommendations_on_path": [
+    "rec-082"
+   ],
+   "root_id": "chg-05720",
+   "states": [
+    "TRIAGING",
+    "DIAGNOSED",
+    "REHEARSING",
+    "ACTING",
+    "PR_OPEN",
+    "RESOLVED",
+    "LEARNED"
+   ],
+   "steps": 0,
+   "suspect_id": "chg-05720",
+   "symptomatic": [
+    "svc-catalog-events@eu-west",
+    "svc-elasticsearch-users@eu-west",
+    "svc-tax-api@eu-west"
+   ],
+   "tool_calls": 5,
+   "verdict": "DIAGNOSED"
+  },
+  {
+   "alert_service": "svc-api-gateway-3@eu-west",
+   "alert_time": 1790914032,
+   "check": false,
+   "contradicted": true,
+   "correct": true,
+   "edge_action": "contradicted",
+   "edge_confidence": 0.49375,
+   "edge_confidence_before": 0.9875,
+   "edge_seeded": true,
+   "fault_class": "flag_flip",
+   "final_state": "LEARNED",
+   "incident_id": "inc-047",
+   "learned": [
+    {
+     "action": "contradicted",
+     "callee": "svc-elasticsearch-users@eu-west",
+     "caller": "svc-catalog-events@eu-west",
+     "confidence": 0.49375,
+     "confirmations": 5,
+     "contradictions": 1,
+     "first_learned_incident": "inc-041"
+    }
+   ],
+   "memory_seeded": true,
+   "ms": 1260.7,
+   "phase": "forget",
+   "recall_used": true,
+   "recommendations_on_path": [
+    "rec-082",
+    "rec-083"
+   ],
+   "root_id": "chg-05726",
+   "seed": 42718,
+   "states": [
+    "TRIAGING",
+    "DIAGNOSED",
+    "REHEARSING",
+    "ACTING",
+    "PR_OPEN",
+    "RESOLVED",
+    "LEARNED"
+   ],
+   "steps": 0,
+   "suspect_id": "chg-05726",
+   "symptomatic": [
+    "svc-api-gateway-3@eu-west",
+    "svc-audit-log-replica@eu-west",
+    "svc-catalog-events@eu-west",
+    "svc-commerce-gateway-4@us-east",
+    "svc-elasticsearch-users@eu-west",
+    "svc-notification-hub-replica@eu-west"
+   ],
+   "target": "svc-elasticsearch-users@eu-west",
+   "tool_calls": 5,
+   "verdict": "DIAGNOSED"
+  },
+  {
+   "alert_service": "svc-tracking-worker@us-east",
+   "alert_time": 1790929334,
+   "check": false,
+   "contradicted": true,
+   "correct": true,
+   "edge_action": "contradicted",
+   "edge_confidence": 0.246875,
+   "edge_confidence_before": 0.49375,
+   "edge_seeded": true,
+   "fault_class": "bad_deploy",
+   "final_state": "LEARNED",
+   "incident_id": "inc-048",
+   "learned": [
+    {
+     "action": "contradicted",
+     "callee": "svc-elasticsearch-users@eu-west",
+     "caller": "svc-catalog-events@eu-west",
+     "confidence": 0.246875,
+     "confirmations": 5,
+     "contradictions": 2,
+     "first_learned_incident": "inc-041"
+    }
+   ],
+   "memory_seeded": true,
+   "ms": 1239.2,
+   "phase": "forget",
+   "recall_used": true,
+   "recommendations_on_path": [
+    "rec-082"
+   ],
+   "root_id": "chg-05736",
+   "seed": 42725,
+   "states": [
+    "TRIAGING",
+    "DIAGNOSED",
+    "REHEARSING",
+    "ACTING",
+    "PR_OPEN",
+    "RESOLVED",
+    "LEARNED"
+   ],
+   "steps": 0,
+   "suspect_id": "chg-05736",
+   "symptomatic": [
+    "svc-catalog-events@eu-west",
+    "svc-elasticsearch-users@eu-west",
+    "svc-routing-batch@eu-west",
+    "svc-tracking-worker@us-east"
+   ],
+   "target": "svc-elasticsearch-users@eu-west",
+   "tool_calls": 5,
+   "verdict": "DIAGNOSED"
+  },
+  {
+   "alert_service": "svc-tracking-worker@eu-west",
+   "alert_time": 1790946496,
+   "check": true,
+   "contradicted": true,
+   "correct": true,
+   "edge_action": "contradicted",
+   "edge_confidence": 0.123438,
+   "edge_confidence_before": 0.246875,
+   "edge_seeded": false,
+   "fault_class": "bad_deploy",
+   "final_state": "LEARNED",
+   "incident_id": "inc-049",
+   "learned": [
+    {
+     "action": "confirmed",
+     "callee": "svc-audit-log-replica@eu-west",
+     "caller": "svc-pricing-api@eu-west",
+     "confidence": 0.9,
+     "confirmations": 2,
+     "contradictions": 0,
+     "first_learned_incident": "inc-044"
+    },
+    {
+     "action": "contradicted",
+     "callee": "svc-elasticsearch-users@eu-west",
+     "caller": "svc-catalog-events@eu-west",
+     "confidence": 0.123438,
+     "confirmations": 5,
+     "contradictions": 3,
+     "first_learned_incident": "inc-041"
+    }
+   ],
+   "memory_seeded": false,
+   "ms": 1325.3,
+   "phase": "forget",
+   "recall_used": false,
+   "recommendations_on_path": [
+    "rec-082"
+   ],
+   "root_id": "chg-05742",
+   "seed": 42737,
+   "states": [
+    "TRIAGING",
+    "DIAGNOSED",
+    "REHEARSING",
+    "ACTING",
+    "PR_OPEN",
+    "RESOLVED",
+    "LEARNED"
+   ],
+   "steps": 0,
+   "suspect_id": "chg-05742",
+   "symptomatic": [
+    "svc-cart@eu-west",
+    "svc-catalog-events@eu-west",
+    "svc-elasticsearch-users@eu-west",
+    "svc-exports-sync@eu-west",
+    "svc-pricing-api@eu-west",
+    "svc-tracking-worker@eu-west"
+   ],
+   "target": "svc-elasticsearch-users@eu-west",
+   "tool_calls": 9,
+   "verdict": "DIAGNOSED"
+  }
+ ],
+ "meta": {
+  "commit": "2e6993823905a2106a7ce22c5950ede9d6c28ef5",
+  "coupling": {
+   "callee": "svc-elasticsearch-users@eu-west",
+   "caller": "svc-catalog-events@eu-west"
+  },
+  "dirty": false,
+  "discarded_incident1_attempts": [
+   {
+    "correct": true,
+    "downstream_alerts": 0,
+    "reason": "too few distinct downstream alert services",
+    "seed": 42000,
+    "taught_coupling": true,
+    "tool_calls": 9,
+    "verdict": "DIAGNOSED"
+   }
+  ],
+  "fault_class": "undeclared_coupling",
+  "forget": {
+   "below_threshold": true,
+   "change": {
+    "at": 1790898792,
+    "id": "chg-05725",
+    "kind": "deploy",
+    "service_id": "svc-catalog-events@eu-west",
+    "summary": "Deploy v2.17.0: read svc-elasticsearch-users@eu-west through svc-audit-log-replica@eu-west instead of calling it directly",
+    "via": "svc-audit-log-replica@eu-west"
+   },
+   "check_incident": "inc-049",
+   "contradictions": 3,
+   "picks": [
+    {
+     "fault_class": "flag_flip",
+     "incident_id": "inc-047",
+     "seed": 42718,
+     "target": "svc-elasticsearch-users@eu-west"
+    },
+    {
+     "fault_class": "bad_deploy",
+     "incident_id": "inc-048",
+     "seed": 42725,
+     "target": "svc-elasticsearch-users@eu-west"
+    },
+    {
+     "fault_class": "bad_deploy",
+     "incident_id": "inc-049",
+     "seed": 42737,
+     "target": "svc-elasticsearch-users@eu-west"
+    }
+   ],
+   "requested": 4,
+   "targets": [
+    "svc-elasticsearch-users@eu-west"
+   ],
+   "threshold": 0.25
+  },
+  "generated_at": "2026-10-10T17:48:44Z",
+  "llm": "none (deterministic triage)",
+  "method": "One session world, incidents investigated in sequence with write-back after each RESOLVED run. Incident 1 is selected by retry-until-correct: attempts that were wrong, taught no coupling, or had too few downstream alert services are discarded and listed in discarded_incident1_attempts (the first incident shown is the first acceptable attempt, not the first attempt). Incident 1 teaches LEARNED_DEPENDS_ON svc-catalog-events@eu-west -> svc-elasticsearch-users@eu-west; later faults are rooted on svc-elasticsearch-users@eu-west and their symptoms include both ends of the coupling (seeds probed on a scratch copy first). Tool calls count every registry call of the triage run (recall, screening, proofs and the verdict's causal path). Forget phase: chg-05725 (a deploy of svc-catalog-events@eu-west) stops calling svc-elasticsearch-users@eu-west directly and goes through svc-audit-log-replica@eu-west (declared), and the observed-call edge is removed; each later incident is a training fault whose symptoms include both ends (seeds probed first), so both are symptomatic through another path, the cleared explanation uses no hop through the coupling and the write-back halves the learned edge's confidence. It runs until the confidence is under the recall threshold 0.25 plus one more incident. edge_confidence is read from the world after every incident.",
+  "requested_runs": 6,
+  "runs": 6,
+  "seed": 42,
+  "seeds": [
+   42001,
+   42101,
+   42106,
+   42117,
+   42126,
+   42134
+  ],
+  "wall_s": 40.4
+ },
+ "summary": {
+  "correct": 6,
+  "first_tool_calls": 9,
+  "later_mean_tool_calls": 5,
+  "ms": [
+   1237.1,
+   1263.2,
+   1259.9,
+   1157.4,
+   1222.4,
+   1281.5
+  ],
+  "n": 6,
+  "recall_used_after_first": 5,
+  "reduction_pct": 44.4,
+  "second_tool_calls": 5,
+  "tool_calls": [
+   9,
+   5,
+   5,
+   5,
+   5,
+   5
+  ]
+ }
+}

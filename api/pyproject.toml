@@ -1,0 +1,59 @@
+[project]
+name = "ic"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Nihesh Rachakonda", email = "niheshr03@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "falkordb>=1.7.1",
+    "fastapi>=0.143.0",
+    "httpx>=0.28.1",
+    "mcp[cli]>=2.3.0",
+    "networkx>=3.7",
+    "numpy>=2.5.3",
+    "openai>=3.26.1",
+    "psycopg[binary]>=3.3.6",
+    "pydantic>=2.14.0",
+    "pydantic-settings>=2.15.0",
+    "scipy>=1.18.1",
+    "sse-starlette>=3.5.0",
+    "uvicorn[standard]>=0.54.0",
+]
+
+[project.scripts]
+ic = "ic.cli:main"
+
+[build-system]
+requires = ["uv_build>=0.12.23,<0.13.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+    "pytest-asyncio>=1.4.0",
+    "ruff>=0.16.10",
+]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "session"
+asyncio_default_test_loop_scope = "session"
+markers = [
+    "live: needs real API keys / network",
+    "slow: performance budget tests",
+]
+addopts = "-m 'not live and not slow'"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "ASYNC"]
+
+[tool.ruff.lint.per-file-ignores]
+"src/ic/world/text.py" = ["E501"]  # prose templates
+"tests/graph/test_snapshots.py" = ["E501"]  # inline Cypher fixtures

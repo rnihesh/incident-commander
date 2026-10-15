@@ -1,0 +1,121 @@
+{
+ "closure_depth": 8,
+ "closure_depths": [
+  2,
+  4,
+  8
+ ],
+ "commit": "22bf7f3c1f6781810e9a7961644e8f567359c73d",
+ "counts": {
+  "changes": 54051,
+  "depends_on": 15075,
+  "impacts_service_edges": 15527,
+  "observed_calls": 15678,
+  "postmortems": 1,
+  "services": 8335
+ },
+ "dirty": true,
+ "generated_at": "2026-10-09T07:59:51Z",
+ "iterations": 50,
+ "n_services_requested": 4000,
+ "notes": [
+  "Sources: the 50 deepest of 400 randomly drawn services (by services reached at the snapshot time); path targets are the farthest service each source reaches.",
+  "Agree = FalkorDB and Postgres return the same set (closure) or hop count (path) for the same input; both are also checked against an in-memory BFS over the same edges (reference in scale.json).",
+  "FalkorDB queries a materialized as-of snapshot (IMPACTS edges built ahead of time, snapshot build time listed separately); Postgres applies the valid-time filter inside each recursive query. Same host, warm cache, one client.",
+  "Top-k precedent search is not repeated: postmortems do not grow with service count (1 in this world).",
+  "Traversal depth actually reached: the farthest target of any sampled source is 5 hops (mean 3.52). Mean services reached (depth 2: 26.3, depth 4: 40.5, depth 8: 41.0). The generator's topology is tiered, so this world is wide rather than deep."
+ ],
+ "ops": {
+  "closure_d2": {
+   "agreed": 50,
+   "checked": 50,
+   "falkordb": {
+    "n": 50,
+    "p50_ms": 3.145,
+    "p95_ms": 3.748
+   },
+   "label": "Upstream closure, depth 2 (algo.BFS vs recursive CTE)",
+   "mean_size": 26.3,
+   "postgres": {
+    "n": 50,
+    "p50_ms": 5.625,
+    "p95_ms": 6.173
+   },
+   "reference": {
+    "falkordb": 50,
+    "postgres": 50
+   }
+  },
+  "closure_d4": {
+   "agreed": 50,
+   "checked": 50,
+   "falkordb": {
+    "n": 50,
+    "p50_ms": 3.257,
+    "p95_ms": 3.892
+   },
+   "label": "Upstream closure, depth 4 (algo.BFS vs recursive CTE)",
+   "mean_size": 40.5,
+   "postgres": {
+    "n": 50,
+    "p50_ms": 8.729,
+    "p95_ms": 8.947
+   },
+   "reference": {
+    "falkordb": 50,
+    "postgres": 50
+   }
+  },
+  "closure_d8": {
+   "agreed": 50,
+   "checked": 50,
+   "falkordb": {
+    "n": 50,
+    "p50_ms": 4.036,
+    "p95_ms": 4.949
+   },
+   "label": "Upstream closure, depth 8 (algo.BFS vs recursive CTE)",
+   "mean_size": 41.0,
+   "postgres": {
+    "n": 50,
+    "p50_ms": 9.738,
+    "p95_ms": 12.979
+   },
+   "reference": {
+    "falkordb": 50,
+    "postgres": 50
+   }
+  },
+  "path": {
+   "agreed": 50,
+   "checked": 50,
+   "falkordb": {
+    "n": 50,
+    "p50_ms": 1.014,
+    "p95_ms": 1.437
+   },
+   "label": "Shortest path to the farthest reachable service (shortestPath vs CTE)",
+   "max_hops": 5,
+   "mean_size": 3.52,
+   "postgres": {
+    "n": 50,
+    "p50_ms": 10.158,
+    "p95_ms": 13.446
+   },
+   "reference": {
+    "falkordb": 50,
+    "postgres": 50
+   }
+  }
+ },
+ "seed": 42,
+ "t": 1790812800,
+ "timings_s": {
+  "generate": 100.7,
+  "load_falkordb": 4.1,
+  "load_postgres": 0.4,
+  "read_rows": 1.6,
+  "snapshot": 0.6
+ },
+ "world": "generate_world(42, n_services=4000)"
+}

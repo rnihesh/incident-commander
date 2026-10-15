@@ -1,0 +1,265 @@
+{
+ "case_list": [
+  {
+   "alert_service": "svc-growth-gateway@eu-west",
+   "alert_time": 1790831040,
+   "case": "c000",
+   "fault_class": "undeclared_coupling",
+   "held_out": true,
+   "incident_id": "inc-041",
+   "rng_seed": 78473,
+   "root_id": "chg-05690"
+  },
+  {
+   "alert_service": "svc-user-profile-scheduler@eu-west",
+   "alert_time": 1790830860,
+   "case": "c001",
+   "fault_class": "bad_deploy",
+   "held_out": false,
+   "incident_id": "inc-041",
+   "rng_seed": 529123,
+   "root_id": "chg-05691"
+  },
+  {
+   "alert_service": "svc-permissions-bff@us-east",
+   "alert_time": 1790826600,
+   "case": "c002",
+   "fault_class": "config_change",
+   "held_out": false,
+   "incident_id": "inc-041",
+   "rng_seed": 949669,
+   "root_id": "chg-05687"
+  },
+  {
+   "alert_service": "svc-identity-gateway@ap-south",
+   "alert_time": 1790828340,
+   "case": "c003",
+   "fault_class": "flag_flip",
+   "held_out": false,
+   "incident_id": "inc-041",
+   "rng_seed": 981231,
+   "root_id": "chg-05689"
+  },
+  {
+   "alert_service": "svc-mobile-bff-7@ap-south",
+   "alert_time": 1790826780,
+   "case": "c004",
+   "fault_class": "expiry",
+   "held_out": true,
+   "incident_id": "inc-041",
+   "rng_seed": 345666,
+   "root_id": "exp-0174"
+  }
+ ],
+ "failures": [],
+ "latency": null,
+ "learning_curve": null,
+ "meta": {
+  "approaches": [
+   {
+    "label": "graph (llm: gpt-6-luna)",
+    "name": "graph"
+   }
+  ],
+  "case_seeds": [
+   78473,
+   529123,
+   949669,
+   981231,
+   345666
+  ],
+  "case_seeds_digest": "e711856546a4",
+  "cases": 5,
+  "class_order": [
+   "undeclared_coupling",
+   "bad_deploy",
+   "config_change",
+   "flag_flip",
+   "expiry"
+  ],
+  "classes": [
+   "bad_deploy",
+   "config_change",
+   "flag_flip",
+   "expiry",
+   "undeclared_coupling"
+  ],
+  "commit": "76921df63c47e08bf9a8422b487081bca1d7180c",
+  "context_limit": 128000,
+  "dirty": false,
+  "generated_at": "2026-10-09T15:14:16Z",
+  "heldout_classes": [
+   "expiry",
+   "undeclared_coupling"
+  ],
+  "llm": "gpt-6-luna",
+  "n_heldout": 2,
+  "n_seen": 3,
+  "notes": [
+   "Correct = exact root entity id (change or expiry) from the answer key; an INCONCLUSIVE graph verdict makes no claim and counts as not correct.",
+   "Held-out classes (expiry, undeclared_coupling) were written after the triage prompts and tool descriptions, which do not change in this unit and never name them as fault classes (tested; Expiry as a graph label and the observed_calls tool predate them).",
+   "Every approach reads the same as-of snapshot (known view at alert time) and the same candidate window [earliest onset - 120 min, alert time].",
+   "full_context serializes the declared service catalog (DEPENDS_ON only, no OBSERVED_CALL); prompt tokens are estimated as len(text)/4 against a 128,000-token limit.",
+   "Mean ms is wall time per case for the approach alone (world copy, injection and snapshot builds excluded)."
+  ],
+  "requested_cases": 5,
+  "seed": 42,
+  "training_classes": [
+   "bad_deploy",
+   "config_change",
+   "flag_flip"
+  ],
+  "wall_s": 70.9,
+  "world": "seed:world"
+ },
+ "per_class": {
+  "graph": {
+   "bad_deploy": {
+    "correct": 1,
+    "n": 1
+   },
+   "config_change": {
+    "correct": 1,
+    "n": 1
+   },
+   "expiry": {
+    "correct": 1,
+    "n": 1
+   },
+   "flag_flip": {
+    "correct": 1,
+    "n": 1
+   },
+   "undeclared_coupling": {
+    "correct": 1,
+    "n": 1
+   }
+  }
+ },
+ "results": [
+  {
+   "approach": "graph",
+   "case": "c000",
+   "correct": true,
+   "error": null,
+   "fault_class": "undeclared_coupling",
+   "held_out": true,
+   "llm_tokens": 22926,
+   "ms": 14230.2,
+   "notes": {
+    "degraded": false,
+    "rivals": [],
+    "steps": 7
+   },
+   "predicted": "chg-05690",
+   "prompt_tokens_est": 0,
+   "root_id": "chg-05690",
+   "tool_calls": 7,
+   "truncated": false,
+   "verdict": "DIAGNOSED"
+  },
+  {
+   "approach": "graph",
+   "case": "c001",
+   "correct": true,
+   "error": null,
+   "fault_class": "bad_deploy",
+   "held_out": false,
+   "llm_tokens": 23300,
+   "ms": 11447.3,
+   "notes": {
+    "degraded": false,
+    "rivals": [],
+    "steps": 7
+   },
+   "predicted": "chg-05691",
+   "prompt_tokens_est": 0,
+   "root_id": "chg-05691",
+   "tool_calls": 7,
+   "truncated": false,
+   "verdict": "DIAGNOSED"
+  },
+  {
+   "approach": "graph",
+   "case": "c002",
+   "correct": true,
+   "error": null,
+   "fault_class": "config_change",
+   "held_out": false,
+   "llm_tokens": 22365,
+   "ms": 12336.2,
+   "notes": {
+    "degraded": false,
+    "rivals": [],
+    "steps": 7
+   },
+   "predicted": "chg-05687",
+   "prompt_tokens_est": 0,
+   "root_id": "chg-05687",
+   "tool_calls": 7,
+   "truncated": false,
+   "verdict": "DIAGNOSED"
+  },
+  {
+   "approach": "graph",
+   "case": "c003",
+   "correct": true,
+   "error": null,
+   "fault_class": "flag_flip",
+   "held_out": false,
+   "llm_tokens": 22341,
+   "ms": 9600.1,
+   "notes": {
+    "degraded": false,
+    "rivals": [],
+    "steps": 7
+   },
+   "predicted": "chg-05689",
+   "prompt_tokens_est": 0,
+   "root_id": "chg-05689",
+   "tool_calls": 7,
+   "truncated": false,
+   "verdict": "DIAGNOSED"
+  },
+  {
+   "approach": "graph",
+   "case": "c004",
+   "correct": true,
+   "error": null,
+   "fault_class": "expiry",
+   "held_out": true,
+   "llm_tokens": 22157,
+   "ms": 12785.0,
+   "notes": {
+    "degraded": false,
+    "rivals": [],
+    "steps": 7
+   },
+   "predicted": "exp-0174",
+   "prompt_tokens_est": 0,
+   "root_id": "exp-0174",
+   "tool_calls": 7,
+   "truncated": false,
+   "verdict": "DIAGNOSED"
+  }
+ ],
+ "scale": null,
+ "summary": {
+  "graph": {
+   "accuracy_heldout": 1.0,
+   "accuracy_overall": 1.0,
+   "accuracy_seen": 1.0,
+   "correct": 5,
+   "errors": 0,
+   "label": "graph (llm: gpt-6-luna)",
+   "mean_llm_tokens": 22617.8,
+   "mean_ms": 12079.8,
+   "mean_prompt_tokens_est": 0,
+   "mean_tool_calls": 7,
+   "n": 5,
+   "n_heldout": 2,
+   "n_seen": 3,
+   "truncated": 0
+  }
+ }
+}
