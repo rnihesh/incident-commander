@@ -395,6 +395,7 @@ firewall, monitoring, budgets, PAT scope, secret rotation) is in
 
 | Doc | What's in it |
 |---|---|
+| [docs/blog/incident-commander.md](docs/blog/incident-commander.md) | Write-up: why proofs instead of rankings, the graph model, and results with caveats |
 | [docs/usage.md](docs/usage.md) | Walkthrough of the console, judge mode, replay, storm, proof page, benchmark page and MCP setup |
 | [docs/features.md](docs/features.md) | Feature tour with the FalkorDB capability behind each feature |
 | [docs/benchmark.md](docs/benchmark.md) | Full benchmark, latency against Postgres, scale, learning curve |
