@@ -43,8 +43,9 @@
 ## Determinism
 
 - The world is fully determined by its seed (`random.Random(seed)` only). `ic seed --seed 42`
-  prints a content hash; on this commit it is
-  `879505a4501940838d15ac0743f6891686655da34e39d24e7521e99b577352ae`.
+  prints a content hash:
+  `879505a4501940838d15ac0743f6891686655da34e39d24e7521e99b577352ae`. CI re-seeds on a fresh
+  FalkorDB on every push and fails if the hash differs from this one.
 - The world clock is frozen at `WORLD_NOW` (2026-10-01T00:00:00Z).
 - `algo.betweenness` runs with `samplingSeed: 42`. Canonical paths are the lexicographically
   smallest of the equal-length shortest paths, so proof hashes do not depend on `algo.SPpaths`

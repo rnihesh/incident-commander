@@ -39,8 +39,11 @@ jobs:
           enable-cache: true
       - run: uv sync --frozen
       - run: uv run ruff check .
-      - name: Seed the world graph (tests copy seed:world)
-        run: uv run ic seed --seed 42
+      - name: Seed the world graph (tests copy seed:world) and check determinism
+        run: |
+          uv run ic seed --seed 42 | tee seed.log
+          want=$(grep -oE '[0-9a-f]{64}' ../docs/security.md | head -1)
+          grep -q "content hash: $want" seed.log || { echo "seed 42 hash drifted from docs/security.md ($want)"; exit 1; }
       - run: uv run pytest -q
 
   web:
