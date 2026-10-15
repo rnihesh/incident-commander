@@ -113,3 +113,27 @@ async def test_cleanup_continues_past_failing_delete(tmp_path, monkeypatch):
     assert m.get(sids[0]) is None and m.get(sids[2]) is None
     assert m.get(sids[1]) is not None  # retained for retry
     assert m.tracked_graphs(sids[1]) == [bad]
+
+
+async def test_cleanup_prunes_judge_challenges(tmp_path, monkeypatch):
+    """An expired session's challenge budget rows go with it; live sessions keep theirs."""
+    from ic.api import routes_challenge
+    from ic.sessions import manager as mod
+
+    async def fake_delete(name):
+        return None
+
+    monkeypatch.setattr(mod, "delete_graph", fake_delete)
+    m = SessionManager(Store(tmp_path / "j.sqlite3"), max_sessions=8, idle_ttl_s=100)
+    old, live = naming.new_session_id(), naming.new_session_id()
+    with m.store.conn() as c:
+        c.execute("INSERT INTO sessions VALUES (?, '1.1.1.1', 0, 0, 0)", (old,))
+        c.execute("INSERT INTO sessions VALUES (?, '1.1.1.1', 0, 1100, 0)", (live,))
+    for sid in (old, live):
+        assert routes_challenge.spend(m.store, sid, "inc-001")
+    await m.cleanup(now=1150)
+    assert routes_challenge.remaining(m.store, old, "inc-001") == 2
+    assert routes_challenge.remaining(m.store, live, "inc-001") == 1
+    with m.store.conn() as c:
+        sids = {r[0] for r in c.execute("SELECT sid FROM judge_challenges")}
+    assert sids == {live}

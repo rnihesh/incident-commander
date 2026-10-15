@@ -94,6 +94,14 @@ CREATE TABLE IF NOT EXISTS rehearsal_seal (
     sealed_at    REAL NOT NULL,
     PRIMARY KEY (sid, incident_id)
 );
+
+-- Judge challenge budget per incident (ic.api.routes_challenge); pruned with its session.
+CREATE TABLE IF NOT EXISTS judge_challenges (
+    sid         TEXT NOT NULL,
+    incident_id TEXT NOT NULL,
+    used        INTEGER NOT NULL,
+    PRIMARY KEY (sid, incident_id)
+);
 """
 
 # Columns added after the first release: (table, column, SQL type). Added in place by

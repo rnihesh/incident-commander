@@ -91,6 +91,7 @@ class SessionManager:
     def _drop_rows(self, sid: str) -> None:
         with self.store.conn() as c:
             c.execute("DELETE FROM session_graphs WHERE sid = ?", (sid,))
+            c.execute("DELETE FROM judge_challenges WHERE sid = ?", (sid,))
             c.execute("DELETE FROM sessions WHERE sid = ?", (sid,))
 
     async def cleanup(self, now: float | None = None) -> list[str]:

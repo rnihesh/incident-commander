@@ -47,15 +47,6 @@ from ic.tools.result import ToolError
 CHALLENGES_PER_INCIDENT = 2
 QUALIFYING = ("VERIFIED", "RIVAL")
 
-SCHEMA = """
-CREATE TABLE IF NOT EXISTS judge_challenges (
-    sid         TEXT NOT NULL,
-    incident_id TEXT NOT NULL,
-    used        INTEGER NOT NULL,
-    PRIMARY KEY (sid, incident_id)
-);
-"""
-_ready: set[str] = set()
 log = logging.getLogger(__name__)
 
 
@@ -63,12 +54,7 @@ log = logging.getLogger(__name__)
 
 
 def _db(store: Store):
-    key = str(store.path.resolve())
-    if key not in _ready:
-        with store.conn() as c:
-            c.executescript(SCHEMA)
-        _ready.add(key)
-    return store.conn()
+    return store.conn()  # judge_challenges is created by Store.init
 
 
 def remaining(store: Store, sid: str, iid: str) -> int:

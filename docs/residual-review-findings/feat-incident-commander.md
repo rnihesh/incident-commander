@@ -36,12 +36,12 @@ follow-up pass. Kept as a record of what changed and what remains.
   above `Conditional Variable Length Traverse`, next to the real query's plan on the snapshot.
   Funnel cuts use the newest run's last screening call. Proof X-rays still profile the
   `EXPLAINS` predicate, so different proofs can show the same tree.
-- **Graph fit.** The canvas only refits on resize or new data: after a focus animation it
+- **Graph fit (resolved: refits once when the run settles and after a focus fades).** The canvas only refit on resize or new data: after a focus animation it
   stays zoomed on a node, and the storm graph first drew unfitted. Captures nudged the
   viewport to refit. A refit when the run settles would fix both.
 - **Graph overlay.** The advisory banner ("Predicted by REC-034 ...") sits over the top of the
   canvas and can cover the topmost node label.
-- **Learning-curve chart.** The "÷2" labels overlap the confidence markers at incidents 7-9.
+- **Learning-curve chart (resolved: labels are placed clear of markers, bars and the threshold).** The "÷2" labels overlapped the confidence markers at incidents 7-9.
 - Graph labels: overlap is now avoided (priority alerting > suspect > path > symptomatic >
   rest; below, above, right, left, else skipped). Near-coincident nodes keep their positions,
   so two discs can still overlap; hover names either.
@@ -54,7 +54,8 @@ Remaining residual risks, recorded rather than fixed:
   removed by session cleanup.
 - SQLite challenge spend/refund run synchronously inside async handlers (existing store
   pattern; 5 s busy timeout).
-- `judge_challenges` rows are not pruned when sessions expire.
+- ~~`judge_challenges` rows are not pruned when sessions expire.~~ Resolved: the table is
+  created by `Store.init` and session cleanup deletes an expired session's rows.
 - Challenge `would_overturn` is always INCONCLUSIVE; after stacked tampers that make the
   challenged change the sole qualifier, a re-derive would diagnose that change instead.
 - Fragility and X-ray rebuild missing as-of snapshots from the current (possibly tampered)
