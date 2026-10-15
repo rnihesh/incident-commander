@@ -47,6 +47,7 @@ With no LLM key the deterministic graph agent runs the same tools and proofs.
 ## Test
 
 ```bash
+uv run ic seed --seed 42    # tests copy seed:world, so seed once first
 uv run pytest -q            # needs FalkorDB on localhost:16379; live/slow markers skipped
 uv run ruff check .
 ```

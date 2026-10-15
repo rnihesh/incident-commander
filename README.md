@@ -436,7 +436,7 @@ run uses no LLM.
 ## Tests
 
 ```bash
-cd api && uv run pytest -q      # needs FalkorDB on localhost:16379; live/slow markers skipped by default
+cd api && uv run ic seed --seed 42 && uv run pytest -q   # needs FalkorDB on localhost:16379; live/slow skipped
 cd web && pnpm test             # vitest
 ```
 
