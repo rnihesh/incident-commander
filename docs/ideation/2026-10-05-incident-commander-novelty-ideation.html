@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ideation: Incident Commander - novel features</title>
+<style>
+:root {
+  --bg: #fbfaf7; --surface: #ffffff; --ink: #1d1f24; --muted: #565b66; --rule: #dedbd2;
+  --accent: #1f5fbf; --accent-soft: #e6eefb; --accent-text: #174a96;
+  --warn-soft: #fdf0dc; --warn-text: #7a4a07;
+  --ok-soft: #e3f3e8; --ok-text: #1d6137;
+  --neutral-soft: #eeece6; --neutral-text: #3a3d45;
+  --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #15171b; --surface: #1d2025; --ink: #e8e9ec; --muted: #a9adb7; --rule: #343841;
+    --accent: #7fb0ff; --accent-soft: #1d2b44; --accent-text: #a9ccff;
+    --warn-soft: #3a2d17; --warn-text: #f2cf92;
+    --ok-soft: #1b3326; --ok-text: #a4dbb8;
+    --neutral-soft: #2a2d34; --neutral-text: #d3d5db;
+  }
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 15.5px/1.6 var(--font-body); }
+main { max-width: 56rem; margin-inline: auto; padding: 2.5rem 1.25rem 4rem; }
+h1 { font-size: 2rem; line-height: 1.2; margin: .25rem 0 1rem; letter-spacing: -.01em; }
+h2 { font-size: 1.45rem; margin: 3rem 0 .75rem; padding-bottom: .35rem; border-bottom: 2px solid var(--rule); }
+h3 { font-size: 1.15rem; margin: 0; }
+p, ul.prose { max-width: 70ch; }
+code { font-family: var(--font-mono); font-size: .88em; background: var(--neutral-soft); color: var(--neutral-text); padding: .08em .35em; border-radius: 4px; }
+.eyebrow { font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.chips { display: flex; flex-wrap: wrap; gap: .5rem; margin: 0; padding: 0; list-style: none; }
+.chip { display: inline-block; padding: .15rem .65rem; border-radius: 999px; border: 1px solid var(--rule); background: var(--neutral-soft); color: var(--neutral-text); font-size: .82rem; font-weight: 600; }
+.chip.accent { background: var(--accent-soft); color: var(--accent-text); border-color: var(--accent-soft); }
+.chip.ok { background: var(--ok-soft); color: var(--ok-text); border-color: var(--ok-soft); }
+.chip.warn { background: var(--warn-soft); color: var(--warn-text); border-color: var(--warn-soft); }
+dl.meta { display: grid; grid-template-columns: max-content 1fr; gap: .25rem 1rem; margin: 1rem 0; }
+dl.meta dt { color: var(--muted); font-weight: 600; font-size: .85rem; text-transform: uppercase; letter-spacing: .05em; }
+dl.meta dd { margin: 0; }
+nav.toc, nav.jump { background: var(--surface); border: 1px solid var(--rule); border-radius: 10px; padding: .75rem 1.1rem; margin: 1rem 0; }
+nav ul { margin: .35rem 0 0; padding-left: 1.2rem; }
+nav li { margin: .15rem 0; }
+a { color: var(--accent); }
+.callout { border-radius: 10px; padding: .9rem 1.1rem; margin: 1rem 0; background: var(--warn-soft); color: var(--warn-text); border: 1px solid var(--warn-soft); }
+.callout .eyebrow { color: var(--warn-text); }
+.callout p { margin: .3rem 0 0; }
+.facts li { margin: .3rem 0; }
+article.idea { background: var(--surface); border: 1px solid var(--rule); border-radius: 12px; padding: 1.25rem 1.4rem; margin: 1.5rem 0; }
+article.idea header { display: flex; align-items: baseline; gap: .75rem; flex-wrap: wrap; margin-bottom: .6rem; }
+.idea-id { font-family: var(--font-mono); font-weight: 700; padding: .1rem .6rem; border-radius: 999px; background: var(--accent-soft); color: var(--accent-text); border: 1px solid var(--accent-soft); font-size: .9rem; }
+article.idea dl { margin: .9rem 0 0; }
+article.idea dt { font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 700; margin-top: .8rem; }
+article.idea dd { margin: .15rem 0 0; max-width: 70ch; }
+.tag { font-family: var(--font-mono); font-size: .85em; font-weight: 700; }
+.meeting { background: var(--ok-soft); color: var(--ok-text); border-radius: 8px; padding: .55rem .8rem; margin-top: .9rem; max-width: 70ch; border: 1px solid var(--ok-soft); }
+figure.visual { margin: 1rem 0 .25rem; padding: .75rem; background: var(--bg); border: 1px solid var(--rule); border-radius: 10px; }
+figure.visual figcaption { font-size: .82rem; color: var(--muted); margin-top: .4rem; max-width: 70ch; }
+figure.visual svg { width: 100%; height: auto; display: block; }
+svg text { fill: var(--ink); font-family: var(--font-body); font-size: 12.5px; }
+svg .sub { fill: var(--muted); font-size: 11.5px; }
+svg .on-accent { fill: var(--accent-text); font-weight: 600; }
+svg .on-ok { fill: var(--ok-text); font-weight: 600; }
+svg .on-warn { fill: var(--warn-text); font-weight: 600; }
+svg .box { fill: var(--surface); stroke: var(--ink); stroke-width: 1.2; }
+svg .box-accent { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 1.2; }
+svg .box-ok { fill: var(--ok-soft); stroke: var(--ok-text); stroke-width: 1.2; }
+svg .box-warn { fill: var(--warn-soft); stroke: var(--warn-text); stroke-width: 1.2; stroke-dasharray: 5 3; }
+svg .line { stroke: var(--ink); stroke-width: 1.4; fill: none; }
+svg .dash { stroke: var(--accent); stroke-width: 2; fill: none; stroke-dasharray: 6 4; }
+svg .dashmuted { stroke: var(--muted); stroke-width: 1.2; fill: none; stroke-dasharray: 4 3; }
+svg .dot { fill: var(--accent); stroke: var(--accent); stroke-width: 1.5; }
+svg .dot-ghost { fill: var(--surface); stroke: var(--accent); stroke-width: 1.5; }
+svg .arrowhead { fill: var(--ink); }
+table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--rule); border-radius: 10px; overflow: hidden; font-size: .93rem; }
+th, td { text-align: left; padding: .55rem .8rem; border-bottom: 1px solid var(--rule); vertical-align: top; }
+th { background: var(--neutral-soft); color: var(--neutral-text); font-size: .78rem; text-transform: uppercase; letter-spacing: .06em; }
+td:first-child, th:first-child { width: 2.5rem; }
+tr:last-child td { border-bottom: none; }
+footer.composition-signal { margin-top: 3.5rem; padding-top: 1rem; border-top: 1px solid var(--rule); color: var(--muted); font-size: .85rem; }
+@media (max-width: 640px) { dl.meta { grid-template-columns: 1fr; } h1 { font-size: 1.6rem; } }
+</style>
+</head>
+<body>
+<main>
+
+<header id="top">
+  <p class="eyebrow">Ideation</p>
+  <h1>Ideation: Incident Commander - novel features</h1>
+  <dl class="meta">
+    <dt>Date</dt><dd><time datetime="2026-10-05">2026-10-05</time></dd>
+    <dt>Topic</dt><dd><code>incident-commander-novel-features</code></dd>
+    <dt>Focus</dt><dd>Novel, niche, wow features for Incident Commander (FalkorDB Graph Hacks, Track 1 plus Tracks 2 and 3)</dd>
+    <dt>Mode</dt><dd><code>elsewhere-software</code> (product topic outside repo; empty repo, pre-hackathon)</dd>
+    <dt>Funnel</dt><dd>
+      <ul class="chips">
+        <li class="chip">47 raw ideas</li>
+        <li class="chip">29 clusters + 4 syntheses</li>
+        <li class="chip accent">7 survivors</li>
+      </ul>
+    </dd>
+  </dl>
+  <nav class="toc" aria-label="Document sections">
+    <span class="eyebrow">Contents</span>
+    <ul>
+      <li><a href="#grounding-context">Grounding Context</a></li>
+      <li><a href="#topic-axes">Topic Axes</a></li>
+      <li><a href="#ranked-ideas">Ranked Ideas</a></li>
+      <li><a href="#rejection-summary">Rejection Summary</a></li>
+    </ul>
+  </nav>
+</header>
+
+<section id="grounding-context">
+  <h2>Grounding Context</h2>
+  <p class="eyebrow">Topic Context</p>
+  <p><strong>Subject.</strong> "Incident Commander" is a solo entry (one developer plus an AI coding agent) for the "Graph Hacks: Context for AI Agents" hackathon by WeMakeDevs x FalkorDB, Oct 15-18 2026 (four build days; no product code before Oct 15; 2,552 registrants). The primary target is Track 1, "Agents That Act on Connected Data" (multi-hop reasoning, graph queries and algorithms as agent tools, tool selection through MCP, actions based on graph, explainable results). It also enters Track 2, "Agent Memory &amp; Coordination", and Track 3, "Company Brain". Side prize: best blog post.</p>
+  <p><strong>Rules.</strong> FalkorDB must be the primary graph database and central: if the product works with FalkorDB removed, it does not qualify. Data must be public, synthetic, or the entrant's own. Submission needs a public repo, a README with the graph data model and the list of Cypher queries and algorithms, a demo video of about two minutes, and a live deploy or local setup. AI assistant use must be disclosed, and the entrant must be able to explain the graph model, queries, and architecture to judges.</p>
+  <p><strong>Stack.</strong> Python (uv) with FastAPI backend, Next.js UI. LLMs: OpenAI primary, Gemini free tier or Ollama swappable.</p>
+
+  <h3>Locked base concept</h3>
+  <p>An alert webhook (or an "inject fault" button) starts a thin OpenAI tool-calling agent that picks graph tools from a shared tools layer, also exposed as an MCP server. It reconstructs a bitemporal service topology as of alert time (edges carry valid_from, valid_to, recorded_at), computes the upstream closure and the shortest causal path from the alert to a root-cause change (deploy, config, flag, commit), and emits a reproducible absence certificate (Cypher, params, and result hash, re-runnable in FalkorDB Browser). A hybrid precedent lookup (vector index, fuzzy full-text, causal-path-shape fingerprint) feeds a hypothesis ledger stored as graph nodes. The agent then opens a real GitHub rollback PR on a demo repo, pages the owner via webhook, and writes memory back (Incident, CAUSED_BY, REMEDIATED_BY with confidence reinforcement and decay) so a second similar alert resolves faster. A synthetic world generator (about 400 services across 3 regions, with deploys, commits, config, flags, owners, teams, on-call, incidents, postmortems, ADRs), a fault injector, and a benchmark (graph agent vs vector-RAG vs full topology in the prompt) back it up. Every tool returns <code>{result, cypher, params, nodes_touched, ms}</code> and the UI streams over SSE.</p>
+  <p>Should-have: a second remediation agent sharing state via the graph, multi-graph prod/staging, MCP usable in Claude Desktop. Stretch: <code>algo.MaxFlow</code> counterfactual. Cut: GraphRAG-SDK, CDLP.</p>
+
+  <h3>FalkorDB capabilities in play</h3>
+  <p>Redis-module graph database on GraphBLAS sparse matrices. OpenCypher with variable-length paths and <code>shortestPath()</code>. HNSW vector indexes on nodes and relationships, RediSearch full-text, a set of graph algorithms (BFS, SPpath, SSpath, Astar, MSF, PageRank, betweenness, harmonic centrality, WCC, CDLP, MaxFlow), and thousands of isolated named graphs per instance (<code>GRAPH.COPY</code>, <code>GRAPH.LIST</code>). No native datetime type (use epoch ints). Official MCP server. FalkorDB Browser for raw graph viewing.</p>
+
+  <h3>Verified FalkorDB facts</h3>
+  <ul class="prose facts">
+    <li><code>GRAPH.COPY</code> exists and snapshots indexes too; copy timing is undocumented, so benchmark it on day 1.</li>
+    <li>A relationship vector index and <code>db.idx.vector.queryRelationships</code> are confirmed.</li>
+    <li><code>algo.maxFlow</code> returns only edges, edgeFlows, and maxFlow: no min-cut or residual graph.</li>
+    <li><code>algo.SSpaths</code> / <code>algo.SPpaths</code> are weighted (verify config keys). <code>algo.WCC</code> is undirected. <code>algo.betweenness</code> is sampled, so pin <code>samplingSeed</code>.</li>
+    <li>There are no triggers or change notifications.</li>
+    <li><code>shortestPath</code> disallows property filters in the pattern, so a bitemporal as-of query must use a materialized as-of graph (<code>GRAPH.COPY</code> plus deleting invalid edges) or a variable-length MATCH with <code>WHERE all(...)</code>.</li>
+  </ul>
+  <div class="callout">
+    <span class="eyebrow">Prior-art warning</span>
+    <p>arXiv 2606.08590, "Auditable Graph-Guided RCA for Kubernetes Incidents", overlaps the word "auditable". Do not claim "first auditable graph RCA".</p>
+  </div>
+
+  <h3>External context</h3>
+  <ul class="prose facts">
+    <li><strong>Prior FalkorDB hackathon</strong> ("Memory Meets Motion", SF, Aug 2026, 13 projects): the winner, Atrium, modeled student misconceptions as graph nodes; a clear graph-native hook beat a feature list. Judges valued complex traversals, precedent reasoning, absence verification, and real-time event-to-action. Adjacent entry "Hopper" walked advisory, package, dependency, repo, service, customer. No SRE or incident project appeared there.</li>
+    <li><strong>Commercial AI-SRE:</strong> Causely (causal graph, abductive inference, closed), Dynatrace Davis/Smartscape (deterministic topology traversal, closed), Datadog Bits AI SRE (hypothesis tree with rejected hypotheses shown, telemetry-based, closed), Resolve.ai (autonomous), Cleric (self-learning, read-only), Traversal (causal ML), HolmesGPT (CNCF OSS, agentic loop over toolsets and runbooks, no graph), Komodor Klaudia (K8s multi-agent).</li>
+    <li><strong>Closest hackathon prior art:</strong> PagerDruid (Neo4j Aura Agent challenge winner: dependency graph, deterministic Cypher-template tools, shortest path, blast radius, owner routing; no embeddings, memory, or proofs). Sherlock (IBM hackathon: alert to git forensics to PR, no graph). RecallOps/CascadeFlow (vector-only incident memory). Academic: GALA, Praxis, KGroot.</li>
+    <li><strong>Adversarial judge review of the base concept:</strong> graph centrality 8, FalkorDB breadth 6, originality 5 (to 6), demo wow 8, Track 1 fit 9, Track 2 fit 4, Track 3 fit 5, explainability 9; roughly 20-25% win probability. Attacks: "this is Causely with a smaller graph"; "synthetic world, synthetic win: you planted the path"; "the graph is a lookup table over canned Cypher templates; Postgres + recursive CTE + pgvector looks identical"; "60 services fits in a prompt".</li>
+    <li><strong>Gaps nobody demonstrates:</strong> graph-structural negative proofs; visible replayable traversal with algorithm steps; native graph algorithms as MCP tools; a change-centric graph; memory write-back that changes later traversals; vector plus graph precedent in one store; open and self-hostable.</li>
+  </ul>
+</section>
+
+<section id="topic-axes">
+  <h2>Topic Axes</h2>
+  <ul class="prose">
+    <li><strong>Reasoning &amp; proof</strong> - how the agent decides, proves, and refutes (causal paths, absence, hypotheses, uncertainty)</li>
+    <li><strong>Memory &amp; learning over time</strong> - what persists, how it changes future runs, multi-agent shared state (Track 2)</li>
+    <li><strong>Actions &amp; the real-time loop</strong> - event intake, acting safely in the world, closing the loop</li>
+    <li><strong>Demo &amp; judge experience</strong> - what appears on screen in a 2-minute video and in a live judge poke; the "wow" moment</li>
+    <li><strong>Credibility &amp; FalkorDB depth</strong> - evaluation, scale, anti-"toy" evidence, using FalkorDB features others will not (algorithms, multi-graph, relationship vectors, GraphBLAS speed)</li>
+  </ul>
+</section>
+
+<section id="ranked-ideas">
+  <h2>Ranked Ideas</h2>
+  <nav class="jump" aria-label="Ranked ideas jump list">
+    <span class="eyebrow">Jump to idea</span>
+    <ul>
+      <li><a href="#i1">1. Proof-Carrying Incident Response</a></li>
+      <li><a href="#i2">2. Judge Plays Chaos Monkey</a></li>
+      <li><a href="#i3">3. Time Machine: as-of snapshot graphs + kill-cam replay</a></li>
+      <li><a href="#i4">4. Scar Tissue: memory that rewrites the topology</a></li>
+      <li><a href="#i5">5. Storm Collapse: 300 alerts, 2 incidents, 3 changes</a></li>
+      <li><a href="#i6">6. Multiverse Rollback Rehearsal</a></li>
+      <li><a href="#i7">7. Postgres Twin + Reflex-vs-Proof latency</a></li>
+    </ul>
+  </nav>
+
+  <!-- Idea 1 -->
+  <article class="idea" id="i1">
+    <header>
+      <span class="idea-id">1.</span>
+      <h3>Proof-Carrying Incident Response</h3>
+    </header>
+    <ul class="chips">
+      <li class="chip accent">Confidence: High</li>
+      <li class="chip">Complexity: Medium</li>
+    </ul>
+    <figure class="visual">
+      <svg viewBox="0 0 640 200" role="img" aria-label="Elimination funnel from 312 changes down to one suspect, each cut a clickable query">
+        <rect class="box" x="10" y="10" width="420" height="34" rx="6"/>
+        <text x="22" y="32">312 changes in the alert window</text>
+        <rect class="box" x="10" y="54" width="300" height="34" rx="6"/>
+        <text x="22" y="76">41 inside the upstream closure</text>
+        <rect class="box" x="10" y="98" width="190" height="34" rx="6"/>
+        <text x="22" y="120">6 survive falsifying queries</text>
+        <rect class="box-accent" x="10" y="142" width="110" height="34" rx="6"/>
+        <text class="on-accent" x="22" y="164">1 suspect</text>
+        <text class="sub" x="446" y="32">each cut is a clickable query</text>
+        <text class="sub" x="326" y="76">hash-chained result per cut</text>
+        <text class="sub" x="136" y="160">necessity check: remove the suspect in an as-of</text>
+        <text class="sub" x="136" y="175">snapshot and the alert loses all explanation</text>
+      </svg>
+      <figcaption>Illustrative: the elimination funnel, with the 312, 41, 6, 1 counts from the description. Prose below is complete without it.</figcaption>
+    </figure>
+    <dl>
+      <dt>Description</dt>
+      <dd>Every claim the agent makes is a pre-registered, machine-checkable Cypher proof. Each Hypothesis declares its falsifying query before running; results, a hash, and a prev_hash form an append-only chain in the graph. The UI shows an elimination funnel (312 changes, then 41, then 6, then 1), each cut a clickable query. A necessity check removes the suspect in an as-of snapshot and shows the alert loses all explanation (a uniqueness certificate). A "Was it my deploy?" exoneration receipt is the same machinery applied per deploy. A Verify button re-runs the whole chain (VERIFIED / DRIFTED / FALSIFIED), and a GitHub check on the rollback PR re-runs the proofs against FalkorDB.</dd>
+      <dt>Axis</dt>
+      <dd>Reasoning &amp; proof</dd>
+      <dt>Basis</dt>
+      <dd><span class="tag">direct:</span> the grounding records an absence certificate and hypothesis ledger in the base concept, that judges valued absence verification, and an adversarial review scoring explainability 9 but originality only 5. <span class="tag">external:</span> proof-carrying code, Certificate Transparency, and clinical pre-registration; Datadog Bits AI SRE shows rejected hypotheses but is closed and unverifiable.</dd>
+      <dt>Rationale</dt>
+      <dd>It turns "explainable" into "independently checkable", which is the identity of the product and the lever on the originality score. The same proof machinery yields the funnel, the uniqueness certificate, the exoneration receipt, and the PR check, so one mechanism carries several demo beats.</dd>
+      <dt>Downsides</dt>
+      <dd>arXiv 2606.08590 overlaps the word "auditable", so the claim must be framed carefully. Dominators are computed in Python, not FalkorDB.</dd>
+      <dt>Meeting test</dt>
+      <dd>"Every sentence the agent says has a button that re-proves it against the database."</dd>
+    </dl>
+  </article>
+
+  <!-- Idea 2 -->
+  <article class="idea" id="i2">
+    <header>
+      <span class="idea-id">2.</span>
+      <h3>Judge Plays Chaos Monkey</h3>
+    </header>
+    <ul class="chips">
+      <li class="chip accent">Confidence: High</li>
+      <li class="chip">Complexity: Medium</li>
+    </ul>
+    <figure class="visual">
+      <svg viewBox="0 0 680 190" role="img" aria-label="Judge breaks a node, injector publishes only a hash, agent investigates blind, reveal matches the hash; ground truth sits in a sealed graph the agent cannot read">
+        <defs><marker id="ah2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="arrowhead" d="M0 0 L10 5 L0 10 z"/></marker></defs>
+        <rect class="box" x="10" y="20" width="135" height="56" rx="8"/>
+        <text x="77" y="45" text-anchor="middle">Judge clicks</text>
+        <text x="77" y="62" text-anchor="middle">a node to break</text>
+        <rect class="box-accent" x="185" y="20" width="135" height="56" rx="8"/>
+        <text class="on-accent" x="252" y="45" text-anchor="middle">Injector publishes</text>
+        <text class="on-accent" x="252" y="62" text-anchor="middle">SHA-256 only</text>
+        <rect class="box" x="360" y="20" width="135" height="56" rx="8"/>
+        <text x="427" y="45" text-anchor="middle">Agent finds</text>
+        <text x="427" y="62" text-anchor="middle">the fault blind</text>
+        <rect class="box-ok" x="535" y="20" width="135" height="56" rx="8"/>
+        <text class="on-ok" x="602" y="45" text-anchor="middle">Reveal matches</text>
+        <text class="on-ok" x="602" y="62" text-anchor="middle">the commitment</text>
+        <path class="line" d="M145 48 H183" marker-end="url(#ah2)"/>
+        <path class="line" d="M320 48 H358" marker-end="url(#ah2)"/>
+        <path class="line" d="M495 48 H533" marker-end="url(#ah2)"/>
+        <path class="dashmuted" d="M252 76 V118"/>
+        <rect class="box-warn" x="162" y="118" width="180" height="46" rx="8"/>
+        <text class="on-warn" x="252" y="139" text-anchor="middle">sealed answer_key graph</text>
+        <text class="on-warn" x="252" y="155" text-anchor="middle">agent tools cannot read</text>
+        <text class="sub" x="362" y="145">ground truth stays here until reveal</text>
+      </svg>
+      <figcaption>Illustrative: commit, solve blind, reveal. The second beat (edge edit in FalkorDB Browser) is described in the prose.</figcaption>
+    </figure>
+    <dl>
+      <dt>Description</dt>
+      <dd>A judge clicks any node to break it. The injector publishes only a SHA-256 commitment; ground truth lives in a sealed <code>answer_key</code> graph the agent's tools cannot read. The agent finds the fault blind, then the reveal matches the commitment. Second beat: the judge inserts or deletes an edge in FalkorDB Browser and the stored certificate flips to FALSIFIED in under a second, naming the violating node; the agent then re-derives.</dd>
+      <dt>Axis</dt>
+      <dd>Demo &amp; judge experience</dd>
+      <dt>Basis</dt>
+      <dd><span class="tag">direct:</span> the adversarial attack "synthetic world, synthetic win: you planted the path"; FalkorDB multi-graph isolation; certificates that are re-runnable in FalkorDB Browser.</dd>
+      <dt>Rationale</dt>
+      <dd>The commitment hash and the unreadable answer graph remove the "you planted the path" objection by construction, and the judge's own edge edit shows the certificates are live rather than canned.</dd>
+      <dt>Downsides</dt>
+      <dd>The live fault must be reliably solvable, so pre-test the injector classes and record a fallback take.</dd>
+      <dt>Meeting test</dt>
+      <dd>"The judge picked the fault, and the agent found it blind."</dd>
+    </dl>
+  </article>
+
+  <!-- Idea 3 -->
+  <article class="idea" id="i3">
+    <header>
+      <span class="idea-id">3.</span>
+      <h3>Time Machine: as-of snapshot graphs + kill-cam replay</h3>
+    </header>
+    <ul class="chips">
+      <li class="chip accent">Confidence: High</li>
+      <li class="chip">Complexity: Medium</li>
+    </ul>
+    <figure class="visual">
+      <svg viewBox="0 0 640 170" role="img" aria-label="Two timelines: as-happened shows backdated evidence before the alert, as-known-then shows it recorded after the alert">
+        <text x="10" y="54" style="font-weight:600">as-happened</text>
+        <line class="line" x1="130" y1="50" x2="625" y2="50"/>
+        <circle class="dot" cx="230" cy="50" r="6"/>
+        <text class="sub" x="230" y="72" text-anchor="middle">deploy</text>
+        <circle class="dot" cx="300" cy="50" r="6"/>
+        <text class="on-accent" x="300" y="34" text-anchor="middle">edge valid_from (backdated)</text>
+        <text x="10" y="124" style="font-weight:600">as-known-then</text>
+        <line class="line" x1="130" y1="120" x2="625" y2="120"/>
+        <circle class="dot" cx="230" cy="120" r="6"/>
+        <text class="sub" x="230" y="142" text-anchor="middle">deploy</text>
+        <circle class="dot-ghost" cx="300" cy="120" r="6" stroke-dasharray="3 2"/>
+        <circle class="dot" cx="520" cy="120" r="6"/>
+        <text class="on-accent" x="520" y="104" text-anchor="middle">recorded_at: +14 min</text>
+        <text class="sub" x="520" y="142" text-anchor="middle">not available to on-call</text>
+        <line class="dashmuted" x1="400" y1="22" x2="400" y2="150"/>
+        <text class="sub" x="400" y="164" text-anchor="middle">alert T</text>
+      </svg>
+      <figcaption>Illustrative: the same evidence on valid time versus transaction time. The scrubber and the as-known-then toggle are described in the prose.</figcaption>
+    </figure>
+    <dl>
+      <dt>Description</dt>
+      <dd>Edges are bitemporal (valid_from, valid_to, recorded_at). The agent materializes the world as of alert time into its own named graph (<code>GRAPH.COPY</code> plus pruning), so every algorithm runs on the true past topology. A scrubber replays the outage spreading hop by hop. A toggle between "as-happened" and "as-known-then" exposes late-arriving or backdated evidence ("recorded 14 min after alert - not available to on-call"). A silent-failure mode uses future-dated expiry edges (TLS cert, TTL, quota) so the agent can prove a cause even when nothing changed.</dd>
+      <dt>Axis</dt>
+      <dd>Credibility &amp; FalkorDB depth</dd>
+      <dt>Basis</dt>
+      <dd><span class="tag">direct:</span> the bitemporal base design, plus the verifier finding that <code>shortestPath</code> cannot filter on properties, so as-of snapshots are required. <span class="tag">external:</span> a search found no prior RCA system that distinguishes transaction time from valid time.</dd>
+      <dt>Rationale</dt>
+      <dd>The FalkorDB limitation turns multi-graph from a nice-to-have into a load-bearing feature, which answers "Postgres looks identical". The as-happened versus as-known-then toggle is a novel view of an incident that no competitor shows.</dd>
+      <dt>Downsides</dt>
+      <dd><code>GRAPH.COPY</code> timing is unknown: benchmark it on day 1, with variable-length MATCH plus <code>WHERE all(...)</code> as the fallback.</dd>
+      <dt>Meeting test</dt>
+      <dd>"Drag the slider back before the deploy and watch the outage path vanish - and the graph knows when evidence was planted."</dd>
+    </dl>
+  </article>
+
+  <!-- Idea 4 -->
+  <article class="idea" id="i4">
+    <header>
+      <span class="idea-id">4.</span>
+      <h3>Scar Tissue: memory that rewrites the topology</h3>
+    </header>
+    <ul class="chips">
+      <li class="chip accent">Confidence: Medium-High</li>
+      <li class="chip">Complexity: Medium</li>
+    </ul>
+    <figure class="visual">
+      <svg viewBox="0 0 620 165" role="img" aria-label="A multi-hop declared path from Orders to Cache is shortcut by a learned latent edge">
+        <defs><marker id="ah4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="arrowhead" d="M0 0 L10 5 L0 10 z"/></marker></defs>
+        <text class="sub" x="310" y="16" text-anchor="middle">declared topology: several hops to the shared cache</text>
+        <rect class="box" x="30" y="30" width="80" height="40" rx="8"/>
+        <text x="70" y="55" text-anchor="middle">Orders</text>
+        <rect class="box" x="190" y="30" width="80" height="40" rx="8"/>
+        <text x="230" y="55" text-anchor="middle">Gateway</text>
+        <rect class="box" x="350" y="30" width="80" height="40" rx="8"/>
+        <text x="390" y="55" text-anchor="middle">Config svc</text>
+        <rect class="box-accent" x="510" y="30" width="80" height="40" rx="8"/>
+        <text class="on-accent" x="550" y="55" text-anchor="middle">Cache</text>
+        <path class="line" d="M110 50 H188" marker-end="url(#ah4)"/>
+        <path class="line" d="M270 50 H348" marker-end="url(#ah4)"/>
+        <path class="line" d="M430 50 H508" marker-end="url(#ah4)"/>
+        <path class="dash" d="M70 70 Q310 150 550 70" marker-end="url(#ah4)"/>
+        <text class="on-accent" x="310" y="150" text-anchor="middle">LATENT_DEPENDS_ON (learned, confidence reinforced)</text>
+      </svg>
+      <figcaption>Illustrative: a learned edge turns a multi-hop route into one hop on the next similar alert.</figcaption>
+    </figure>
+    <dl>
+      <dt>Description</dt>
+      <dd>After each resolved incident the agent writes <code>LATENT_DEPENDS_ON</code> edges (real but undeclared couplings, such as a shared cache) with reinforced or decayed confidence, plus suspicion weights on confirmed path edges. The next similar alert on a different service routes through the learned dashed edge in one hop, shown with a learning-curve chart (hops and time across seeded incidents). The investigation subgraph doubles as the handoff baton between triage and remediation agents (Track 2 shared state). Open postmortem recommendations that intersect the new causal path raise a banner such as "predicted by REC-0871-3, open 194 days" (Track 3).</dd>
+      <dt>Axis</dt>
+      <dd>Memory &amp; learning over time</dd>
+      <dt>Basis</dt>
+      <dd><span class="tag">direct:</span> the identified gap "memory write-back that changes later traversals"; Track 2 fit scored 4 and Track 3 fit scored 5 in the adversarial review. <span class="tag">external:</span> RecallOps and CascadeFlow keep incident memory as vectors only.</dd>
+      <dt>Rationale</dt>
+      <dd>Memory that changes the graph's shape, not just a lookup table, is a graph-native hook and the strongest lever on the weak Track 2 and Track 3 fit scores.</dd>
+      <dt>Downsides</dt>
+      <dd>A learning curve on self-generated data can look circular, so use held-out fault classes.</dd>
+      <dt>Meeting test</dt>
+      <dd>"Watch the graph grow a new edge after the incident - and the next alert use it."</dd>
+    </dl>
+  </article>
+
+  <!-- Idea 5 -->
+  <article class="idea" id="i5">
+    <header>
+      <span class="idea-id">5.</span>
+      <h3>Storm Collapse: 300 alerts, 2 incidents, 3 changes</h3>
+    </header>
+    <ul class="chips">
+      <li class="chip warn">Confidence: Medium</li>
+      <li class="chip">Complexity: Medium</li>
+    </ul>
+    <dl>
+      <dt>Description</dt>
+      <dd>Storm mode fires 200-400 alerts. <code>algo.WCC</code> splits independent incidents, <code>algo.betweenness</code> (seeded) finds chokepoints, and a greedy set-cover over upstream closures finds the minimal explaining set ("incident B needs flag + config together - neither alone covers all 6"). A counter shows pages collapsing from 312 to 2.</dd>
+      <dt>Axis</dt>
+      <dd>Reasoning &amp; proof</dd>
+      <dt>Basis</dt>
+      <dd><span class="tag">direct:</span> WCC and betweenness are named as agent tools, and real-time event-to-action was valued by judges. <span class="tag">external:</span> Groot assumes a single root cause; PagerDruid handles a single alert.</dd>
+      <dt>Rationale</dt>
+      <dd>It uses native graph algorithms for multi-root-cause incidents, a case the closest prior art does not handle, and the page-count collapse is an instantly legible number.</dd>
+      <dt>Downsides</dt>
+      <dd>It adds a second scenario to the demo, so keep it to one storm beat.</dd>
+      <dt>Meeting test</dt>
+      <dd>"Seventeen alerts, two incidents, three changes - and proof two of them were needed together."</dd>
+    </dl>
+  </article>
+
+  <!-- Idea 6 -->
+  <article class="idea" id="i6">
+    <header>
+      <span class="idea-id">6.</span>
+      <h3>Multiverse Rollback Rehearsal</h3>
+    </header>
+    <ul class="chips">
+      <li class="chip warn">Confidence: Medium</li>
+      <li class="chip">Complexity: Medium</li>
+    </ul>
+    <dl>
+      <dt>Description</dt>
+      <dd>Before opening the real PR, the agent runs <code>GRAPH.COPY</code> on the as-of world, applies the rollback as mutations, and re-checks alert reachability. It ranks candidate remediations across N universes and refuses a rollback that does not clear the fault. A side-by-side diff shows prod versus sandbox.</dd>
+      <dt>Axis</dt>
+      <dd>Actions &amp; the real-time loop</dd>
+      <dt>Basis</dt>
+      <dd><span class="tag">direct:</span> <code>GRAPH.COPY</code> and multi-graph support are verified; safe action is a stated concern. <span class="tag">reasoned:</span> there is no clean Postgres equivalent of cheap whole-graph clones with graph algorithms running on them.</dd>
+      <dt>Rationale</dt>
+      <dd>It makes acting on the graph safe, which strengthens the Track 1 "actions based on graph" criterion and reuses the snapshot machinery from idea 3.</dd>
+      <dt>Downsides</dt>
+      <dd>It depends on copy timing. The MaxFlow "what saturates next" counterfactual is deferred because there is no min-cut.</dd>
+      <dt>Meeting test</dt>
+      <dd>"It rehearsed the rollback on a copy of the world before touching the real one."</dd>
+    </dl>
+  </article>
+
+  <!-- Idea 7 -->
+  <article class="idea" id="i7">
+    <header>
+      <span class="idea-id">7.</span>
+      <h3>Postgres Twin + Reflex-vs-Proof latency</h3>
+    </header>
+    <ul class="chips">
+      <li class="chip accent">Confidence: High</li>
+      <li class="chip">Complexity: Medium</li>
+    </ul>
+    <dl>
+      <dt>Description</dt>
+      <dd>The same synthetic world, scaled to about 5-10k services, is loaded into Postgres (recursive CTE plus pgvector). Every tool has an engine switch. A benchmark page shows latency per step and the accuracy of the graph agent versus vector-RAG versus full topology in the prompt (token overflow shown). The first SSE frame is a sub-100ms "reflex" (precomputed blast radius and top suspects) delivered before the slow proof.</dd>
+      <dt>Axis</dt>
+      <dd>Credibility &amp; FalkorDB depth</dd>
+      <dt>Basis</dt>
+      <dd><span class="tag">direct:</span> the adversarial attacks "Postgres + CTE + pgvector looks identical" and "60 services fits in a prompt", plus the GraphBLAS latency profile.</dd>
+      <dt>Rationale</dt>
+      <dd>It answers the two sharpest judge objections with measurements rather than argument, and the reflex frame makes the latency advantage visible in the first moment of the demo.</dd>
+      <dt>Downsides</dt>
+      <dd>The Postgres twin is extra work; it can be trimmed to closure and shortest-path queries only.</dd>
+      <dt>Meeting test</dt>
+      <dd>"We built the Postgres version so you don't have to ask."</dd>
+    </dl>
+  </article>
+</section>
+
+<section id="rejection-summary">
+  <h2>Rejection Summary</h2>
+  <table>
+    <thead><tr><th>#</th><th>Idea</th><th>Reason Rejected</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Saboteur decoy agent</td><td>LLM adversary is non-deterministic and a high demo risk; Judge Plays Chaos Monkey (2) covers the "planted path" attack more credibly</td></tr>
+      <tr><td>2</td><td>Antibody library / compiled procedures</td><td>Stored Cypher replay is just prepared statements; Scar Tissue (4) carries the "memory makes it faster" story better</td></tr>
+      <tr><td>3</td><td>Earned autonomy gate</td><td>Thin on graph: a counter gating auto-merge</td></tr>
+      <tr><td>4</td><td>Bookmaker calibration</td><td>Needs many incidents; self-graded on synthetic data, so judges will discount it</td></tr>
+      <tr><td>5</td><td>Reasoning trace with relationship vectors</td><td>Vague payoff; a gimmick use of the relationship vector index</td></tr>
+      <tr><td>6</td><td>Seismic epicenter localization</td><td>Onset times are self-generated, so corroboration is circular; novelty unverified</td></tr>
+      <tr><td>7</td><td>Causal null test</td><td>Null model is statistically shaky; judges will poke it</td></tr>
+      <tr><td>8</td><td>Min-cut minimal rollback / islanding</td><td><code>algo.maxFlow</code> returns no cut; capacities would be invented; high demo risk (deferred stretch)</td></tr>
+      <tr><td>9</td><td>Topology regression bisect</td><td>Needs many copies and invariant definitions; niche story</td></tr>
+      <tr><td>10</td><td>Pre-mortem deploy gate</td><td>Predictions have no real model; the timeline would be faked</td></tr>
+      <tr><td>11</td><td>Standing tripwires</td><td>FalkorDB has no triggers, so it would be a poll loop and the claim would be false</td></tr>
+      <tr><td>12</td><td>Expertise-edge paging</td><td>A Postgres join does the same; Track 3 filler</td></tr>
+      <tr><td>13</td><td>1000-agent hypothesis race</td><td>Concurrency theater; fails the explain-it test (refuted)</td></tr>
+      <tr><td>14</td><td>Relationship-vector change fingerprints</td><td>Retrieval quality unproven; at most an optional precedent tweak</td></tr>
+      <tr><td>15</td><td>Immune-system synthesis</td><td>Bundles weak parts; the strong parts live in Scar Tissue (4)</td></tr>
+      <tr><td>16</td><td>Multiverse synthesis (full)</td><td>Too many parts; only the rehearsal survives as idea 6</td></tr>
+      <tr><td>17</td><td>Two-witnesses synthesis</td><td>Timing signal is synthetic, so it is circular</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<footer class="composition-signal">
+  Composed 2026-10-05 by ce-ideate from the survivors and grounding of ideation run 8e9fbf2a (product topic "Incident Commander - novel features").
+</footer>
+
+</main>
+</body>
+</html>

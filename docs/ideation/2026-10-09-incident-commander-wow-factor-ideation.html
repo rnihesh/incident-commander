@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ideation: Incident Commander wow factors</title>
+<style>
+  :root {
+    --bg: #fbfaf7; --ink: #1d1d1b; --dim: #55534e; --rule: #dedbd2;
+    --card: #ffffff; --accent: #8a3b12; --accent-soft: #f6e8df; --accent-text: #6e2c0b;
+    --ok-soft: #e4f0e6; --ok-text: #1f5a2c; --warn-soft: #f7efd9; --warn-text: #6b4e05;
+    --bad-soft: #f5e1e1; --bad-text: #7a1f1f; --mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#161614; --ink:#ecebe6; --dim:#b3b0a7; --rule:#34332f; --card:#1e1d1b;
+      --accent:#e08a5a; --accent-soft:#3a2418; --accent-text:#f2b08a; --ok-soft:#1d3122; --ok-text:#9fd6aa;
+      --warn-soft:#352c14; --warn-text:#e6c46e; --bad-soft:#3a1d1d; --bad-text:#f0a3a3; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif; }
+  main { max-width: 920px; margin-inline: auto; padding: 2.5rem 1.25rem 4rem; }
+  p, li, dd { max-width: 72ch; }
+  h1 { font-size: 1.75rem; line-height: 1.2; margin: .2rem 0 .6rem; }
+  h2 { font-size: 1.3rem; margin: 2.6rem 0 .8rem; padding-bottom: .3rem; border-bottom: 1px solid var(--rule); }
+  h3 { font-size: 1.08rem; margin: 0 0 .5rem; }
+  .eyebrow { font: 600 11px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--accent-text); }
+  .meta { display: flex; flex-wrap: wrap; gap: .4rem 1.4rem; color: var(--dim); font-size: 13px; margin: .4rem 0 1rem; }
+  .meta b { color: var(--ink); font-weight: 600; }
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: .6rem; margin: 1.2rem 0; }
+  .stat { background: var(--card); border: 1px solid var(--rule); border-radius: 8px; padding: .7rem .9rem; }
+  .stat .n { font: 600 1.4rem/1.1 var(--mono); }
+  .stat .l { color: var(--dim); font-size: 12px; }
+  code { font-family: var(--mono); font-size: .9em; }
+  strong { color: inherit; }
+  ul.jump { columns: 2; padding-left: 1.1rem; font-size: 14px; }
+  article.idea { background: var(--card); border: 1px solid var(--rule); border-radius: 10px; padding: 1.1rem 1.25rem; margin: 1rem 0 1.4rem; }
+  .chips { display: flex; flex-wrap: wrap; gap: .4rem; margin: .2rem 0 .7rem; }
+  .chip { font: 600 11px/1 var(--mono); padding: .35rem .55rem; border-radius: 999px; border: 1px solid transparent; }
+  .c-id { background: var(--accent-soft); color: var(--accent-text); }
+  .c-axis { background: var(--warn-soft); color: var(--warn-text); }
+  .c-conf { background: var(--ok-soft); color: var(--ok-text); }
+  .c-cx { background: var(--bad-soft); color: var(--bad-text); }
+  dl.fields { display: grid; grid-template-columns: 8.5rem 1fr; gap: .45rem 1rem; margin: .4rem 0 0; }
+  dl.fields dt { font: 600 11px/1.6 var(--mono); text-transform: uppercase; letter-spacing: .05em; color: var(--dim); padding-top: .15rem; }
+  dl.fields dd { margin: 0; }
+  figure { margin: .9rem 0 .3rem; }
+  figure svg { width: 100%; height: auto; max-width: 760px; display: block; }
+  figcaption { color: var(--dim); font-size: 12.5px; margin-top: .3rem; }
+  svg text { font-family: -apple-system, "Segoe UI", sans-serif; fill: var(--ink); }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { text-align: left; padding: .5rem .6rem; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  th { font: 600 11px/1.4 var(--mono); text-transform: uppercase; letter-spacing: .05em; color: var(--dim); }
+  .callout { background: var(--warn-soft); color: var(--warn-text); border-radius: 8px; padding: .8rem 1rem; margin: 1rem 0; }
+  .callout p { margin: .2rem 0; color: inherit; }
+  footer.composition-signal { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); color: var(--dim); font-size: 12.5px; }
+  @media (max-width: 640px) { dl.fields { grid-template-columns: 1fr; } ul.jump { columns: 1; } }
+</style>
+</head>
+<body>
+<main>
+<header>
+  <div class="eyebrow">Ideation</div>
+  <h1>Ideation: Incident Commander wow factors</h1>
+  <div class="meta">
+    <span><b>Date</b> <time datetime="2026-10-09">2026-10-09</time></span>
+    <span><b>Topic</b> incident-commander-wow-factor</span>
+    <span><b>Mode</b> repo-grounded</span>
+  </div>
+  <p><b>Focus:</b> additional wow-factor features for a feature-complete hackathon entry — demo-visible in a 2-3 minute video and on a live URL, deepening FalkorDB usage, buildable in about 1-2 days solo by reusing existing code, near-zero paid LLM tokens, low risk to the existing flow; plus README screenshots and GIFs.</p>
+  <div class="stats">
+    <div class="stat"><div class="n">47</div><div class="l">raw ideas from 5 frames</div></div>
+    <div class="stat"><div class="n">22 + 3</div><div class="l">after dedupe + cross-cutting</div></div>
+    <div class="stat"><div class="n">7</div><div class="l">survivors</div></div>
+    <div class="stat"><div class="n">5 / 5</div><div class="l">topic axes covered</div></div>
+  </div>
+</header>
+
+<section id="grounding-context">
+  <h2>Grounding Context</h2>
+  <h3>Codebase Context</h3>
+  <p>Incident Commander is a FastAPI + FalkorDB on-call agent with a Next.js console. The full flow runs: inject a fault, a reflex answer in about 2 ms, bitemporal as-of snapshots built with <code>GRAPH.COPY</code>, an elimination funnel, an absence certificate and necessity proof, a verdict, a rollback rehearsal on a cloned graph, a simulated PR, commit status and page, and a memory write-back. Judge mode adds blind commit-reveal injection and a tamper panel that flips proofs to FALSIFIED. Other pages cover replay, public proof pages, storm collapse (WCC plus betweenness) and a benchmark. An MCP server exposes the read-only tools. The live LLM benchmark puts the graph agent at 50/50 with both <code>gpt-6-luna</code> and local <code>qwen3:8b</code>. The same model with the full catalog in its prompt got 26/50, Opus 5.5 full context got 4/10, and vector RAG got 4/50.</p>
+  <p>Gaps that matter for wow:</p>
+  <ul>
+    <li>The README has no images.</li>
+    <li>The first paint is an empty state.</li>
+    <li>The "Was it my deploy?" panel is mocked (<code>Exonerate.tsx:14</code>).</li>
+    <li>The learning curve never shows a contradiction (<code>learning_curve.json</code>: contradictions 0 in every row).</li>
+    <li>Several FalkorDB features go unused in product code: <code>GRAPH.EXPLAIN</code>/<code>GRAPH.PROFILE</code>, <code>algo.pageRank</code>, <code>algo.SSpaths</code>, and the GraphRAG-SDK.</li>
+  </ul>
+  <h3>External Context</h3>
+  <p>The AI SRE market (Cleric, Resolve.ai, Traversal, Datadog Bits AI, incident.io) sells autonomy plus accuracy. Nobody shows re-runnable proofs, tamper detection or as-of time travel. The hackathon rules reportedly require FalkorDB to be "primary and central". The tracks are reportedly named <i>Investigation &amp; Risk</i> (multi-hop link analysis, evidence and case mapping, explainable results), <i>Best Agentic AI Use Case</i> and <i>Best Use Case of the GraphRAG SDK</i>; that may differ from the README's track names, so verify. Useful analogies: chess-engine analysis lines, Hawk-Eye/VAR review, the courtroom chain of custody, and phylogenetic bootstrap.</p>
+</section>
+
+<section id="topic-axes">
+  <h2>Topic Axes</h2>
+  <ol>
+    <li>First-30-seconds demo moment</li>
+    <li>Judge interactivity &amp; adversarial play</li>
+    <li>FalkorDB depth</li>
+    <li>Agent memory &amp; coordination over time</li>
+    <li>Outward trust artifacts &amp; shareability</li>
+  </ol>
+</section>
+
+<section id="ranked-ideas">
+  <h2>Ranked Ideas</h2>
+  <ul class="jump">
+    <li><a href="#idea-1">1. Refutation engine: check any claimed root cause</a></li>
+    <li><a href="#idea-2">2. Query X-ray: FalkorDB's plan under every cut</a></li>
+    <li><a href="#idea-3">3. Forgetting curve: memory that unlearns</a></li>
+    <li><a href="#idea-4">4. Clause bars: the certificate as a VAR review</a></li>
+    <li><a href="#idea-5">5. Autopilot first paint</a></li>
+    <li><a href="#idea-6">6. Fragility map: the agent tells you how to beat it</a></li>
+    <li><a href="#idea-7">7. README media factory</a></li>
+  </ul>
+
+  <article class="idea" id="idea-1">
+    <h3>1. Refutation engine: check any claimed root cause</h3>
+    <div class="chips"><span class="chip c-id">IDEA 1</span><span class="chip c-axis">Outward trust artifacts</span><span class="chip c-conf">Confidence 80%</span><span class="chip c-cx">Complexity Medium</span></div>
+    <dl class="fields">
+      <dt>Description</dt><dd>One read-only primitive runs the same <code>EXPLAINS</code> predicate the agent uses against <em>any</em> claimed entity id on the incident's as-of snapshot. It returns VERIFIED, or REFUTED with the first failing clause and the query, or "a rival qualifies". It surfaces three ways. (a) <code>/benchmark</code> gets a "Why it was wrong" column: every wrong answer from the gpt-6-luna and Opus full-context and vector runs is re-checked on its regenerated case world and refuted on a named clause. (b) An MCP <code>verify_claim</code> tool lets another agent (Claude Desktop, qwen) submit its answer and get graded. (c) A Hawk-Eye-style judge challenge replaces the mocked "Was it my deploy?" panel: tap an eliminated change and watch the live check stop on the clause that rules it out.</dd>
+      <dt>Axis</dt><dd>Outward trust artifacts &amp; shareability (also judge play and agent coordination)</dd>
+      <dt>Basis</dt><dd><code>direct:</code> <code>predicate.py</code> returns <code>failed_clause</code> in a fixed order (after_onset, origin, coverage, order, signature). The benchmark reports store per-case <code>predicted</code>, <code>root_id</code> and <code>rng_seed</code>; Opus case c000 predicted <code>chg-05692</code> against root <code>chg-05690</code>. <code>Exonerate.tsx:14</code> reads "Mocked against the completed incident's certificate", and line 63 uses <code>fakeHash</code>. <code>mcp_server.py:14-16</code> binds a bearer token to a session world.</dd>
+      <dt>Rationale</dt><dd>It turns the headline number ("a frontier model got 4/10") from a claim into clickable evidence, removes the one visible fake in a product whose pitch is "no simulation", and makes the graph a trust layer other agents call. That fits both the Investigation &amp; Risk "explainable results" brief and the agentic track. The new backend is one primitive.</dd>
+      <dt>Downsides</dt><dd>Case worlds must regenerate exactly from their seeds; verify one before trusting all. The Opus pool is only 6 wrong answers, so the 50-case gpt-6-luna run carries the column. A judge challenge must stay read-only and never mutate the main incident.</dd>
+      <dt>Confidence</dt><dd>80%</dd>
+      <dt>Complexity</dt><dd>Medium</dd>
+    </dl>
+    <figure>
+      <svg viewBox="0 0 760 210" role="img" aria-label="One refutation primitive feeding three surfaces">
+        <rect x="270" y="20" width="220" height="62" rx="10" fill="var(--accent-soft)" stroke="var(--accent)"/>
+        <text x="380" y="46" text-anchor="middle" font-size="14" font-weight="600" style="fill:var(--accent-text)">check_claim(entity, snapshot)</text>
+        <text x="380" y="66" text-anchor="middle" font-size="12" style="fill:var(--accent-text)">EXPLAINS → first failing clause</text>
+        <line x1="320" y1="82" x2="130" y2="132" stroke="var(--dim)" stroke-width="1.5"/>
+        <line x1="380" y1="82" x2="380" y2="132" stroke="var(--dim)" stroke-width="1.5"/>
+        <line x1="440" y1="82" x2="630" y2="132" stroke="var(--dim)" stroke-width="1.5"/>
+        <rect x="20" y="132" width="220" height="58" rx="8" fill="var(--card)" stroke="var(--rule)"/>
+        <text x="130" y="156" text-anchor="middle" font-size="13" font-weight="600">/benchmark</text>
+        <text x="130" y="175" text-anchor="middle" font-size="12" style="fill:var(--dim)">why each wrong answer is wrong</text>
+        <rect x="270" y="132" width="220" height="58" rx="8" fill="var(--card)" stroke="var(--rule)"/>
+        <text x="380" y="156" text-anchor="middle" font-size="13" font-weight="600">MCP verify_claim</text>
+        <text x="380" y="175" text-anchor="middle" font-size="12" style="fill:var(--dim)">grade another agent's answer</text>
+        <rect x="520" y="132" width="220" height="58" rx="8" fill="var(--card)" stroke="var(--rule)"/>
+        <text x="630" y="156" text-anchor="middle" font-size="13" font-weight="600">Judge challenge</text>
+        <text x="630" y="175" text-anchor="middle" font-size="12" style="fill:var(--dim)">replaces the mocked panel</text>
+      </svg>
+      <figcaption>One read-only primitive, three surfaces.</figcaption>
+    </figure>
+  </article>
+
+  <article class="idea" id="idea-2">
+    <h3>2. Query X-ray: FalkorDB's plan under every cut</h3>
+    <div class="chips"><span class="chip c-id">IDEA 2</span><span class="chip c-axis">FalkorDB depth</span><span class="chip c-conf">Confidence 75%</span><span class="chip c-cx">Complexity Low-Medium</span></div>
+    <dl class="fields">
+      <dt>Description</dt><dd>Each funnel cut and proof already shows the query that made it. Add an "X-ray" toggle that shows FalkorDB's execution plan for that exact query, from <code>GRAPH.EXPLAIN</code> live on the snapshot, as an operator tree. A short note ties the plan to a design decision: in a variable-length match the filter runs <em>after</em> the traverse, which is why the product materializes as-of snapshots instead of filtering valid time inside the traversal. A <code>GRAPH.PROFILE</code> capture from dev, clearly labelled as recorded, shows the per-operator row counts behind that finding.</dd>
+      <dt>Axis</dt><dd>FalkorDB depth</dd>
+      <dt>Basis</dt><dd><code>direct:</code> <code>docs/notes/day0-spikes.md:13</code> — "GRAPH.PROFILE … shows Filter above Conditional Variable Length Traverse: the predicate is applied after traversal". No <code>profile(</code> or <code>explain(</code> call exists in <code>api/src</code>. <code>docs/notes/deploy.md:206</code> grants the prod <code>ic</code> user EXPLAIN but not PROFILE. <code>Funnel.tsx</code>: "Each cut shows the query that made it."</dd>
+      <dt>Rationale</dt><dd>FalkorDB engineers judge this hackathon. Showing their own planner justifying an architectural choice is the most direct proof that FalkorDB is central, not decoration. It is also cheap, read-only, and a strong README screenshot.</dd>
+      <dt>Downsides</dt><dd>Prod can only show EXPLAIN, so live per-operator timings are not possible there. Plan text needs a small parser or a monospace tree render.</dd>
+      <dt>Confidence</dt><dd>75%</dd>
+      <dt>Complexity</dt><dd>Low-Medium</dd>
+    </dl>
+  </article>
+
+  <article class="idea" id="idea-3">
+    <h3>3. Forgetting curve: memory that unlearns</h3>
+    <div class="chips"><span class="chip c-id">IDEA 3</span><span class="chip c-axis">Agent memory over time</span><span class="chip c-conf">Confidence 75%</span><span class="chip c-cx">Complexity Medium</span></div>
+    <dl class="fields">
+      <dt>Description</dt><dd>Extend <code>ic learn</code> with a single scripted contradiction. After the learned coupling reaches high confidence, the world changes (a real Change removes the coupling) or a decoy incident has both ends symptomatic but no path through the learned edge. Confidence visibly halves, drops below the 0.25 recall threshold, and memory stops seeding that suspect. The learning-curve chart gains a confidence line that rises and then falls.</dd>
+      <dt>Axis</dt><dd>Agent memory &amp; coordination over time</dd>
+      <dt>Basis</dt><dd><code>direct:</code> <code>learning_curve.json</code> has <code>contradictions</code> = 0 in every row. <code>memory/writeback.py</code> sets <code>CONTRADICT_FACTOR = 0.5</code>, and <code>tools/recall.py</code> sets <code>MIN_CONFIDENCE = 0.25</code>. The README's Track 2 text claims confidence "halves when contradicted", and the saved run is one seed with a curve that only rises.</dd>
+      <dt>Rationale</dt><dd>A memory that only learns is a cache. Showing it unlearn when the world changes closes an honesty gap a sharp judge would spot, and it makes the memory story about reasoning, not storage.</dd>
+      <dt>Downsides</dt><dd>The decoy must satisfy the contradiction rule exactly, and the current injector cannot force the caller service, so it needs the scratch-probe trick already used in <code>learning_curve.py</code>. Keep the published curve until the new run is accepted. Skip the multi-agent and soak variants.</dd>
+      <dt>Confidence</dt><dd>75%</dd>
+      <dt>Complexity</dt><dd>Medium</dd>
+    </dl>
+    <figure>
+      <svg viewBox="0 0 760 170" role="img" aria-label="Confidence rises with confirmations then halves on contradiction">
+        <line x1="60" y1="140" x2="720" y2="140" stroke="var(--rule)"/>
+        <line x1="60" y1="20" x2="60" y2="140" stroke="var(--rule)"/>
+        <line x1="60" y1="116" x2="720" y2="116" stroke="var(--bad-text)" stroke-dasharray="4 4"/>
+        <text x="716" y="110" text-anchor="end" font-size="11" style="fill:var(--bad-text)">recall threshold 0.25</text>
+        <polyline fill="none" stroke="var(--accent)" stroke-width="2.5" points="90,68 170,44 250,32 330,26 410,23 490,80 570,108 650,122"/>
+        <text x="90" y="160" text-anchor="middle" font-size="11" style="fill:var(--dim)">learn</text>
+        <text x="330" y="160" text-anchor="middle" font-size="11" style="fill:var(--dim)">confirmations</text>
+        <text x="490" y="160" text-anchor="middle" font-size="11" style="fill:var(--dim)">world changes</text>
+        <text x="650" y="160" text-anchor="middle" font-size="11" style="fill:var(--dim)">stops seeding</text>
+        <text x="40" y="30" text-anchor="end" font-size="11" style="fill:var(--dim)">1.0</text>
+        <text x="40" y="143" text-anchor="end" font-size="11" style="fill:var(--dim)">0</text>
+      </svg>
+      <figcaption>Illustrative: confidence 0.6 → 0.99 on confirmations, then halving after the world changes until memory stops seeding.</figcaption>
+    </figure>
+  </article>
+
+  <article class="idea" id="idea-4">
+    <h3>4. Clause bars: the certificate as a VAR review</h3>
+    <div class="chips"><span class="chip c-id">IDEA 4</span><span class="chip c-axis">First 30 seconds</span><span class="chip c-conf">Confidence 80%</span><span class="chip c-cx">Complexity Low</span></div>
+    <dl class="fields">
+      <dt>Description</dt><dd>Render the absence certificate as one bar per candidate with five segments: after onset, origin, coverage, order, signature. The predicate checks clauses in a fixed order, so every segment before a candidate's failing clause is genuinely passed (green), the failing clause is red, and the rest are grey (not reached). Only the root fills all five. A "VAR" time strip draws the earliest symptom onset as the offside line and marks changes past it.</dd>
+      <dt>Axis</dt><dd>First-30-seconds demo moment</dd>
+      <dt>Basis</dt><dd><code>direct:</code> <code>predicate.py</code> uses <code>CASE WHEN event_time &gt;= earliest THEN 'after_onset' WHEN NOT home_fails_first THEN 'origin' … END AS failed_clause</code>, and the certificate already returns <code>event_time</code>, <code>earliest</code> and <code>failed_clause</code>. Today <code>Certificate.tsx</code> renders this as a table. <code>external:</code> FIFA VAR's calibrated offside line.</dd>
+      <dt>Rationale</dt><dd>"Elimination by proof" is the product's core idea and its hardest panel to explain. Bars read in under two seconds of video and need no backend change.</dd>
+      <dt>Downsides</dt><dd>The labels must not suggest clauses after the failing one were evaluated; grey means "not reached". Frontend only.</dd>
+      <dt>Confidence</dt><dd>80%</dd>
+      <dt>Complexity</dt><dd>Low</dd>
+    </dl>
+    <figure>
+      <svg viewBox="0 0 760 150" role="img" aria-label="Candidate clause bars: only the root fills all five">
+        <text x="20" y="34" font-size="12" font-family="monospace">chg-05689 (root)</text>
+        <g transform="translate(170,20)"><rect width="100" height="20" fill="var(--ok-soft)" stroke="var(--ok-text)"/><rect x="104" width="100" height="20" fill="var(--ok-soft)" stroke="var(--ok-text)"/><rect x="208" width="100" height="20" fill="var(--ok-soft)" stroke="var(--ok-text)"/><rect x="312" width="100" height="20" fill="var(--ok-soft)" stroke="var(--ok-text)"/><rect x="416" width="100" height="20" fill="var(--ok-soft)" stroke="var(--ok-text)"/></g>
+        <text x="20" y="74" font-size="12" font-family="monospace">chg-05692</text>
+        <g transform="translate(170,60)"><rect width="100" height="20" fill="var(--ok-soft)" stroke="var(--ok-text)"/><rect x="104" width="100" height="20" fill="var(--ok-soft)" stroke="var(--ok-text)"/><rect x="208" width="100" height="20" fill="var(--bad-soft)" stroke="var(--bad-text)"/><rect x="312" width="100" height="20" fill="none" stroke="var(--rule)"/><rect x="416" width="100" height="20" fill="none" stroke="var(--rule)"/></g>
+        <text x="20" y="114" font-size="12" font-family="monospace">chg-05701</text>
+        <g transform="translate(170,100)"><rect width="100" height="20" fill="var(--bad-soft)" stroke="var(--bad-text)"/><rect x="104" width="100" height="20" fill="none" stroke="var(--rule)"/><rect x="208" width="100" height="20" fill="none" stroke="var(--rule)"/><rect x="312" width="100" height="20" fill="none" stroke="var(--rule)"/><rect x="416" width="100" height="20" fill="none" stroke="var(--rule)"/></g>
+        <text x="220" y="144" text-anchor="middle" font-size="11" style="fill:var(--dim)">after onset</text>
+        <text x="324" y="144" text-anchor="middle" font-size="11" style="fill:var(--dim)">origin</text>
+        <text x="428" y="144" text-anchor="middle" font-size="11" style="fill:var(--dim)">coverage</text>
+        <text x="532" y="144" text-anchor="middle" font-size="11" style="fill:var(--dim)">order</text>
+        <text x="636" y="144" text-anchor="middle" font-size="11" style="fill:var(--dim)">signature</text>
+      </svg>
+      <figcaption>Illustrative: green passed, red is the first failing clause, grey not reached.</figcaption>
+    </figure>
+  </article>
+
+  <article class="idea" id="idea-5">
+    <h3>5. Autopilot first paint</h3>
+    <div class="chips"><span class="chip c-id">IDEA 5</span><span class="chip c-axis">First 30 seconds</span><span class="chip c-conf">Confidence 85%</span><span class="chip c-cx">Complexity Low</span></div>
+    <dl class="fields">
+      <dt>Description</dt><dd>On a first visit with no incident, the console plays the recorded hero run (a real gpt-6-luna run, DIAGNOSED, not degraded) under the existing "Recorded run" banner, so the pager card, reflex, funnel, certificate and verdict appear within seconds. Any click on Inject stops playback and starts a live run.</dd>
+      <dt>Axis</dt><dd>First-30-seconds demo moment</dd>
+      <dt>Basis</dt><dd><code>direct:</code> <code>reducer.ts:393-394</code> shows "No incident loaded" as the first paint. <code>useRunStream.ts:46</code> already defaults to <code>autoplay ?? true</code>. <code>routes.py</code> serves <code>/recorded/hero</code> publicly, and the console already has "Recorded run" banner copy.</dd>
+      <dt>Rationale</dt><dd>On a live URL, judges skim. A moving proof pipeline beats a blank page, and the disclosure banner keeps it honest.</dd>
+      <dt>Downsides</dt><dd>It must never be mistaken for a live run: keep the banner prominent and stop on the first interaction.</dd>
+      <dt>Confidence</dt><dd>85%</dd>
+      <dt>Complexity</dt><dd>Low</dd>
+    </dl>
+  </article>
+
+  <article class="idea" id="idea-6">
+    <h3>6. Fragility map: the agent tells you how to beat it</h3>
+    <div class="chips"><span class="chip c-id">IDEA 6</span><span class="chip c-axis">Judge play</span><span class="chip c-conf">Confidence 55%</span><span class="chip c-cx">Complexity Medium-High</span></div>
+    <dl class="fields">
+      <dt>Description</dt><dd>After a verdict, a capped background job (about 10 edits) tries single tamper edits on <code>GRAPH.COPY</code> clones and re-runs the predicate. The edits are removing each hop of the causal path, adding a deploy upstream of the nearest eliminated candidate, and shifting the root's timestamp. It reports which edits would flip the verdict ("falsified by any of these 2 edits"), and the tamper panel pre-fills them as "try these". When the judge applies one, the predicted flip comes true.</dd>
+      <dt>Axis</dt><dd>Judge interactivity &amp; adversarial play</dd>
+      <dt>Basis</dt><dd><code>direct:</code> <code>TamperPanel.tsx</code> offers add_deploy_upstream, remove_edge and change_timestamp. <code>judge.ts</code> <code>flippedProofs()</code> already names the responsible nodes. <code>predicate.py</code> computes <code>shortestPath</code> and <code>unreached</code>, so removing an edge either reroutes or fails coverage. MaxFlow was blocked earlier because it returns no cut, and single-edge enumeration sidesteps that.</dd>
+      <dt>Rationale</dt><dd>It inverts the adversarial setup: instead of surviving random tampering, the system predicts its own falsification and the judge confirms it. No AI SRE product shows proof brittleness.</dd>
+      <dt>Downsides</dt><dd>The highest effort and risk of the set. Runtime per clone on the 858-service world is unmeasured, it must stay off the critical path, and it touches the judge flow. Stretch goal.</dd>
+      <dt>Confidence</dt><dd>55%</dd>
+      <dt>Complexity</dt><dd>Medium-High</dd>
+    </dl>
+  </article>
+
+  <article class="idea" id="idea-7">
+    <h3>7. README media factory</h3>
+    <div class="chips"><span class="chip c-id">IDEA 7</span><span class="chip c-axis">Outward trust artifacts</span><span class="chip c-conf">Confidence 90%</span><span class="chip c-cx">Complexity Low</span></div>
+    <dl class="fields">
+      <dt>Description</dt><dd>A scripted browser pass over the recorded hero, the judge tamper flip, the replay scrubber, a proof page re-verify, the benchmark page and the new features writes fixed-size PNGs and short GIFs into <code>docs/media/</code>. The README gets a hero GIF at the top and a screenshot grid. Rerunning the script after UI changes regenerates every image.</dd>
+      <dt>Axis</dt><dd>Outward trust artifacts &amp; shareability</dd>
+      <dt>Basis</dt><dd><code>direct:</code> the README contains no image references, and five PNGs in <code>web/.shots/</code> are unreferenced. <code>docs/video-script.md</code> says live runs take about 1.2 s and the hero run is deterministic, so captures repeat. The user asked for screenshots and GIFs in the README.</dd>
+      <dt>Rationale</dt><dd>The README is the first thing judges read. Regenerable media means late UI polish never leaves stale images, and the same footage seeds the video.</dd>
+      <dt>Downsides</dt><dd>Not a product feature; GIF size needs care (palette, short loops).</dd>
+      <dt>Confidence</dt><dd>90%</dd>
+      <dt>Complexity</dt><dd>Low</dd>
+    </dl>
+  </article>
+
+  <div class="callout">
+    <div class="eyebrow">Open question</div>
+    <p>The web research reports the track names as Investigation &amp; Risk, Best Agentic AI Use Case and Best Use Case of the GraphRAG SDK. The README lists different names. Check the official rules page before submitting, and decide whether a GraphRAG-SDK track is worth targeting.</p>
+  </div>
+</section>
+
+<section id="rejection-summary">
+  <h2>Rejection Summary</h2>
+  <table>
+    <thead><tr><th>#</th><th>Idea</th><th>Reason Rejected</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Click-to-break: visitor plants the blind fault from the graph</td><td>Mostly UI over the existing blind inject, thin FalkorDB role, and a click path that could bypass commit-reveal gates; Autopilot covers the first-paint gap more cheaply.</td></tr>
+      <tr><td>2</td><td>Chain-of-custody cascade along PREV</td><td>Basis mismatch: a tamper flips individual proofs whose results change, not a cascade along the hash chain, so the visual would misstate how verification works.</td></tr>
+      <tr><td>3</td><td>Blink comparator (tampered world vs frozen PR copy)</td><td>Pretty, but it duplicates the tamper panel's result; low value per hour.</td></tr>
+      <tr><td>4</td><td>Offline proof capsule / bundle</td><td>Good idea, but effort is likely underestimated and the self-verifying HTML half is mostly browser crypto, not FalkorDB; lower priority than the survivors.</td></tr>
+      <tr><td>5</td><td>Parallel universes: one clone per suspect</td><td>Largely redundant with the funnel and rehearsal; concurrency cost on prod unmeasured.</td></tr>
+      <tr><td>6</td><td>Pre-incident pageRank risk map</td><td>Decorative; roots are change nodes, not services, so "the hot node predicted the root" may be false.</td></tr>
+      <tr><td>7</td><td>Three agents, one proof hash</td><td>Basis refuted: proof hashes bind a session-specific genesis (<code>ledger.py:215</code>); only result hashes are comparable, and agents call different tools.</td></tr>
+      <tr><td>8</td><td>Fault dictionary / diagnosability map</td><td>Moves the networkx eligibility check into FalkorDB with no visible payoff, and risks the judge flow.</td></tr>
+      <tr><td>9</td><td>Bootstrap support values on causal hops</td><td>A statistical stunt on a deterministic graph; 8-12 h not justified.</td></tr>
+      <tr><td>10</td><td>Incident phylogeny via algo.MSF</td><td>Basis weak: <code>algo.MSF</code> is not verified on the pinned image, and 6 incidents make a trivial tree.</td></tr>
+      <tr><td>11</td><td>Certificate-Transparency Merkle log</td><td>Needs a new ACL prefix and a deploy change; too expensive for its demo value.</td></tr>
+      <tr><td>12</td><td>Storm arena (all visitors share one world)</td><td>Shared-write, abuse and reset risk; breaks session isolation.</td></tr>
+      <tr><td>13</td><td>Scale dial to 8,335 services live</td><td>World generation takes about 100 s and copy cost at that size is unmeasured; needs a pinned world under an allowed prefix.</td></tr>
+      <tr><td>14</td><td>Adversarial self-audit cascade (combined)</td><td>Carries the fragility map's risk plus the cascade's basis mismatch; the fragility map survives alone as a stretch goal.</td></tr>
+      <tr><td>15</td><td>Graph-native first 30 seconds (combined)</td><td>Leans on the weak risk-map idea; its strong parts survive as Autopilot and Clause bars.</td></tr>
+      <tr><td>16</td><td>Bring-your-own-agent blind exam; verify_claim; Hawk-Eye challenge; cross-examination (separately)</td><td>Duplicates a stronger idea: folded into the Refutation engine.</td></tr>
+      <tr><td>17</td><td>Forgetting-curve variants (qwen-teaches/luna-inherits, live soak worker, read-time evaporation)</td><td>Scope bloat; one contradiction run carries the point.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<footer class="composition-signal">Composed 2026-10-09T17:26Z by ce-ideate from the user's request for more wow-factor features and README media in the Incident Commander repo.</footer>
+</main>
+</body>
+</html>
