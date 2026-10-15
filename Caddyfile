@@ -1,0 +1,45 @@
+# Caddy in front of the API (KTD18): automatic TLS for api.{$DOMAIN}, SSE unbuffered.
+# The web app is on Vercel at app.{$DOMAIN}; it calls this host directly with
+# credentials (CORS is enforced by the API for IC_WEB_ORIGIN only).
+# No trusted_proxies here: Caddy is the edge, so it replaces any client-sent
+# X-Forwarded-For with the real peer address, and the API trusts XFF only from Caddy's
+# fixed address (IC_TRUSTED_PROXIES).
+{
+	email {$ACME_EMAIL}
+}
+
+api.{$DOMAIN} {
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "DENY"
+		Referrer-Policy "no-referrer"
+		Cross-Origin-Resource-Policy "same-site"
+		Permissions-Policy "camera=(), microphone=(), geolocation=(), interest-cohort=()"
+		Content-Security-Policy "default-src 'none'; frame-ancestors 'none'"
+		-Server
+		-Via
+	}
+
+	# Request bodies are small JSON; refuse anything large before it reaches the API.
+	request_body {
+		max_size 64KB
+	}
+
+	reverse_proxy api:8000 {
+		# Server-sent events (/api/runs/{id}/events): flush every write immediately.
+		flush_interval -1
+		transport http {
+			read_timeout 0
+			write_timeout 0
+			dial_timeout 5s
+		}
+		health_uri /health
+		health_interval 30s
+	}
+
+	log {
+		output stdout
+		format console
+	}
+}

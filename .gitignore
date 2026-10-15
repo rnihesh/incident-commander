@@ -1,0 +1,16 @@
+.env
+.env.*
+!.env.example
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+.ruff_cache/
+api/data/
+api/.cache/
+node_modules/
+.next/
+web/.next/
+.DS_Store
+.claude/
+web/.shots/

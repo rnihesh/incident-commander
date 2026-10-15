@@ -1,0 +1,146 @@
+name: incident-commander
+
+# Profiles:
+#   dev   FalkorDB + bundled Browser on localhost only (16379 / 13000), no auth.
+#   prod  The public deploy (KTD18): falkordb-prod (ACL users, no host ports, no Browser),
+#         api (api/Dockerfile) and caddy (TLS on 80/443). See docs/notes/deploy.md.
+#         docker compose --profile prod up -d --build
+
+services:
+  falkordb:
+    image: falkordb/falkordb@sha256:107455e862a824e45e8e9f5a7fbfdf5e00a08b14e13eae2577c72fd9e3f59ba6
+    environment:
+      FALKORDB_ARGS: "TIMEOUT_DEFAULT 10000 TIMEOUT_MAX 60000 THREAD_COUNT 4"
+      REDIS_ARGS: "--appendonly yes ${FALKORDB_REDIS_ARGS:-}"
+    volumes:
+      - falkordb-data:/var/lib/falkordb/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+    profiles: ["dev"]
+    ports:
+      # Dev only: FalkorDB (16379) and bundled Browser (13000) on localhost.
+      - "127.0.0.1:16379:6379"
+      - "127.0.0.1:13000:3000"
+
+  # --- prod -------------------------------------------------------------------------------
+
+  falkordb-prod:
+    # Same pinned image as dev (Redis 8.10.2 + FalkorDB module).
+    image: falkordb/falkordb@sha256:107455e862a824e45e8e9f5a7fbfdf5e00a08b14e13eae2577c72fd9e3f59ba6
+    profiles: ["prod"]
+    restart: unless-stopped
+    environment:
+      BROWSER: "0" # the bundled FalkorDB Browser never starts in prod
+      FALKORDB_ARGS: "TIMEOUT_DEFAULT 10000 TIMEOUT_MAX 60000 THREAD_COUNT 4 MAX_QUEUED_QUERIES 50"
+      # Users come from the ACL file only: `default` is off, so there is no password-only
+      # login (Redis ignores `requirepass` once an aclfile is set; the passwords live in
+      # the ACL file, interpolated from .env). maxmemory with noeviction: writes fail
+      # loudly instead of silently evicting a session's graph.
+      REDIS_ARGS: >-
+        --appendonly yes
+        --aclfile /etc/falkordb/users.acl
+        --maxmemory ${FALKORDB_MAXMEMORY:-2gb}
+        --maxmemory-policy noeviction
+      # Checked before start (below) and used by the healthcheck.
+      FALKORDB_IC_PASSWORD: ${FALKORDB_IC_PASSWORD:-}
+      FALKORDB_PASSWORD: ${FALKORDB_PASSWORD:-}
+    # Refuse to start with unset or short passwords (an empty `>` in the ACL file would
+    # not be a password). Variables use `:-` because Compose interpolates every profile,
+    # and `:?` would break `--profile dev` for anyone without a prod .env.
+    entrypoint:
+      - /bin/sh
+      - -c
+      - >-
+        if [ $${#FALKORDB_IC_PASSWORD} -lt 24 ] || [ $${#FALKORDB_PASSWORD} -lt 24 ];
+        then echo "set FALKORDB_IC_PASSWORD and FALKORDB_PASSWORD (24+ chars) in .env" >&2; exit 1; fi;
+        exec /var/lib/falkordb/bin/run.sh
+    configs:
+      - source: falkordb_acl
+        target: /etc/falkordb/users.acl
+        mode: 0444
+    volumes:
+      - falkordb-prod-data:/var/lib/falkordb/data
+    networks: [backend]
+    # No `ports:`: FalkorDB is reachable only from the api container (KTD18).
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli --no-auth-warning --user ic --pass \"$$FALKORDB_IC_PASSWORD\" ping | grep -q PONG"]
+      interval: 10s
+      timeout: 3s
+      retries: 12
+
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    image: incident-commander-api:latest
+    profiles: ["prod"]
+    restart: unless-stopped
+    depends_on:
+      falkordb-prod:
+        condition: service_healthy
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      # Container-specific values override anything in .env.
+      IC_FALKORDB_URL: falkor://ic:${FALKORDB_IC_PASSWORD:-}@falkordb-prod:6379
+      IC_STORE_PATH: /app/data/ic.sqlite3
+      IC_WEB_ORIGIN: ${IC_WEB_ORIGIN_PROD:-https://app.${DOMAIN:-example.invalid}}
+      IC_COOKIE_SECURE: "true"
+      IC_COOKIE_DOMAIN: ${IC_COOKIE_DOMAIN:-}
+      # Only Caddy (fixed address on the edge network) may set X-Forwarded-For.
+      IC_TRUSTED_PROXIES: ${IC_TRUSTED_PROXIES:-["172.30.213.10"]}
+    volumes:
+      - api-data:/app/data # SQLite: sessions, limits, anchors, answer keys, PR tracking
+    networks: [backend, edge]
+    # No `ports:`: only Caddy talks to the API.
+
+  caddy:
+    image: caddy:2.10.2-alpine
+    profiles: ["prod"]
+    restart: unless-stopped
+    depends_on: [api]
+    environment:
+      DOMAIN: ${DOMAIN:-}
+      ACME_EMAIL: ${ACME_EMAIL:-}
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp" # HTTP/3
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    networks:
+      edge:
+        ipv4_address: 172.30.213.10
+
+configs:
+  falkordb_acl:
+    # Redis ACL (Redis 8 syntax). `ic` (the API) may only touch the graph namespaces it
+    # owns (KTD1) and only the GRAPH.* commands it uses, by name. `admin` is for operators
+    # (docker compose exec falkordb-prod redis-cli --user admin --askpass). `+info`: the
+    # falkordb client runs `INFO server` on connect to detect cluster/sentinel mode.
+    content: |
+      user default off
+      user ic on >${FALKORDB_IC_PASSWORD:-} resetkeys ~seed:* ~s:* ~pr:* ~b:* resetchannels -@all +@connection -@admin -@dangerous +ping +info +graph.query +graph.ro_query +graph.delete +graph.copy +graph.list +graph.explain +graph.profile
+      user admin on >${FALKORDB_PASSWORD:-} ~* &* +@all
+
+networks:
+  backend:
+    internal: true # FalkorDB has no route to or from the internet
+  edge:
+    ipam:
+      config:
+        - subnet: 172.30.213.0/24
+
+volumes:
+  falkordb-data:
+  falkordb-prod-data:
+  api-data:
+  caddy-data:
+  caddy-config:
