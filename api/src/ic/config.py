@@ -55,17 +55,20 @@ class Settings(BaseSettings):
     # Ask the graph (/api/ask): questions per session per hour (each may spend LLM tokens).
     session_asks_per_hour: int = 20
     session_idle_ttl_s: int = 1800
-    # USD per 1M tokens, [prompt, completion]. Defaults are deliberately pessimistic.
-    # USD per 1M [input, output] tokens. Unknown models fall back to the deliberately high
-    # default so the breaker trips early rather than late. Haiku 5.5 uses Haiku 4.5's list
-    # price until the official rate card is confirmed.
+    # USD per 1M [input, output] tokens (Claude rows: Anthropic list prices, 2026-10).
+    # Unknown models fall back to the deliberately high default so the breaker trips early.
     llm_prices: dict[str, list[float]] = {
         "default": [5.0, 20.0],
         "gpt-6-luna": [0.10, 0.50],
-        "claude-haiku-5-5": [1.0, 5.0],
-        "claude-sonnet-5-5": [3.0, 15.0],  # Sonnet 4.x list price until confirmed
+        "claude-haiku-5-5": [0.10, 0.50],
+        "claude-sonnet-5-5": [2.0, 10.0],
         "claude-opus-5-5": [4.0, 20.0],
         "claude-fable-5-1": [10.0, 50.0],
+    }
+    # Per-request long-prompt rates: model -> (prompt-token threshold, [input, output]).
+    # A request whose prompt exceeds the threshold is priced entirely at the higher rate.
+    llm_long_prompt_prices: dict[str, tuple[int, list[float]]] = {
+        "claude-haiku-5-5": (100_000, [0.50, 2.50]),
     }
 
     store_path: str = "./data/ic.sqlite3"

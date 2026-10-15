@@ -20,14 +20,21 @@ class Breaker:
         *,
         daily_usd: float | None = None,
         prices: dict[str, list[float]] | None = None,
+        long_prompt_prices: dict[str, tuple[int, list[float]]] | None = None,
     ):
         s = get_settings()
         self.store = store
         self.daily_usd = s.daily_usd_breaker if daily_usd is None else daily_usd
         self.prices = s.llm_prices if prices is None else prices
+        self.long_prompt_prices = (
+            s.llm_long_prompt_prices if long_prompt_prices is None else long_prompt_prices
+        )
 
     def cost(self, model: str, prompt_tokens: int, completion_tokens: int) -> float:
         p_in, p_out = self.prices.get(model) or self.prices.get("default") or [5.0, 20.0]
+        tier = self.long_prompt_prices.get(model)
+        if tier is not None and prompt_tokens > tier[0]:
+            p_in, p_out = tier[1]
         return (prompt_tokens * p_in + completion_tokens * p_out) / 1_000_000
 
     def record_usage(
