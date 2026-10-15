@@ -45,7 +45,6 @@ zoomed on one node, and the storm graph can stay unfitted. Before a still, nudge
 | `why-wrong.png` | Open the gpt-6-luna **Why it was wrong** and its first **deciding query**; scroll the summary near the top. |
 | `learning-curve.png` | Scroll "Learning curve" into view and screenshot that element (the region uid from a snapshot) at 1440x900 DPR 2; no crop needed. |
 | `ask.png` | After a console run, open the drawer's **Ask the graph** tab, ask "Who owns checkout and who is on call right now?", wait for the badges (LLM, grounded), expand **Show queries**. The drawer is only 28vh tall: for the shot, set its height to about 62vh (`div.overflow-y-auto.border-t.border-rule`, style only) and scroll the answer to the top of the drawer. Costs about $0.001. A second, off-graph question ("What is the weather in Paris today?") shows the "no information" answer for the video script. |
-| `mobile.png` | Fresh isolated context (so first-visit autoplay runs), emulate `390x844x2,mobile,touch`, wait about 2.5 s, set the scrubber to 29, scroll the page's inner scroller to about 520 px so the graph, causal path and start of the funnel show, screenshot, then `magick raw.png -strip -resize 50% mobile.png` (390x844). Free, no LLM call. |
 
 ## GIFs
 
