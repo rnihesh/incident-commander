@@ -1,5 +1,7 @@
 # Incident Commander
 
+[![CI](https://github.com/rnihesh/incident-commander/actions/workflows/ci.yml/badge.svg)](https://github.com/rnihesh/incident-commander/actions/workflows/ci.yml)
+
 An on-call agent whose every answer is a proof you can re-run or break.
 
 ![Incident Commander: the recorded gpt-6-luna run autoplays through the elimination funnel, the clause-bar certificate and the verdict](docs/media/console-investigation.gif)
@@ -440,3 +442,5 @@ cd api && uv run ic seed --seed 42 && uv run pytest -q   # needs FalkorDB on loc
 cd web && pnpm test             # vitest
 ```
 
+Latest local run: **API 662 passed** (4 live/slow deselected), **web 213 passed** in 20 files.
+CI runs both on every push. The 12 Postgres-twin tests skip there because CI has no Postgres.
