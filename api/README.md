@@ -44,6 +44,27 @@ With no LLM key the deterministic graph agent runs the same tools and proofs.
 | `ic.api` | HTTP routes, SSE events, judge / challenge / replay / storm / proof endpoints |
 | `ic.bench` | Benchmark runner, baselines, Postgres twin, scale and learning-curve reports |
 
+## Admin panel
+
+Set `IC_ADMIN_TOKEN` (for example `openssl rand -hex 32`) to enable a read-only usage panel
+at `/admin` in the web app. Without it every `/api/admin/*` route answers 404.
+
+| Route | Returns |
+|---|---|
+| `GET /api/admin/summary` | LLM spend (today, 7 days, all time, by model), the breaker, runs by verdict / fault class / degraded, a 7-day table, sessions vs `max_sessions`, unique clients, asks / verifies / fragility maps / challenges, refusals by limit, FalkorDB memory and graph count, uptime, configured limits and the LLM provider and model |
+| `GET /api/admin/runs?limit=50` | Recent runs, newest first: incident, fault class, verdict, degraded flag, tool calls, tokens, cost, duration |
+
+Requests need `Authorization: Bearer <token>`. Ten failed attempts from one address within
+15 minutes lock that address out for the rest of the window. The routes set no cookies and
+never start a visitor session. Client addresses are stored only as salted hashes, and no
+response contains a session id or an API key. Counters live in SQLite (`ic.usage`); days are
+UTC. Runs from before the counters existed are summarized from their stored events, without
+token counts.
+
+```bash
+curl -H "Authorization: Bearer $IC_ADMIN_TOKEN" https://<site>/api/admin/summary
+```
+
 ## Test
 
 ```bash
