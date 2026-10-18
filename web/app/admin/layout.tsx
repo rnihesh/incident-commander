@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 
 // The owner's usage panel: never indexed, never linked from the public pages.
 export const metadata: Metadata = {
-  title: "Admin · Incident Commander",
+  title: "Admin",
   robots: { index: false, follow: false },
 };
 
