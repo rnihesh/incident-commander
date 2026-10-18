@@ -11,6 +11,8 @@ on:
 permissions:
   contents: read
 
+# A running deploy always finishes. Back-to-back pushes queue: only the newest waiting deploy
+# runs, and it includes the earlier commits.
 concurrency:
   group: deploy-prod
   cancel-in-progress: false
@@ -47,10 +49,16 @@ jobs:
           sha="$1"
           cd ~/incident-commander
           git fetch --quiet origin main
+          before=$(git rev-parse HEAD)
           # Deploy the commit CI tested (an ancestor of main is a no-op).
           git merge --ff-only --quiet "$sha"
           git log --oneline -1
           docker compose --profile prod up -d --build --remove-orphans
+          # The Caddyfile is a single-file bind mount: git replaces the file, so a running
+          # Caddy keeps the old copy until its container is recreated.
+          if ! git diff --quiet "$before" HEAD -- Caddyfile; then
+            docker compose --profile prod up -d --force-recreate caddy
+          fi
           docker image prune -f
           docker builder prune -f --filter until=72h
           docker compose --profile prod ps
