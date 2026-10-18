@@ -7,7 +7,9 @@ An on-call agent whose every answer is a proof you can re-run or break.
 **Live demo: [commander.niheshr.com](https://commander.niheshr.com)**. Press **Start an incident**
 to run an investigation against a fresh copy of the world graph.
 
-![Incident Commander: the recorded gpt-6-luna run through the elimination funnel, the clause-bar certificate and the verdict](docs/media/console-investigation.gif)
+![Incident Commander: from the welcome screen, Start an incident; the live run narrows the elimination funnel, names the root-cause change with its absence certificate, then rehearses the rollback and writes the result back to the graph](docs/media/console-investigation.gif)
+
+<sub>A live run on a local stack (agent: <code>qwen3:8b</code> on Ollama), time-compressed about 3x. The live site runs Claude Haiku.</sub>
 
 Incident Commander takes a production alert, rebuilds the service graph in **FalkorDB** as it
 stood at alert time, and finds the root-cause change. It doesn't rank guesses. It rules out
@@ -49,40 +51,48 @@ Built for **Graph Hacks: Context for AI Agents** (WeMakeDevs x FalkorDB).
 
 ## Screenshots
 
+All stills are from the redesigned console at 1440x900 in the dark theme, captured from live
+runs on a local stack (agent: `qwen3:8b` on Ollama). PR, commit status and page are simulated
+without GitHub and Discord tokens.
+
 <table>
 <tr>
-<td width="50%"><img src="docs/media/console-verdict.png" alt="Console verdict with clause bars"><br><sub>Live verdict: the graph highlights the causal path, and the absence certificate shows clause bars and the onset strip for four rival changes.</sub></td>
-<td width="50%"><img src="docs/media/console-response.png" alt="Response panel"><br><sub>The response: handoff, rollback rehearsed on a cloned graph, PR, commit status, page, memory write-back, LEARNED.</sub></td>
+<td width="50%"><img src="docs/media/welcome.png" alt="Welcome screen"><br><sub>The welcome screen: pick what should break and press <b>Start an incident</b>. A saved sample run, an alert storm and Judge mode are one click away; <b>Ask the graph</b> sits bottom right.</sub></td>
+<td width="50%"><img src="docs/media/console-verdict.png" alt="Console verdict with clause bars"><br><sub>Verdict: <code>chg-05694</code> on postgres-users, with the three-hop causal path to tracking-worker highlighted on the graph. The absence certificate rules out four rival changes, each with its clause bar.</sub></td>
 </tr>
 <tr>
-<td><img src="docs/media/xray.png" alt="Query X-ray"><br><sub>Query X-ray: FalkorDB's own plan shows why the product materializes as-of snapshots — the naive valid-time query filters after the variable-length traverse (left); the real query runs on the snapshot (right).</sub></td>
-<td><img src="docs/media/challenge.png" alt="Judge challenge"><br><sub>"Was it my deploy?": an eliminated change re-checked live comes back REFUTED on signature, with its query; 1 of 2 challenges left.</sub></td>
+<td><img src="docs/media/console-response.png" alt="Response panel"><br><sub>The response: handoff to remediation, rollback rehearsal CLEARED on a cloned graph (5 candidates re-checked), rollback PR, commit status, page and the memory write-back.</sub></td>
+<td><img src="docs/media/xray.png" alt="Query X-ray"><br><sub>Query X-ray on the <code>origin</code> cut: FalkorDB's EXPLAIN shows the naive valid-time query filtering after the variable-length traverse (left); the live PROFILE of the real query on the as-of snapshot takes 3.5 ms (right).</sub></td>
 </tr>
 <tr>
-<td><img src="docs/media/judge-commit-reveal.png" alt="Judge commit-reveal"><br><sub>Judge mode: blind commit-reveal. The recomputed hash matches and the agent named the committed root cause.</sub></td>
-<td><img src="docs/media/fragility.png" alt="Fragility map"><br><sub>Fragility map: "Try these" lists the 4 single edits that flip this verdict, each tried on its own copy (about 130 ms per copy).</sub></td>
+<td><img src="docs/media/challenge.png" alt="Was it my deploy? challenge"><br><sub>"Was it my deploy?": eliminated <code>chg-05697</code> re-checked live comes back REFUTED on signature ("config cannot produce latency"), with the query that decided it; 1 of 2 challenges left.</sub></td>
+<td><img src="docs/media/ask.png" alt="Ask the graph chat panel"><br><sub>Ask the graph, the chat panel: "Why did you blame chg-05694?" is answered from the incident's proof chain, marked grounded, with source chips and the Cypher under "Show queries". A follow-up lists last week's root causes.</sub></td>
 </tr>
 <tr>
-<td><img src="docs/media/judge-tamper-falsified.png" alt="Tamper flips a proof to FALSIFIED"><br><sub>One suggested edit applied (a causal-path dependency removed): Verify flips the proof to FALSIFIED and names the responsible node.</sub></td>
-<td><img src="docs/media/replay-scrubber.png" alt="Replay scrubber"><br><sub>Time machine: the replay scrubber at frame 101 of 119, changes landing and services turning symptomatic, with the as-happened / as-known toggle.</sub></td>
+<td><img src="docs/media/judge-commit-reveal.png" alt="Judge commit-reveal"><br><sub>Judge mode: a blind fault on elasticsearch-payments. After the run, Reveal recomputes the published hash and shows MATCH: the agent named the committed root change.</sub></td>
+<td><img src="docs/media/fragility.png" alt="Fragility map"><br><sub>Fragility map: "Try these" lists the 5 single edits that would flip this verdict, each tried on its own snapshot copy (about 150 ms per copy).</sub></td>
 </tr>
 <tr>
-<td><img src="docs/media/proof-page.png" alt="Public proof page"><br><sub>Public proof page from the PR status link: Re-verify replays all three proofs on the PR's world copy and returns VERIFIED.</sub></td>
-<td><img src="docs/media/storm.png" alt="Storm collapse"><br><sub>Storm mode: 289 pages collapse into 3 incidents, one jointly caused by a config change and a flag flip; chokepoints by seeded betweenness.</sub></td>
+<td><img src="docs/media/judge-tamper-falsified.png" alt="Tamper flips a proof to FALSIFIED"><br><sub>One suggested edit applied (a causal-path dependency removed): Verify returns FALSIFIED and the graph zooms to the responsible nodes.</sub></td>
+<td><img src="docs/media/replay-scrubber.png" alt="Replay scrubber"><br><sub>Replay: frame 111 of 119, five changes landed and two of three services symptomatic, with the as-happened / as-known toggle.</sub></td>
 </tr>
 <tr>
-<td><img src="docs/media/benchmark.png" alt="Live LLM runs"><br><sub>Benchmark: live LLM runs with the same model behind every approach, held-out accuracy, tokens and fallback counts.</sub></td>
+<td><img src="docs/media/proof-page.png" alt="Public proof page"><br><sub>Public proof page from the commit-status link: Re-verify re-runs all three proofs on the PR's world copy and returns VERIFIED (chain ok, anchor ok).</sub></td>
+<td><img src="docs/media/storm.png" alt="Alert storm collapse"><br><sub>Alert storm: 268 pages collapse into 3 incidents, one jointly caused by a config change and a flag flip; chokepoints by seeded betweenness.</sub></td>
+</tr>
+<tr>
+<td><img src="docs/media/benchmark.png" alt="Live LLM runs"><br><sub>Benchmark, live LLM runs with the same model behind every approach: with <code>gpt-6-luna</code>, graph 50/50, full context 26/50, vector RAG 4/50; a local <code>qwen3:8b</code> graph agent also scores 50/50.</sub></td>
 <td><img src="docs/media/why-wrong.png" alt="Why it was wrong"><br><sub>"Why it was wrong": all 70 wrong <code>gpt-6-luna</code> predictions re-checked with <code>verify_claim</code>, each with its failing clause and deciding query.</sub></td>
 </tr>
 <tr>
-<td><img src="docs/media/ask.png" alt="Ask the graph"><br><sub>Ask the graph: "Who owns checkout and who is on call right now?" answered by the LLM agent, marked grounded, with source chips and the exact Cypher of each tool call under "Show queries".</sub></td>
 <td><img src="docs/media/learning-curve.png" alt="Forgetting curve"><br><sub>Forgetting curve: 9 tool calls, then 5 while the learned edge rises to 0.99; each contradiction halves it (÷2), and under the 0.25 recall threshold incident 9 is back to 9.</sub></td>
+<td><img src="docs/media/console-light.png" alt="Console in the light theme"><br><sub>The same verdict in the light theme. The header toggle switches themes; the default follows the system setting.</sub></td>
 </tr>
 </table>
 
-Tamper to FALSIFIED, recorded live:
+Tamper to FALSIFIED in Judge mode:
 
-![Judge applies a suggested edit, Verify flips the proof to FALSIFIED](docs/media/judge-tamper-falsified.gif)
+![Judge applies a suggested edit: Review edit, Confirm and write, then Verify flips the proof to FALSIFIED and the hypothesis chain shows FALSIFIED and DRIFTED](docs/media/judge-tamper-falsified.gif)
 
 ## How it works
 
