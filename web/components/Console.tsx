@@ -12,14 +12,14 @@ import {
   createSession,
   getIncidentGraph,
   getRecordedHeroGraph,
-  getSessionIncidents,
   type IncidentGraphResponse,
   injectFault,
   startStorm,
   verifyIncident,
   type FaultClass,
 } from "@/lib/api";
-import { AUTOPLAY_MARKER, controlsDisabled, shouldApplyAutoplay, shouldAutoplay, sourceFor } from "@/lib/autoplay";
+import { controlsDisabled, initialSession, showWelcome, sourceFor } from "@/lib/consoleMode";
+import { limitNotice } from "@/lib/limits";
 import { liveGraphView, pickGraph, toLiveGraph } from "@/lib/liveGraph";
 import { mapVerify, type ChainVerify } from "@/lib/verify";
 import { HERO_EDGES, HERO_NODES } from "@/lib/mock/hero-graph";
@@ -41,6 +41,7 @@ import { Ask } from "./Ask";
 import { RecommendationBanner } from "./RecommendationBanner";
 import { LearningCurve } from "./LearningCurve";
 import { StormPanel } from "./Storm";
+import { FAULT_COPY, Welcome } from "./Welcome";
 
 const PHASE_TONE: Record<string, Tone> = {
   DIAGNOSED: "verified", RESOLVED: "verified", LEARNED: "verified", PR_OPEN: "verified",
@@ -48,13 +49,9 @@ const PHASE_TONE: Record<string, Tone> = {
   FAILED: "falsified", REFUSED: "falsified",
 };
 
-/** Remember in this tab that the visitor started something, so autoplay never replays over it. */
-function markStarted() {
-  try { window.sessionStorage.setItem(AUTOPLAY_MARKER, "1"); } catch { /* storage blocked: fine */ }
-}
-
-/** A started live run, or the recorded fallback when the backend refused. */
-export type LiveSession = { runId: string; incidentId: string } | { recorded: true; reason?: string };
+/** A started live run, or a recording: the sample run the visitor asked for, or the fallback
+ *  when the backend refused a live one (`reason` says why). */
+export type LiveSession = { runId: string; incidentId: string } | { recorded: true; sample?: boolean; reason?: string };
 
 export default function Console() {
   const params = useSearchParams();
@@ -62,44 +59,12 @@ export default function Console() {
   const scenario = scenarioParam === null ? null : resolveScenario(scenarioParam);
   // An explicit ?verify= forces the mocked verifier even against a live run.
   const verifyParam = params.get("verify") as VerifyMode | null;
-  const [session, setSession] = useState<LiveSession | null>(null);
+  // Nothing plays on its own: the welcome screen shows until the visitor starts something.
+  // ?sample (the "Watch a sample run" links) opens straight on the recording.
+  const [session, setSession] = useState<LiveSession | null>(() => initialSession({ sampleParam: params.get("sample"), scenarioParam }));
   const [gen, setGen] = useState(0);
 
-  // First paint: play the recorded hero under its "Recorded run" label until the visitor starts
-  // something. sessionStorage is touched only in effects/handlers so SSR stays safe.
-  const sessionRef = useRef<LiveSession | null>(null);
-  useEffect(() => { sessionRef.current = session; }, [session]);
-  // Set synchronously by the first click, before any await, so a pending autoplay check can't remount over it.
-  const userActedRef = useRef(false);
-  const onUserAct = useCallback(() => {
-    userActedRef.current = true;
-    markStarted();
-  }, []);
-  useEffect(() => {
-    let cancelled = false;
-    const marker = (() => {
-      try { return window.sessionStorage.getItem(AUTOPLAY_MARKER) !== null; } catch { return false; }
-    })();
-    if (!shouldAutoplay({ hasLiveSession: false, scenarioParam, marker, sessionHasIncident: false })) return;
-    // A session that already lists an incident (another tab, a returning visitor) is never played over.
-    getSessionIncidents()
-      .catch(() => [] as string[])
-      .then((ids) => {
-        if (cancelled || userActedRef.current || sessionRef.current) return;
-        const stillMarked = (() => {
-          try { return window.sessionStorage.getItem(AUTOPLAY_MARKER) !== null; } catch { return false; }
-        })();
-        if (!shouldApplyAutoplay({ cancelled, userActed: userActedRef.current, hasLiveSession: false, scenarioParam, marker: stillMarked, sessionHasIncident: ids.length > 0 })) return;
-        setSession({ recorded: true });
-        setGen((g) => g + 1);
-      });
-    return () => { cancelled = true; };
-    // Runs once per scenario param; later session changes come from user actions.
-  }, [scenarioParam]);
-
-  // Any user-started action takes over from autoplay and remembers it for this tab.
-  const start = (x: LiveSession) => {
-    onUserAct();
+  const start = (x: LiveSession | null) => {
     setSession(x);
     setGen((g) => g + 1);
   };
@@ -111,7 +76,6 @@ export default function Console() {
       verifyParam={verifyParam}
       session={session}
       onSession={start}
-      onUserAct={onUserAct}
     />
   );
 }
@@ -123,14 +87,12 @@ function RunConsole({
   verifyParam,
   session,
   onSession,
-  onUserAct,
 }: {
   scenario: Scenario | null;
   verifyParam: VerifyMode | null;
   session: LiveSession | null;
-  onSession: (s: LiveSession) => void;
-  /** Called synchronously on a click of Inject/Storm, before any await. */
-  onUserAct: () => void;
+  /** Start a run or a recording; null goes back to the welcome screen. */
+  onSession: (s: LiveSession | null) => void;
 }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -163,7 +125,6 @@ function RunConsole({
   const doFocus = useCallback((ids: string[]) => setFocus({ ids, n: Date.now() }), []);
 
   const inject = useCallback(async () => {
-    onUserAct();
     setInjecting(true);
     setInjectError(null);
     try {
@@ -174,14 +135,14 @@ function RunConsole({
       if (e instanceof FallbackError) {
         onSession({ recorded: true, reason: e.reason });
       } else {
-        setInjectError(e instanceof Error ? e.message : "inject failed");
+        const msg = e instanceof Error ? e.message : "inject failed";
+        setInjectError(limitNotice(msg)?.detail ?? msg);
         setInjecting(false);
       }
     }
-  }, [fault, onSession, onUserAct]);
+  }, [fault, onSession]);
 
   const fireStorm = useCallback(async () => {
-    onUserAct();
     setStorming(true);
     setInjectError(null);
     try {
@@ -189,11 +150,14 @@ function RunConsole({
       const r = await startStorm();
       setStorm({ runId: r.run_id });
     } catch (e) {
-      setInjectError(e instanceof FallbackError ? `Storm unavailable (${e.reason ?? "backend at its cap"})` : e instanceof Error ? e.message : "storm failed");
+      const notice = e instanceof FallbackError ? limitNotice(e.reason) : null;
+      setInjectError(
+        notice ? `The storm could not start. ${notice.detail}` : e instanceof FallbackError ? `The storm could not start (${e.reason ?? "the server is at its limit"}).` : e instanceof Error ? e.message : "storm failed",
+      );
     } finally {
       setStorming(false);
     }
-  }, [onUserAct]);
+  }, []);
 
   const verifyLive = useCallback(
     async (ids: string[]) => {
@@ -288,14 +252,22 @@ function RunConsole({
     return { ...base, falsified };
   }, [liveResp, s, falsified]);
   const banners = deriveBanners(s);
-  if (stream.kind === "recorded" && !banners.some((b) => b.kind === "recorded")) {
+  if (stream.kind === "recorded") {
+    const sample = !!session && "recorded" in session && session.sample;
+    const reason = session && "recorded" in session ? session.reason : undefined;
+    const notice = limitNotice(reason);
+    const why = notice ? notice.detail : "The live backend is unavailable or at its limit.";
+    const idx = banners.findIndex((b) => b.kind === "recorded");
+    if (idx >= 0) banners.splice(idx, 1);
     banners.unshift({
       kind: "recorded",
       tone: "info",
-      title: "Recorded run",
+      title: sample ? "Sample run (recording)" : "Recorded run",
       body: stream.error
-        ? `Live backend unavailable and the recorded run could not be loaded: ${stream.error}`
-        : "The live backend is unavailable or at its cap, so a saved run is playing. Queries are real; nothing is executing against a live graph.",
+        ? `The recording could not be loaded: ${stream.error}`
+        : sample
+          ? "A saved investigation replayed from its event stream; nothing is running live. Press Start an incident for a live run in your own sandbox."
+          : `${why} A saved investigation is playing instead; nothing is running live.`,
     });
   }
   if (stream.kind === "live" && stream.status === "reconnecting") {
@@ -308,14 +280,32 @@ function RunConsole({
   const outcome = s.verdict?.outcome;
 
   const setScenario = (id: string) => {
-    markStarted();
     router.replace(id === "live" ? pathname : `${pathname}?scenario=${id}`);
   };
+
+  const welcome = showWelcome({ scenario: !!scenario, session: liveSession, storm: !!storm });
+  if (welcome) {
+    return (
+      <div className="flex h-screen flex-col overflow-y-auto lg:grid lg:min-h-[600px] lg:grid-rows-[auto_minmax(0,1fr)] lg:overflow-hidden">
+        <PageHeader title="Console" right={<PageNav current="console" />} />
+        <Welcome
+          fault={fault}
+          onFault={setFault}
+          onStart={() => void inject()}
+          starting={injecting}
+          error={injectError}
+          onSample={() => onSession({ recorded: true, sample: true })}
+          onStorm={() => void fireStorm()}
+          storming={storming}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-screen flex-col overflow-y-auto lg:grid lg:min-h-[640px] lg:grid-rows-[auto_auto_minmax(0,1fr)_auto] lg:overflow-hidden">
       <PageHeader
-        title={s.incident?.title ?? "No incident"}
+        title={s.incident?.title ?? (storm ? "Alert storm" : "Starting the incident")}
         status={
           <>
             {phase && <Badge tone={PHASE_TONE[phase] ?? "muted"} title="Incident state">{phase}</Badge>}
@@ -331,7 +321,8 @@ function RunConsole({
               </span>
             )}
             {replayable && (
-              <div className="flex items-center gap-2" role="group" aria-label="Playback">
+              <div className="flex items-center gap-2" role="group" aria-label="Recording playback">
+                <span className="text-meta font-medium text-dim">{isRecorded ? "Recording" : "Scripted scenario"}</span>
                 <Button size="sm" onClick={stream.playing ? stream.pause : stream.play} className="w-14">
                   {stream.playing ? "Pause" : stream.cursor >= stream.total ? "Replay" : "Play"}
                 </Button>
@@ -367,24 +358,24 @@ function RunConsole({
       >
         <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-rule/60 px-4 py-2 sm:px-5">
           <div className="flex flex-wrap items-center gap-2" role="group" aria-label="Inject fault">
-            <label className="sr-only" htmlFor="fault-class">Fault class</label>
-            <Select id="fault-class" value={fault} onChange={(e) => setFault(e.target.value as FaultClass)} disabled={locked}>
-              {FAULT_CLASSES.map((f) => <option key={f} value={f}>{f}</option>)}
+            <label className="sr-only" htmlFor="fault-class">What should break</label>
+            <Select id="fault-class" mono={false} value={fault} onChange={(e) => setFault(e.target.value as FaultClass)} disabled={locked}>
+              {FAULT_CLASSES.map((f) => <option key={f} value={f}>{FAULT_COPY[f].label}</option>)}
             </Select>
             <Button
               variant="primary"
               onClick={() => void inject()}
               disabled={locked}
-              title={scenario ? "Scenario playback is on. Choose live in the scenario list to inject." : undefined}
+              title={scenario ? "Scenario playback is on. Choose live in the scenario list to start an incident." : "Break something new in your sandbox and watch the agent investigate"}
             >
-              {injecting ? "Injecting" : "Inject fault"}
+              {injecting ? "Starting" : "New incident"}
             </Button>
             <Button
               onClick={() => void fireStorm()}
               disabled={locked || storming}
               title="Fire an alert storm: 2-3 independent faults, hundreds of pages, collapsed into incidents"
             >
-              {storming ? "Firing" : "Storm"}
+              {storming ? "Firing" : "Alert storm"}
             </Button>
             {injectError && <span role="alert" className="text-label text-falsified">{injectError}</span>}
           </div>
@@ -392,21 +383,24 @@ function RunConsole({
           <span className="hidden h-5 w-px bg-rule sm:block" aria-hidden />
 
           <label className="flex items-center gap-2 text-meta text-dim">
-            Scenario
+            Scripted scenario
             <Select value={scenario?.id ?? "live"} onChange={(e) => setScenario(e.target.value)} className="max-w-60">
-              <option value="live">live: inject a fault</option>
+              <option value="live">none (live)</option>
               {SCENARIOS.map((x) => <option key={x.id} value={x.id}>{x.id}: {x.label}</option>)}
             </Select>
           </label>
 
-          <div className="flex items-center gap-2">
-            <span className="text-meta text-dim" aria-hidden>Evidence</span>
+          <div
+            className="flex items-center gap-2"
+            title="As known: only the data the agent could see at alert time. As true: what really happened, including data that arrived late."
+          >
+            <span className="text-meta text-dim" aria-hidden>Show evidence</span>
             <Segmented
               name="view"
-              legend="Evidence view"
+              legend="Show evidence as known at alert time, or as it really was"
               value={view}
               onChange={setView}
-              options={[{ value: "known", label: "as-known" }, { value: "true", label: "as-true" }]}
+              options={[{ value: "known", label: "as known" }, { value: "true", label: "as true" }]}
             />
           </div>
 

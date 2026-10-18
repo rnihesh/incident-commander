@@ -27,7 +27,7 @@ Set `NEXT_PUBLIC_API_URL` if the API runs elsewhere.
 ## Layout
 
 - `app/` routes, `components/` UI (Funnel, Certificate, TamperPanel, Storm, ProofPage, ...)
-- `lib/` API client, SSE stream, run reducer, autoplay and mock fixtures
+- `lib/` API client, SSE stream, run reducer, console mode and mock fixtures
 - `tests/` vitest suites
 
 ## Test

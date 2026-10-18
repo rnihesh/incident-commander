@@ -25,6 +25,8 @@ import {
 import { Badge, Button, Panel, Placeholder, Segmented, shortSvcs } from "./ui";
 import { GRAPH_CELL, GRAPH_PANEL, PageHeader, PageNav, RUN_LEFT, RUN_MAIN, RUN_RIGHT } from "./Shell";
 import { GraphCanvas } from "./GraphCanvas";
+import { LimitNotice } from "./LimitNotice";
+import { limitNotice } from "@/lib/limits";
 import { CausalPathList } from "./CausalPathList";
 import { Funnel } from "./Funnel";
 import { Certificate } from "./Certificate";
@@ -78,6 +80,7 @@ export default function JudgeConsole() {
   const [now, setNow] = useState(() => Date.now());
   const markBlindVerdict = useCallback(() => setBlindVerdict(true), []);
 
+  const [attempt, setAttempt] = useState(0);
   useEffect(() => {
     let cancelled = false;
     loadTargets()
@@ -86,7 +89,9 @@ export default function JudgeConsole() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [attempt]);
+  // A refused session (sandbox limits, capacity, spend cap) gets one friendly message, not raw text.
+  const limit = limitNotice(targetsError);
 
   useEffect(() => {
     if (!selected) return;
@@ -126,7 +131,8 @@ export default function JudgeConsole() {
       setBlindVerdict(false);
       setTamperLog([]);
     } catch (e) {
-      setInjectError(e instanceof Error ? e.message : "inject failed");
+      const msg = e instanceof Error ? e.message : "inject failed";
+      setInjectError(limitNotice(msg)?.body ?? msg);
     } finally {
       setInjecting(false);
     }
@@ -180,7 +186,17 @@ export default function JudgeConsole() {
         }
       />
 
-      {!round ? (
+      {!round && limit ? (
+        <main className="min-h-0 overflow-y-auto">
+          <LimitNotice
+            notice={limit}
+            onRetry={() => {
+              setTargetsError(null);
+              setAttempt((a) => a + 1);
+            }}
+          />
+        </main>
+      ) : !round ? (
         <main className="flex flex-col lg:grid lg:min-h-0 lg:grid-cols-[minmax(0,1fr)_clamp(440px,38vw,640px)]">
           <section aria-label="Service map" className="relative h-[min(55vh,460px)] min-h-[300px] shrink-0 border-b border-rule bg-deck lg:h-auto lg:min-h-0 lg:border-b-0 lg:border-r">
             {overview ? (
