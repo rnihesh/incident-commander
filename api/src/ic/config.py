@@ -22,6 +22,9 @@ class Settings(BaseSettings):
     github_repo: str | None = None
     discord_webhook_url: str | None = None
     alert_hmac_secret: str | None = None
+    # Bearer token for the read-only admin usage panel (/api/admin/*, /admin). Empty: the
+    # admin routes answer 404.
+    admin_token: str = ""
 
     web_origin: str = "http://localhost:3001"
     # Session cookie (KTD10): Secure is on by default; turn it off for plain-http localhost.

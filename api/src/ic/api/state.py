@@ -5,6 +5,7 @@ run registry and per-key locks, built once per app and fetched by every route.
 from __future__ import annotations
 
 import asyncio
+import time
 from contextlib import AbstractAsyncContextManager
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -45,6 +46,7 @@ class AppState:
     learning_curve_path: Path = LEARNING_CURVE_PATH
     benchmark_path: Path = BENCHMARK_PATH
     create_lock: asyncio.Lock = field(default_factory=asyncio.Lock)
+    started_at: float = field(default_factory=time.time)  # process start, for the admin panel
     # GitHub client for the PR auto-close pass and proof status re-runs; None builds one
     # from settings per use (mock when no token/repo). Tests inject a fake here.
     github: Any = None

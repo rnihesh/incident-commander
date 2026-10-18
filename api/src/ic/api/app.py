@@ -15,6 +15,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from ic.api import (
     routes,
+    routes_admin,
     routes_ask,
     routes_challenge,
     routes_judge,
@@ -68,7 +69,7 @@ def create_app(
         allow_origins=[settings.web_origin],
         allow_credentials=True,
         allow_methods=["GET", "POST"],
-        allow_headers=["Content-Type", "Last-Event-ID"],
+        allow_headers=["Content-Type", "Last-Event-ID", "Authorization"],
     )
     app.include_router(routes.router)
     app.include_router(routes_judge.router)
@@ -77,6 +78,7 @@ def create_app(
     app.include_router(routes_storm.router)
     app.include_router(routes_proof.router)
     app.include_router(routes_ask.router)
+    app.include_router(routes_admin.router)
     mcp_server = mount_mcp(app)
 
     @app.get("/health")
