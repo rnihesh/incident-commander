@@ -28,6 +28,8 @@ def test_settings(tmp: Path, **kw) -> Settings:
         github_repo=None,
         discord_webhook_url=None,
         llm_api_key=None,
+        llm_provider="openai",  # a developer's api/.env must not leak into these tests
+        llm_model=None,
         sse_ping_s=15.0,
         session_verify_interval_s=0.0,  # tests re-verify back to back
         session_verifies_per_hour=1000,
