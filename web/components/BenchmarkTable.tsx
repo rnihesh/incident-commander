@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, type ReactNode } from "react";
+import { plainText } from "../lib/plain";
 import { getBenchmark, type BenchLatency, type BenchLiveRun, type BenchmarkResponse, type BenchScale, type BenchWhyRow } from "../lib/api";
 import { LearningCurveChart } from "./LearningCurve";
 import { Badge, type Tone } from "./ui";
@@ -30,7 +31,7 @@ export function honestyNotes(data: BenchmarkResponse): string[] {
       : `Run with ${llm}.`,
   );
   out.push(
-    "Graph accuracy is partly by construction: every injected fault is verified, when it is planted, against the same causal rule (KTD23) the graph approach screens with. A perfect score shows the funnel and proofs implement that rule end to end on these worlds; it is not evidence about real incidents that break the rule.",
+    "Graph accuracy is partly by construction: every injected fault is verified, when it is planted, against the same causal rule the graph approach screens with. A perfect score shows the funnel and proofs implement that rule end to end on these worlds; it is not evidence about real incidents that break the rule.",
   );
   return out;
 }
@@ -367,7 +368,7 @@ function ScaleSection({ scale }: { scale: BenchScale }) {
           <LatencyTable lat={scale} extra="size" />
           {!!scale.notes?.length && (
             <ul className="space-y-1 border-t border-rule px-inset py-3 text-body text-dim">
-              {scale.notes.map((n) => <li key={n}>{n}</li>)}
+              {scale.notes.map((n) => <li key={n}>{plainText(n)}</li>)}
             </ul>
           )}
         </>
@@ -437,7 +438,7 @@ export function BenchmarkTables({ data }: { data: BenchmarkResponse }) {
         </div>
         {!!m.notes?.length && (
           <ul className="mt-3 list-disc space-y-1 pl-5">
-            {m.notes.map((n) => <li key={n}>{n}</li>)}
+            {m.notes.map((n) => <li key={n}>{plainText(n)}</li>)}
           </ul>
         )}
         <p className="mt-3 font-mono text-label text-faint">

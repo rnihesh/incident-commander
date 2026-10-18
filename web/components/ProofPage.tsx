@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState, type ReactNode } from "react";
+import { plainText } from "../lib/plain";
 import {
   FallbackError,
   NetworkError,
@@ -94,7 +95,7 @@ function ProofItem({ p, last, check }: { p: ProofPageProof; last: boolean; check
           <span className="font-mono text-meta text-faint">{KIND_LABEL[p.kind] ?? p.kind}</span>
           {check && <StateBadge state={check.status} />}
         </div>
-        <p className="mt-1 text-body text-ink/90">{p.claim}</p>
+        <p className="mt-1 text-body text-ink/90">{plainText(p.claim)}</p>
         <dl className="mt-1.5 grid grid-cols-[auto_1fr] gap-x-3 gap-y-0.5 text-meta">
           <dt className="text-faint">prev</dt>
           <dd><Hash value={p.prev_hash} head={16} /></dd>
