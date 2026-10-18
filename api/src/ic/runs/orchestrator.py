@@ -376,6 +376,18 @@ async def _snapshot_payload(handles, iid: str, t: int) -> dict:
 # --- the run ----------------------------------------------------------------------------
 
 
+def _run_usage(run: Run, breaker: Breaker):
+    """The triage usage hook: log the reply's tokens (spend breaker) and add them to the
+    run's own totals (admin run summary)."""
+
+    def on_usage(model: str, prompt_tokens: int, completion_tokens: int) -> float:
+        usd = breaker.record_usage(model, prompt_tokens, completion_tokens)
+        run.add_usage(prompt_tokens, completion_tokens, usd)
+        return usd
+
+    return on_usage
+
+
 async def execute_run(
     run: Run,
     incident_id: str,
@@ -437,7 +449,7 @@ async def execute_run(
             llm=deps.llm,
             emit=emit,
             store=deps.store,
-            on_usage=deps.breaker.record_usage,
+            on_usage=_run_usage(run, deps.breaker),
             should_stop=deps.breaker.tripped,
             alert_text=alert_text,
         )

@@ -8,6 +8,7 @@ import asyncio
 import logging
 import time
 
+from ic import usage
 from ic.actions import pr_store
 from ic.actions.github import GitHubClient
 from ic.api.state import AppState
@@ -70,6 +71,7 @@ async def maintenance_once(s: AppState, *, now: float | None = None) -> dict:
         for ref in [r for r in s.proof_reports if not pr_store.resolve_proof_ref(s.store, r)]:
             s.proof_reports.pop(ref, None)
     pruned = await _stage("runs.prune", s.runs.prune, 0)
+    await _stage("usage.prune", lambda: usage.prune(s.store, now=now), 0)
     return {
         "session_graphs": removed,
         "pr_graphs": pr,

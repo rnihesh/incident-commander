@@ -32,6 +32,7 @@ from typing import Any
 from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import JSONResponse
 
+from ic import usage
 from ic.actions import pr_store
 from ic.actions.errors import ActionError
 from ic.actions.github import STATUS_CONTEXT, GitHubClient
@@ -255,6 +256,7 @@ async def proof_verify(ref: str, request: Request):
     if not s.limiter.allow_proof_verify(ip):
         msg = "too many re-verifies from this address; try again later"
         return JSONResponse({"error": msg, "reason": msg}, status_code=429)
+    usage.bump(s.store, "proof_verifies", ip=ip)
     async with s.lock_for(VERIFY_LOCK):
         interval = s.settings.proof_rerun_interval_s
         if not s.budget.allow_status_rerun(f"proof:{ref}", interval):

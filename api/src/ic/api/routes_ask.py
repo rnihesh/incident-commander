@@ -19,6 +19,7 @@ from fastapi import APIRouter, Request
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, ConfigDict, Field
 
+from ic import usage
 from ic.agent.ask import QUESTION_MAX, ask
 from ic.api import auth
 from ic.api.common import _IID, JSON_ONLY, _error, _new_session, _too_many, _with_cookie
@@ -58,6 +59,7 @@ async def ask_graph(body: AskBody, request: Request):
     if wait is not None:
         msg = f"limit of {limit} questions per hour per session reached"
         return _with_cookie(_too_many(msg, wait), sess, s, created)
+    usage.bump(s.store, "asks", ip=auth.client_ip(request, s.settings))
 
     world = naming.session_world(sid)
     async with s.lock_for(sid):

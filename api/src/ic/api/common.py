@@ -10,6 +10,7 @@ from typing import Any
 from fastapi import Depends, HTTPException, Request
 from fastapi.responses import JSONResponse
 
+from ic import usage
 from ic.api import auth
 from ic.api.state import AppState
 from ic.graph import naming
@@ -59,6 +60,7 @@ async def _new_session(request: Request, s: AppState) -> tuple[Session | None, J
     ip = auth.client_ip(request, s.settings)
     async with s.create_lock:
         if s.sessions.count_active() >= s.settings.max_sessions:
+            usage.bump(s.store, "refused:capacity")
             return None, _refuse(
                 503, f"server is at capacity ({s.settings.max_sessions} concurrent sessions)"
             )
@@ -67,6 +69,7 @@ async def _new_session(request: Request, s: AppState) -> tuple[Session | None, J
             return None, _refuse(429, d.reason)
         sess = await s.sessions.create(ip)
         s.limiter.record_session_create(ip)
+    usage.bump(s.store, "sessions", ip=ip)
     return sess, None
 
 
@@ -78,6 +81,7 @@ def _with_cookie(resp: JSONResponse, sess: Session, s: AppState, created: bool) 
 
 def _run_refusal(s: AppState, sid: str, ip: str) -> JSONResponse | None:
     if s.breaker.tripped():
+        usage.bump(s.store, "refused:spend_cap")
         return _refuse(503, "daily LLM spend cap reached; serving recorded runs")
     d = s.limiter.check_run(sid, ip)
     return None if d.allowed else _refuse(429, d.reason)
@@ -91,7 +95,9 @@ def _reserve_run(s: AppState, sid: str, ip: str) -> tuple[float | None, JSONResp
     refusal = _run_refusal(s, sid, ip)
     if refusal is not None:
         return None, refusal
-    return s.limiter.reserve_run(sid, ip), None
+    reserved = s.limiter.reserve_run(sid, ip)
+    usage.bump(s.store, "runs_started", ip=ip)
+    return reserved, None
 
 
 def _require_session(request: Request, s: AppState) -> Session:

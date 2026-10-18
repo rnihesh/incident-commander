@@ -21,6 +21,7 @@ from dataclasses import dataclass, field
 from functools import partial
 from typing import Any
 
+from ic import usage
 from ic.api.events import Agent, Event, EventType
 from ic.store import Store
 
@@ -64,6 +65,15 @@ class Run:
     cond: asyncio.Condition = field(default_factory=asyncio.Condition, repr=False)
     task: asyncio.Task | None = field(default=None, repr=False)
     emit_lock: asyncio.Lock = field(default_factory=asyncio.Lock, repr=False)
+    # LLM usage attributed to this run (the orchestrator's usage hook adds to these).
+    prompt_tokens: int = 0
+    completion_tokens: int = 0
+    usd: float = 0.0
+
+    def add_usage(self, prompt_tokens: int, completion_tokens: int, usd: float) -> None:
+        self.prompt_tokens += prompt_tokens
+        self.completion_tokens += completion_tokens
+        self.usd += usd
 
     @property
     def finished(self) -> bool:
@@ -116,7 +126,7 @@ class RunRegistry:
                 agent=Agent(agent),
                 data=_json_safe(data),
             )
-            await asyncio.to_thread(self._persist, run.id, ev)
+            await asyncio.to_thread(self._persist, run, ev)
             async with run.cond:
                 run.events.append(ev)
                 if ev.type == EventType.DONE:
@@ -124,13 +134,15 @@ class RunRegistry:
                 run.cond.notify_all()
         return ev
 
-    def _persist(self, run_id: str, ev: Event) -> None:
+    def _persist(self, run: Run, ev: Event) -> None:
         with self.store.conn() as c:
             c.execute(
-                "INSERT INTO run_events VALUES (?, ?, ?)", (run_id, ev.id, ev.model_dump_json())
+                "INSERT INTO run_events VALUES (?, ?, ?)", (run.id, ev.id, ev.model_dump_json())
             )
             if ev.type == EventType.DONE:
-                c.execute("UPDATE runs SET status = ? WHERE run_id = ?", (DONE, run_id))
+                c.execute("UPDATE runs SET status = ? WHERE run_id = ?", (DONE, run.id))
+        if ev.type == EventType.DONE:  # the admin panel's per-run summary, before anyone wakes
+            usage.log_run(self.store, run, [*run.events, ev])
 
     def emitter(self, run: Run):
         """An ``emit(type, data, *, agent)`` callback (the agent loop's shape) for ``run``."""
@@ -217,6 +229,7 @@ class RunRegistry:
                 run.events.append(ev)
             c.execute("UPDATE runs SET status = ? WHERE run_id = ?", (DONE, run.id))
         run.status = DONE
+        usage.log_run(self.store, run, run.events)
 
     def _evict(self, now: float | None = None) -> None:
         now = time.time() if now is None else now

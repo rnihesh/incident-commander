@@ -1,6 +1,7 @@
 """Sliding-window abuse limits backed by SQLite so they survive restarts (KTD10).
 
-Over any limit the visitor gets a recorded run (``fallback="recorded_run"``).
+Over any limit the visitor gets a recorded run (``fallback="recorded_run"``). Every refusal
+is counted per day (``refused:<kind>`` in ``ic.usage``) for the admin panel.
 """
 
 from __future__ import annotations
@@ -8,6 +9,7 @@ from __future__ import annotations
 import time
 from dataclasses import dataclass
 
+from ic import usage
 from ic.config import get_settings
 from ic.store import Store
 
@@ -69,6 +71,10 @@ class Limiter:
                 (kind, key, now - HOUR),
             ).fetchone()[0]
 
+    def _refused(self, kind: str, now: float, decision: Decision | None = None) -> Decision:
+        usage.bump(self.store, f"refused:{kind}", now=now)
+        return decision if decision is not None else OK
+
     def _record(self, kind: str, key: str, now: float) -> None:
         with self.store.conn() as c:
             c.execute("INSERT INTO limit_events VALUES (?, ?, ?)", (kind, key, now))
@@ -83,11 +89,14 @@ class Limiter:
                 (ip, now - self.idle_ttl_s),
             ).fetchone()[0]
         if total >= self.max_sessions:
-            return _deny(f"server is at capacity ({self.max_sessions} concurrent sessions)")
+            d = _deny(f"server is at capacity ({self.max_sessions} concurrent sessions)")
+            return self._refused("capacity", now, d)
         if mine >= self.ip_concurrent_sessions:
-            return _deny(f"at most {self.ip_concurrent_sessions} concurrent sessions per client")
+            d = _deny(f"at most {self.ip_concurrent_sessions} concurrent sessions per client")
+            return self._refused("session_ip_concurrent", now, d)
         if self._count("session_create_ip", ip, now) >= self.ip_sessions_per_hour:
-            return _deny(f"at most {self.ip_sessions_per_hour} new sessions per hour per client")
+            d = _deny(f"at most {self.ip_sessions_per_hour} new sessions per hour per client")
+            return self._refused("session_ip_hourly", now, d)
         return OK
 
     def record_session_create(self, ip: str, *, now: float | None = None) -> None:
@@ -98,13 +107,16 @@ class Limiter:
         with self.store.conn() as c:
             r = c.execute("SELECT active_runs FROM sessions WHERE sid = ?", (sid,)).fetchone()
         if r is not None and r[0] >= SESSION_CONCURRENT_RUNS:
-            return _deny("a run is already in progress for this session")
+            d = _deny("a run is already in progress for this session")
+            return self._refused("run_busy", now, d)
         if self._count("run_session", sid, now) >= self.session_runs_per_hour:
-            return _deny(f"limit of {self.session_runs_per_hour} runs per hour per session reached")
+            d = _deny(f"limit of {self.session_runs_per_hour} runs per hour per session reached")
+            return self._refused("run_session", now, d)
         if self._count("run_ip", ip, now) >= self.ip_runs_per_hour:
-            return _deny(f"limit of {self.ip_runs_per_hour} runs per hour per client reached")
+            d = _deny(f"limit of {self.ip_runs_per_hour} runs per hour per client reached")
+            return self._refused("run_ip", now, d)
         if self._count("run_global", "*", now) >= self.global_runs_per_hour:
-            return _deny("global hourly run ceiling reached")
+            return self._refused("run_global", now, _deny("global hourly run ceiling reached"))
         return OK
 
     def record_run(self, sid: str, ip: str, *, now: float | None = None) -> None:
@@ -162,6 +174,7 @@ class Limiter:
     def _allow_hourly(self, kind: str, key: str, limit: int, now: float | None) -> bool:
         now = time.time() if now is None else now
         if self._count(kind, key, now) >= limit:
+            self._refused(kind, now)
             return False
         self._record(kind, key, now)
         return True

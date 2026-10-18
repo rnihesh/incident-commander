@@ -34,6 +34,7 @@ from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, ConfigDict, Field, TypeAdapter, ValidationError
 
+from ic import usage
 from ic.actions import pr_store
 from ic.api import auth, routes_challenge
 from ic.api.common import (
@@ -885,6 +886,7 @@ async def judge_fragility(incident_id: str, request: Request):
         refusal = _fragility_allowance(s, sess.sid, incident_id)
         if refusal is not None:
             return refusal
+        usage.bump(s.store, "fragility")
         try:
             true_g, known_g = await _ensure_snapshots(s, sess.sid, incident_id)
         except SnapshotsNotReady:

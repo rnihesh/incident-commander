@@ -31,6 +31,7 @@ from fastapi import APIRouter, Request
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, ConfigDict, Field
 
+from ic import usage
 from ic.agent.remediation import read_handoff
 from ic.api.common import _IID, JSON_ONLY, _check_iid, _error, _ledger_info, _require_session
 from ic.api.graph_view import _incident_time
@@ -163,11 +164,13 @@ async def challenge(incident_id: str, body: ChallengeBody, request: Request):
         return _error(422, f"{pick} is not one of the changes this incident's run checked")
     t = await _incident_time(s, sid, iid)
     if not spend(s.store, sid, iid):
+        usage.bump(s.store, "refused:challenge")
         msg = f"both challenges for {iid} are used; re-derive the incident to start over"
         return JSONResponse(
             {"error": f"two challenges per incident: {msg}", "reason": msg, "remaining": 0},
             status_code=429,
         )
+    usage.bump(s.store, "challenges")
     try:
         out = await _run_challenge(s, sid, iid, pick, t)
     except ToolError as e:

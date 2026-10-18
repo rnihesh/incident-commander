@@ -25,6 +25,7 @@ from redis.exceptions import ResponseError
 from redis.exceptions import TimeoutError as RedisTimeoutError
 from sse_starlette import EventSourceResponse
 
+from ic import usage
 from ic.agent import payloads
 from ic.api import auth
 from ic.api.common import (
@@ -313,6 +314,7 @@ async def verify(incident_id: str, request: Request):
     if wait is not None:
         limit = s.settings.session_verifies_per_hour
         return _too_many(f"limit of {limit} verifies per hour per session reached", wait)
+    usage.bump(s.store, "verifies", ip=auth.client_ip(request, s.settings))
     try:
         report = await verify_incident(
             sid, incident_id, s.store, track_graph=lambda name: s.sessions.track_graph(sid, name)

@@ -102,6 +102,47 @@ CREATE TABLE IF NOT EXISTS judge_challenges (
     used        INTEGER NOT NULL,
     PRIMARY KEY (sid, incident_id)
 );
+
+-- Usage counters for the admin panel (ic.usage). Per-day metric counts; per-day client
+-- activity keyed by a salted hash of the address (never the address itself); one summary
+-- row per finished run, kept after the run's events are pruned.
+CREATE TABLE IF NOT EXISTS usage_daily (
+    day    TEXT NOT NULL,
+    metric TEXT NOT NULL,
+    n      INTEGER NOT NULL,
+    PRIMARY KEY (day, metric)
+);
+CREATE TABLE IF NOT EXISTS usage_clients (
+    day    TEXT NOT NULL,
+    client TEXT NOT NULL,
+    n      INTEGER NOT NULL,
+    PRIMARY KEY (day, client)
+);
+CREATE TABLE IF NOT EXISTS usage_meta (
+    k TEXT PRIMARY KEY,
+    v TEXT NOT NULL
+);
+CREATE TABLE IF NOT EXISTS run_log (
+    run_id            TEXT PRIMARY KEY,
+    ts                REAL NOT NULL,
+    day               TEXT NOT NULL,
+    kind              TEXT NOT NULL,
+    incident_id       TEXT NOT NULL,
+    fault_class       TEXT,
+    verdict           TEXT,
+    degraded          INTEGER,
+    degraded_reason   TEXT,
+    final_state       TEXT,
+    tool_calls        INTEGER NOT NULL,
+    prompt_tokens     INTEGER,
+    completion_tokens INTEGER,
+    usd               REAL,
+    duration_ms       REAL,
+    pr                INTEGER NOT NULL DEFAULT 0,
+    simulated         INTEGER,
+    error             TEXT
+);
+CREATE INDEX IF NOT EXISTS run_log_day ON run_log (day);
 """
 
 # Columns added after the first release: (table, column, SQL type). Added in place by
