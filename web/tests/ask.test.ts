@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { Ask, AskAnswer } from "../components/Ask";
-import { ASK_MAX, EXAMPLE_QUESTIONS, answerMeta, askStatus, callLabel, checkQuestion, parseAsk, type AskResponse } from "../lib/ask";
+import { AskAnswer, AskLauncher, AskPanel, type AskChat } from "../components/Ask";
+import { ASK_MAX, CHAT_KEEP, EXAMPLE_QUESTIONS, answerMeta, askErrorText, askStatus, callLabel, checkQuestion, keepChat, parseAsk, readChat, starterQuestions, type AskResponse, type ChatMessage } from "../lib/ask";
 import { NetworkError, RateLimitedError, askGraph } from "../lib/api";
 
 const raw = (o: Record<string, unknown> = {}) => ({
@@ -140,12 +140,91 @@ describe("AskAnswer", () => {
   });
 });
 
-describe("Ask panel", () => {
-  it("renders the field, the Ask button and the example chips", () => {
-    const out = renderToStaticMarkup(createElement(Ask, { incidentId: null, inGraph: () => false, onFocus: () => {} }));
+const chatOf = (messages: ChatMessage[], busy = false): AskChat => ({
+  messages,
+  busy,
+  ask: async () => null,
+  clear: () => {},
+});
+const panel = (chat: AskChat, incidentId: string | null = null, rootCause: string | null = null) =>
+  renderToStaticMarkup(createElement(AskPanel, { chat, onClose: () => {}, incidentId, rootCause, inGraph: () => false, onFocus: () => {} }));
+
+describe("Ask chat panel", () => {
+  it("starts with the field, the Ask button and starter questions", () => {
+    const out = panel(chatOf([]));
     expect(out).toContain("Ask the graph");
     expect(out).toContain(`maxLength="${ASK_MAX}"`);
     for (const q of EXAMPLE_QUESTIONS) expect(out).toContain(q);
     expect(out).toContain(">Ask<");
+    expect(out).toContain('aria-label="Close the chat"');
+  });
+
+  it("offers questions about the visitor's incident first", () => {
+    const out = panel(chatOf([]), "inc-041", "chg-05689");
+    expect(out).toContain("Why did you blame chg-05689?");
+    expect(out).toContain("What got ruled out?");
+    expect(out.indexOf("Why did you blame")).toBeLessThan(out.indexOf(EXAMPLE_QUESTIONS[0]));
+  });
+
+  it("shows the history: the visitor on the right, answers with sources on the left, errors, typing", () => {
+    const out = panel(
+      chatOf(
+        [
+          { id: 1, role: "user", text: "Who owns checkout?" },
+          { id: 2, role: "assistant", result: parsed() },
+          { id: 3, role: "error", text: "You have asked 20 questions in the last hour." },
+        ],
+        true,
+      ),
+    );
+    expect(out).toContain("justify-end");
+    expect(out).toContain("Who owns checkout?");
+    expect(out).toContain("Payments Core");
+    expect(out).toContain("Show queries (3)");
+    expect(out).toContain("grounded");
+    expect(out).toContain("20 questions in the last hour");
+    expect(out).toContain("Reading the graph");
+    expect(out).toContain(">Clear<");
+  });
+
+  it("renders the launcher inline or floating", () => {
+    expect(renderToStaticMarkup(createElement(AskLauncher, { onOpen: () => {} }))).toContain("Ask the graph");
+    expect(renderToStaticMarkup(createElement(AskLauncher, { onOpen: () => {}, floating: true }))).toContain("fixed");
+  });
+});
+
+describe("chat helpers", () => {
+  it("reads back a stored conversation and drops junk", () => {
+    const stored = JSON.stringify([
+      { id: 1, role: "user", text: "hi" },
+      { id: 2, role: "assistant", result: raw() },
+      { id: 3, role: "assistant", result: { nope: true } },
+      { id: "x", role: "user", text: "bad id" },
+      { id: 4, role: "error", text: "failed" },
+    ]);
+    const msgs = readChat(stored);
+    expect(msgs.map((m) => m.id)).toEqual([1, 2, 4]);
+    expect(readChat(null)).toEqual([]);
+    expect(readChat("{not json")).toEqual([]);
+  });
+
+  it("keeps the last messages only", () => {
+    const many = Array.from({ length: CHAT_KEEP + 5 }, (_, i): ChatMessage => ({ id: i, role: "user", text: `q${i}` }));
+    const kept = keepChat(many);
+    expect(kept).toHaveLength(CHAT_KEEP);
+    expect(kept[0].id).toBe(5);
+  });
+
+  it("puts limits in plain words", () => {
+    expect(askErrorText("limit of 20 questions per hour per session reached", "x")).toBe(
+      "You have asked 20 questions in the last hour, the most allowed per sandbox. Try again later.",
+    );
+    expect(askErrorText("at most 2 concurrent sessions per client", "x")).toContain("2 live sandboxes");
+    expect(askErrorText(undefined, "fallback")).toBe("fallback");
+  });
+
+  it("starter questions without an incident are the company examples", () => {
+    expect(starterQuestions({ incidentId: null, rootCause: null })).toEqual(EXAMPLE_QUESTIONS);
+    expect(starterQuestions({ incidentId: "inc-1", rootCause: null })[0]).toBe("Why did you blame this change?");
   });
 });

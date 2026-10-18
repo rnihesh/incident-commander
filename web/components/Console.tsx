@@ -37,7 +37,7 @@ import { StateBanner } from "./StateBanner";
 import { RunLog } from "./RunLog";
 import { Precedent } from "./Precedent";
 import { Challenge } from "./Challenge";
-import { Ask } from "./Ask";
+import { AskLauncher, AskPanel, useAskChat, type AskChat } from "./Ask";
 import { RecommendationBanner } from "./RecommendationBanner";
 import { LearningCurve } from "./LearningCurve";
 import { StormPanel } from "./Storm";
@@ -63,6 +63,9 @@ export default function Console() {
   // ?sample (the "Watch a sample run" links) opens straight on the recording.
   const [session, setSession] = useState<LiveSession | null>(() => initialSession({ sampleParam: params.get("sample"), scenarioParam }));
   const [gen, setGen] = useState(0);
+  // The chat outlives runs: its history and open state sit above the keyed run console.
+  const chat = useAskChat();
+  const [chatOpen, setChatOpen] = useState(false);
 
   const start = (x: LiveSession | null) => {
     setSession(x);
@@ -76,23 +79,32 @@ export default function Console() {
       verifyParam={verifyParam}
       session={session}
       onSession={start}
+      chat={chat}
+      chatOpen={chatOpen}
+      onChatOpen={setChatOpen}
     />
   );
 }
 
-type Tab = "log" | "precedent" | "challenge" | "ask";
+type Tab = "log" | "precedent" | "challenge";
 
 function RunConsole({
   scenario,
   verifyParam,
   session,
   onSession,
+  chat,
+  chatOpen,
+  onChatOpen,
 }: {
   scenario: Scenario | null;
   verifyParam: VerifyMode | null;
   session: LiveSession | null;
   /** Start a run or a recording; null goes back to the welcome screen. */
   onSession: (s: LiveSession | null) => void;
+  chat: AskChat;
+  chatOpen: boolean;
+  onChatOpen: (open: boolean) => void;
 }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -283,6 +295,18 @@ function RunConsole({
     router.replace(id === "live" ? pathname : `${pathname}?scenario=${id}`);
   };
 
+  const closeChat = useCallback(() => onChatOpen(false), [onChatOpen]);
+  const chatPanel = (
+    <AskPanel
+      chat={chat}
+      onClose={closeChat}
+      incidentId={useLiveVerify ? incidentId : null}
+      rootCause={useLiveVerify ? (s.verdict?.root_cause?.change ?? null) : null}
+      inGraph={inGraph}
+      onFocus={doFocus}
+    />
+  );
+
   const welcome = showWelcome({ scenario: !!scenario, session: liveSession, storm: !!storm });
   if (welcome) {
     return (
@@ -298,6 +322,7 @@ function RunConsole({
           onStorm={() => void fireStorm()}
           storming={storming}
         />
+        {chatOpen ? chatPanel : <AskLauncher floating onOpen={() => onChatOpen(true)} />}
       </div>
     );
   }
@@ -482,7 +507,6 @@ function RunConsole({
             ["log", `Run log (${s.toolCalls.length})`],
             ["precedent", `Precedent (${s.precedent.reduce((a, p) => a + p.matches.length, 0)})`],
             ["challenge", "Was it my deploy?"],
-            ["ask", "Ask the graph"],
           ] as [Tab, string][]).map(([id, label]) => (
             <button
               key={id}
@@ -497,19 +521,21 @@ function RunConsole({
               {label}
             </button>
           ))}
-          <span className="ml-auto hidden shrink-0 text-meta text-faint sm:inline">{drawer ? "Select the open tab to collapse" : "Collapsed"}</span>
+          <div className="ml-auto shrink-0 py-1 pl-2">
+            {!chatOpen && <AskLauncher onOpen={() => onChatOpen(true)} />}
+          </div>
         </div>
         {drawer && (
-          <div id="drawer-body" role="tabpanel" aria-labelledby={`tab-${drawer}`} className={`${drawer === "ask" ? "h-[46vh] min-h-[280px]" : "h-[28vh] min-h-[180px]"} overflow-y-auto border-t border-rule`}>
+          <div id="drawer-body" role="tabpanel" aria-labelledby={`tab-${drawer}`} className="h-[28vh] min-h-[180px] overflow-y-auto border-t border-rule">
             {drawer === "log" && <RunLog calls={s.toolCalls} t0={s.startedTs} />}
             {drawer === "precedent" && <Precedent entries={s.precedent} />}
             {drawer === "challenge" && <Challenge cert={s.certificate} verdict={s.verdict} incidentId={useLiveVerify ? incidentId : null} />}
-            {drawer === "ask" && <Ask incidentId={useLiveVerify ? incidentId : null} inGraph={inGraph} onFocus={doFocus} />}
           </div>
         )}
       </section>
       </>
       )}
+      {chatOpen ? chatPanel : storm && <AskLauncher floating onOpen={() => onChatOpen(true)} />}
     </div>
   );
 }
