@@ -32,7 +32,7 @@ Everything below runs from the repo root on the server unless it says otherwise.
   echo vm.swappiness=10 | sudo tee /etc/sysctl.d/99-swap.conf && sudo sysctl -p /etc/sysctl.d/99-swap.conf
   ```
 
-  The public instance uses `IC_MAX_SESSIONS=6` and `FALKORDB_MAXMEMORY=700mb`. A 4 GB host can
+  The public instance uses `IC_MAX_SESSIONS=8`, `IC_IP_CONCURRENT_SESSIONS=3` and `FALKORDB_MAXMEMORY=700mb`. A 4 GB host can
   keep the defaults (`8` and `2gb`).
 - Install Docker Engine and the Compose plugin (Compose v2.23 or newer is needed for inline
   `configs.content`):
