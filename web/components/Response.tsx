@@ -2,7 +2,7 @@
 
 import type { RehearsalData } from "@/lib/payloads";
 import type { ConsoleState } from "@/lib/reducer";
-import { Badge, Hash, PanelHead, shortSvc } from "./ui";
+import { Badge, Hash, PanelHead, TONE, shortSvc } from "./ui";
 
 /** "4 min 28 s" (or "38 s", "2 h 3 min 0 s") for a lead time in seconds. */
 export function formatLead(seconds: number): string {
@@ -24,16 +24,21 @@ export function leadSentence(leadS: number | null | undefined): string {
 
 export function Verdict({ s, view }: { s: ConsoleState; view: "true" | "known" }) {
   const v = s.verdict;
+  const tone = v?.outcome === "DIAGNOSED" ? "verified" : v?.outcome === "INCONCLUSIVE" ? "drifted" : "falsified";
+  // The verdict is the answer the whole console builds to: once it arrives it gets the
+  // outcome's colour down its edge and a faint tint, so it reads first in the column.
+  const frame = !v ? "" : tone === "verified" ? "border-l-[3px] border-l-verified bg-verified/[0.05]" : tone === "drifted" ? "border-l-[3px] border-l-drifted bg-drifted/[0.05]" : "border-l-[3px] border-l-falsified bg-falsified/[0.05]";
   return (
-    <section aria-labelledby="verdict-h" className="border-b border-rule">
+    <section aria-labelledby="verdict-h" className={`border-b border-rule ${frame}`}>
       <PanelHead
         id="verdict-h"
         title="Verdict"
+        hint={v ? undefined : "The one change that explains every symptom, accepted only when no rival is left."}
         right={
           v && (
             <span className="flex items-center gap-2">
-              {v.degraded && <Badge tone="degraded">DEGRADED</Badge>}
-              <Badge tone={v.outcome === "DIAGNOSED" ? "verified" : v.outcome === "INCONCLUSIVE" ? "drifted" : "falsified"}>{v.outcome}</Badge>
+              {v.degraded && <Badge tone="degraded" title="No language model was used: the deterministic funnel reached this verdict">DEGRADED</Badge>}
+              <Badge tone={tone}>{v.outcome}</Badge>
             </span>
           )
         }
@@ -44,7 +49,8 @@ export function Verdict({ s, view }: { s: ConsoleState; view: "true" | "known" }
         <div className="arrive px-inset py-3.5">
           {v.root_cause ? (
             <>
-              <p className="font-mono text-display font-medium tracking-tight text-ink">{v.root_cause.change}</p>
+              <p className={`text-label font-semibold ${TONE[tone].text}`}>Root cause</p>
+              <p className="mt-0.5 font-mono text-headline font-medium tracking-tight text-ink">{v.root_cause.change}</p>
               <p className="mt-2 text-body text-ink/90">
                 {v.root_cause.summary} on <span className="font-mono">{shortSvc(v.root_cause.service)}</span>
                 {v.root_cause.author && <> by {v.root_cause.author}</>}
@@ -99,7 +105,7 @@ export function Response({ s }: { s: ConsoleState }) {
   if (!items.length) return null;
   return (
     <section aria-labelledby="resp-h">
-      <PanelHead id="resp-h" title="Response" meta={s.phase ?? undefined} />
+      <PanelHead id="resp-h" title="Response" hint="What the agent did after the diagnosis: rehearsed the rollback on a copy of the graph, then acted and remembered." />
       <ol className="divide-y divide-rule/70">
         {items.map((it) => (
           <li key={it.key} className="arrive grid grid-cols-[152px_minmax(0,1fr)] items-baseline gap-3 px-inset py-2">

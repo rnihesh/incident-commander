@@ -350,14 +350,18 @@ function highlight(src: string): ReactNode[] {
   return out;
 }
 
-export function PanelHead({ title, meta, right, id }: { title: string; meta?: ReactNode; right?: ReactNode; id?: string }) {
+/** A panel's title row. `hint` is one plain sentence on what the panel shows, under the title. */
+export function PanelHead({ title, meta, right, id, hint }: { title: string; meta?: ReactNode; right?: ReactNode; id?: string; hint?: ReactNode }) {
   return (
-    <div className="flex min-h-10 items-center justify-between gap-3 border-b border-rule px-inset py-2">
-      <h2 id={id} className="flex min-w-0 flex-wrap items-baseline gap-x-2.5 text-body font-semibold text-ink sm:flex-nowrap">
-        <span className="shrink-0">{title}</span>
-        {meta && <span className="min-w-0 text-meta font-normal text-dim sm:truncate">{meta}</span>}
-      </h2>
-      {right && <div className="flex shrink-0 items-center gap-2">{right}</div>}
+    <div className="border-b border-rule px-inset py-2">
+      <div className="flex min-h-6 items-center justify-between gap-3">
+        <h2 id={id} className="flex min-w-0 flex-wrap items-baseline gap-x-2.5 text-body font-semibold text-ink sm:flex-nowrap">
+          <span className="shrink-0">{title}</span>
+          {meta && <span className="min-w-0 text-meta font-normal text-dim sm:truncate">{meta}</span>}
+        </h2>
+        {right && <div className="flex shrink-0 items-center gap-2">{right}</div>}
+      </div>
+      {hint && <p className="mt-0.5 max-w-[80ch] text-label text-dim">{hint}</p>}
     </div>
   );
 }

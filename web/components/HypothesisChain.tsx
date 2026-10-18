@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import type { ProofEntry } from "@/lib/reducer";
+import { plainText } from "@/lib/plain";
 import type { VerifyResult } from "@/lib/mock/verify";
 import { Badge, Button, CopyButton, Cypher, Empty, Hash, PanelHead } from "./ui";
 import type { ChainVerify } from "@/lib/verify";
@@ -41,6 +42,7 @@ export function HypothesisChain({
         id="chain-h"
         title="Hypothesis chain"
         meta={proofs.length ? `${proofs.length} proof${proofs.length > 1 ? "s" : ""}, append-only` : undefined}
+        hint="Each claim is written down before it is tested, then proved by a stored query. Re-run one, or verify the whole chain."
         right={
           <VerifyButton
             label="Verify chain"
@@ -80,8 +82,8 @@ export function HypothesisChain({
                     </Badge>
                     <span className="font-mono text-meta text-faint">proof {p.position} of chain</span>
                   </div>
-                  <p className="mt-1 text-body text-ink/90">{p.hypothesis?.statement ?? p.summary}</p>
-                  {p.hypothesis && <p className="text-label text-dim">{p.summary}</p>}
+                  <p className="mt-1 text-body text-ink/90">{plainText(p.hypothesis?.statement ?? p.summary)}</p>
+                  {p.hypothesis && <p className="text-label text-dim">{plainText(p.summary)}</p>}
                   <dl className="mt-1.5 grid grid-cols-[auto_1fr] gap-x-3 gap-y-0.5 text-meta">
                     <dt className="text-faint">prev</dt>
                     <dd><Hash value={p.prev_hash} head={16} /></dd>

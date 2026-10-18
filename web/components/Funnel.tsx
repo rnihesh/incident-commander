@@ -24,6 +24,7 @@ export function Funnel({
         id="funnel-h"
         title="Elimination funnel"
         meta={steps.length ? `${start} changes in window, ${last.after} remaining` : undefined}
+        hint="Every recent change upstream of the alert, cut down one rule at a time until only changes that explain every symptom are left."
       />
       {!steps.length ? (
         <Empty>The funnel starts once the snapshot exists. Each cut shows the query that made it.</Empty>

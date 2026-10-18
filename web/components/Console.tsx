@@ -20,6 +20,7 @@ import {
 } from "@/lib/api";
 import { controlsDisabled, initialSession, showWelcome, sourceFor } from "@/lib/consoleMode";
 import { limitNotice } from "@/lib/limits";
+import { plainText } from "@/lib/plain";
 import { liveGraphView, pickGraph, toLiveGraph } from "@/lib/liveGraph";
 import { mapVerify, type ChainVerify } from "@/lib/verify";
 import { HERO_EDGES, HERO_NODES } from "@/lib/mock/hero-graph";
@@ -42,6 +43,18 @@ import { RecommendationBanner } from "./RecommendationBanner";
 import { LearningCurve } from "./LearningCurve";
 import { StormPanel } from "./Storm";
 import { FAULT_COPY, Welcome } from "./Welcome";
+
+/** The incident's state in plain words for the header badge. */
+const PHASE_LABEL: Record<string, string> = {
+  OPEN: "Open", TRIAGING: "Investigating", DIAGNOSED: "Diagnosed", REHEARSING: "Rehearsing the fix", ACTING: "Acting",
+  PR_OPEN: "Rollback PR open", RESOLVED: "Resolved", LEARNED: "Resolved and remembered", INCONCLUSIVE: "Inconclusive",
+  FAILED: "Failed", REFUSED: "Rollback refused",
+};
+
+/** The live event stream's status in plain words. */
+const STREAM_LABEL: Record<string, string> = {
+  idle: "Waiting", connecting: "Connecting", streaming: "Live", reconnecting: "Reconnecting", closed: "Finished", error: "Stream lost",
+};
 
 const PHASE_TONE: Record<string, Tone> = {
   DIAGNOSED: "verified", RESOLVED: "verified", LEARNED: "verified", PR_OPEN: "verified",
@@ -333,16 +346,16 @@ function RunConsole({
         title={s.incident?.title ?? (storm ? "Alert storm" : "Starting the incident")}
         status={
           <>
-            {phase && <Badge tone={PHASE_TONE[phase] ?? "muted"} title="Incident state">{phase}</Badge>}
-            {outcome && <Badge tone={outcome === "DIAGNOSED" ? "verified" : outcome === "INCONCLUSIVE" ? "drifted" : "falsified"} title="Verdict">VERDICT {outcome}</Badge>}
-            {isDegraded(s) && <Badge tone="degraded">DEGRADED</Badge>}
+            {phase && <Badge tone={PHASE_TONE[phase] ?? "muted"} title={`Incident state: ${phase}${outcome ? `, verdict ${outcome}` : ""}`}>{PHASE_LABEL[phase] ?? phase}</Badge>}
+            {isDegraded(s) && <Badge tone="degraded" title="No language model was used for this run">Deterministic</Badge>}
           </>
         }
         right={
           <>
             {stream.kind === "live" && (
-              <span className="font-mono text-meta tabular-nums text-dim" aria-live="polite">
-                {stream.status === "idle" ? "idle" : `${stream.status} · ${stream.total} events`}
+              <span className="flex items-center gap-1.5 text-meta tabular-nums text-dim" aria-live="polite" title={`${stream.total} events received`}>
+                {stream.status === "streaming" && <span className="size-1.5 animate-pulse rounded-full bg-verified motion-reduce:animate-none" aria-hidden />}
+                {stream.kind === "live" && stream.status !== "idle" ? `${STREAM_LABEL[stream.status] ?? stream.status} run, ${stream.total} events` : STREAM_LABEL.idle}
               </span>
             )}
             {replayable && (
@@ -453,8 +466,8 @@ function RunConsole({
             <div className="flex min-h-0 min-w-0 flex-col">
               {/* Narration sits above the canvas, never over it, so it cannot hide node labels. */}
               {s.narration.length > 0 && (
-                <p className="shrink-0 border-b border-rule/60 px-3 py-1.5 text-label text-dim" aria-live="polite" title={s.narration[s.narration.length - 1]}>
-                  <span className="line-clamp-2 sm:line-clamp-1">{s.narration[s.narration.length - 1]}</span>
+                <p className="shrink-0 border-b border-rule/60 px-3 py-1.5 text-label text-dim" aria-live="polite" title={plainText(s.narration[s.narration.length - 1])}>
+                  <span className="line-clamp-2 sm:line-clamp-1">{plainText(s.narration[s.narration.length - 1])}</span>
                 </p>
               )}
               <div className={GRAPH_CELL}>

@@ -8,12 +8,13 @@ export function CausalPathList({ graph, onFocus }: { graph: GraphView; onFocus: 
   return (
     <aside aria-label="Causal path, text" className="flex min-h-0 flex-col overflow-y-auto border-t border-rule bg-raise/40 px-4 py-3 text-label sm:border-l sm:border-t-0">
       <h3 className="text-body font-semibold">Causal path</h3>
+      <p className="mt-0.5 text-label text-dim">How the failure spread from the changed service to the one that alerted.</p>
       {graph.paths.length === 0 ? (
         <p className="mt-2 text-label text-faint">The path appears once a suspect qualifies.</p>
       ) : (
         graph.paths.map((p) => (
           <div key={p.label} className="mt-2">
-            <p className="text-meta text-dim">{p.label}</p>
+            {graph.paths.length > 1 && <p className="text-meta text-dim">{p.label}</p>}
             <ol className="mt-1.5 ml-[3px] border-l border-verified/60">
               {p.nodes.map((n, i) => (
                 <li key={n}>

@@ -118,7 +118,8 @@ export function Certificate({
       <PanelHead
         id="cert-h"
         title="Absence certificate"
-        right={cert && (cert.qualifying === 0 ? <Badge tone="verified">0 QUALIFYING</Badge> : <Badge tone="drifted">{cert.qualifying} RIVAL QUALIFIES</Badge>)}
+        hint="Proof that no other change explains the outage: each rival and the first rule it fails."
+        right={cert && (cert.qualifying === 0 ? <Badge tone="verified">No rival qualifies</Badge> : <Badge tone="drifted">{cert.qualifying} rival qualifies</Badge>)}
       />
       {!cert ? (
         <Empty>Issued after the suspect is chosen: every other change in the window, with the first clause it fails.</Empty>

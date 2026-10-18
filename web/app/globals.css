@@ -32,11 +32,11 @@
      meta: captions, legends, table meta. label: controls and data rows.
      body: prose. title: page and section titles. display: the verdict's change id.
      hero: the storm's pages-to-incidents count only. */
-  --text-meta: 11px;
+  --text-meta: 11.5px;
   --text-meta--line-height: 1.4;
-  --text-label: 12px;
+  --text-label: 12.5px;
   --text-label--line-height: 1.45;
-  --text-body: 13px;
+  --text-body: 14px;
   --text-body--line-height: 1.5;
   --text-title: 15px;
   --text-title--line-height: 1.3;

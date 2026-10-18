@@ -9,14 +9,18 @@ export function Reflex({ reflex }: { reflex: ReflexView | null }) {
   const sup = reflex.superseded;
   return (
     <section
-      aria-label="Reflex answer, pre-snapshot"
+      aria-label="First guess, before the investigation"
       className={`arrive flex shrink-0 flex-wrap items-center gap-x-5 gap-y-1.5 border border-dashed px-inset py-2 text-label ${
         sup ? "border-rule bg-transparent text-faint" : "border-symptom/50 bg-symptom/5 text-dim"
       }`}
     >
       <span className="flex items-center gap-2">
-        <Badge tone={sup ? "muted" : "info"}>{sup ? "SUPERSEDED" : "PRE-SNAPSHOT"}</Badge>
-        <span className="font-mono">reflex {reflex.ms} ms</span>
+        <Badge tone={sup ? "muted" : "info"} title="A quick answer from the live graph before the as-of snapshot exists">
+          {sup ? "First guess, replaced" : "First guess"}
+        </Badge>
+        <span>
+          in <span className="font-mono">{reflex.ms} ms</span>
+        </span>
       </span>
       {(reflex.blast_radius != null || reflex.search_space != null) && (
         <span data-testid="reflex-scope">
@@ -47,13 +51,13 @@ export function Reflex({ reflex }: { reflex: ReflexView | null }) {
       {sup && (
         <span className="ml-auto flex items-center gap-2">
           {reflex.diff ? (
-            <Badge tone="drifted" title="Suspects changed between the reflex answer and the first funnel cut">
-              SUSPECTS CHANGED
+            <Badge tone="drifted" title="Suspects changed between the first guess and the first funnel cut">
+              Investigation changed the suspects
               {reflex.diff.added.length > 0 && ` +${reflex.diff.added.join(" +")}`}
               {reflex.diff.removed.length > 0 && ` -${reflex.diff.removed.join(" -")}`}
             </Badge>
           ) : (
-            <Badge tone="verified">SUSPECTS CONFIRMED</Badge>
+            <Badge tone="verified">Investigation confirmed the suspects</Badge>
           )}
         </span>
       )}
