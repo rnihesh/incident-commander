@@ -2,12 +2,13 @@
 
 A walkthrough of every page and integration. Setup is in the [README](../README.md#quickstart).
 
-**Console (`/`).** On a first visit the recorded `gpt-6-luna` hero run plays on its own, with a
-playback bar (0.5x-8x and a scrubber) and a "Recorded run" banner. Pick a fault class
-(`bad_deploy`, `config_change`, `flag_flip`) and press **Inject fault** to take over with a live
-run. The page streams over SSE:
+**Console (`/`).** A first visit opens on a welcome screen: what the product does, how it works
+in three steps, a fault choice (bad deploy, config change, feature flag flip) and **Start an
+incident**, plus links to Judge mode, **Watch a sample run** (the recorded `gpt-6-luna` hero run,
+with a playback bar and a "Sample run (recording)" banner; also at `/?sample=1`) and **Fire an
+alert storm**. Nothing plays on its own. A live run streams over SSE:
 
-- reflex panel (pre-snapshot, later marked SUPERSEDED with a suspects diff)
+- first-guess strip (before the snapshot, later marked replaced with a suspects diff)
 - graph canvas with the causal path
 - elimination funnel (each cut expands to its query, with **X-ray** on live runs)
 - verdict
@@ -16,15 +17,18 @@ run. The page streams over SSE:
 - response panel (handoff, rehearsal, PR, status, page, memory)
 - learning curve (the committed `learning_curve.json`)
 
-**Ask the graph.** Open the drawer's **Ask the graph** tab and type a question, or click an
-example: "Who owns checkout and who is on call right now?", "Which changes caused incidents
+**Ask the graph.** Press **Ask the graph** (bottom right of the console) to open the chat panel
+and type a question, or click a starter question: "Who owns checkout and who is on call right now?", "Which changes caused incidents
 last week?", "What did we decide after the last config-service outage?", "Who changed the rate
 limiter recently?". The answer lists its sources and **Show queries** reveals the Cypher behind
 each claim. A question outside the graph (the weather, say) answers "no information". With
 an LLM key set the agent plans the lookups; without one the panel runs in a limited no-LLM
 mode (also used if the model fails or the daily spend cap is reached) where a deterministic
 router answers a fixed set of question shapes (owner, on call, recent changes, incidents,
-decisions) and the response says so. Each session
+decisions) and the response says so. With a live incident open, the chat also answers
+questions about it ("Why did you blame chg-...?", "What got ruled out?") from the incident's
+stored proofs through the read-only `incident_proofs` tool. The conversation stays in the tab
+across runs. Each session
 may ask 20 questions per hour (`IC_SESSION_ASKS_PER_HOUR`); an incident is not needed, and
 nothing you ask writes to the graph.
 

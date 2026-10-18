@@ -4,10 +4,10 @@
 
 An on-call agent whose every answer is a proof you can re-run or break.
 
-**Live demo: [commander.niheshr.com](https://commander.niheshr.com)**. Press **Inject fault**
+**Live demo: [commander.niheshr.com](https://commander.niheshr.com)**. Press **Start an incident**
 to run an investigation against a fresh copy of the world graph.
 
-![Incident Commander: the recorded gpt-6-luna run autoplays through the elimination funnel, the clause-bar certificate and the verdict](docs/media/console-investigation.gif)
+![Incident Commander: the recorded gpt-6-luna run through the elimination funnel, the clause-bar certificate and the verdict](docs/media/console-investigation.gif)
 
 Incident Commander takes a production alert, rebuilds the service graph in **FalkorDB** as it
 stood at alert time, and finds the root-cause change. It doesn't rank guesses. It rules out
@@ -354,7 +354,7 @@ pnpm install
 pnpm dev
 ```
 
-Open http://localhost:3001 and press **Inject fault**. Without an LLM key, a full
+Open http://localhost:3001 and press **Start an incident**. Without an LLM key, a full
 investigation (reflex, snapshots, funnel, six proofs, rehearsal, simulated PR and page, memory
 write-back) finishes in about 1-2 s and ends in `LEARNED`.
 
