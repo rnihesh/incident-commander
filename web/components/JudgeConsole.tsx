@@ -4,7 +4,8 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { deriveBanners, isDegraded, type GraphView } from "@/lib/reducer";
 import { useRunStream } from "@/lib/useRunStream";
 import { getIncidentGraph, verifyIncident, type IncidentGraphResponse, type VerifyResponse } from "@/lib/api";
-import { fitNodes, liveGraphView, toLiveGraph } from "@/lib/liveGraph";
+import { liveGraphView, toLiveGraph } from "@/lib/liveGraph";
+import { clusterLayout } from "@/lib/graphLayout";
 import { mapVerify, type ChainVerify } from "@/lib/verify";
 import type { VerifyResult } from "@/lib/mock/verify";
 import {
@@ -156,12 +157,13 @@ export default function JudgeConsole() {
   const secondsLeft = round ? Math.max(0, Math.ceil(round.revealAfterS - (now - round.injectedAt) / 1000)) : 0;
   const canReveal = !!round && (blindVerdict || secondsLeft === 0);
 
+  // The target map: services grouped by region and domain (see clusterLayout), not the seeded
+  // world positions, which draw 800+ services as one hairball.
   const overview = useMemo(() => {
     if (!targets) return null;
-    const nodes = fitNodes(
-      targets.services.map((s) => ({ ...s, symptomatic: false, onset: null, signature: null, alerting: false })),
-    );
-    return { nodes, edges: targets.edges };
+    const { pos, captions } = clusterLayout(targets.services);
+    const nodes = targets.services.map((s) => ({ id: s.id, name: s.name, tier: s.tier, ...(pos.get(s.id) ?? { x: 0, y: 0 }) }));
+    return { nodes, edges: targets.edges, captions };
   }, [targets]);
   const [overviewFocus, setOverviewFocus] = useState<{ ids: string[]; n: number } | null>(null);
   const select = useCallback((id: string) => {
@@ -207,6 +209,8 @@ export default function JudgeConsole() {
                 view="true"
                 focus={overviewFocus}
                 onNodeClick={select}
+                variant="map"
+                captions={overview.captions}
               />
             ) : (
               <Placeholder>{targetsError ?? "Loading your session's service map."}</Placeholder>
