@@ -22,7 +22,7 @@
   --color-late: #a78bfa;
 
   /* graph canvas: background nodes, eliminated nodes, the alerting service, path particles */
-  --color-node: #35475c;
+  --color-node: #3e536b;
   --color-node-out: #2a3849;
   --color-node-out-mark: #4a5d73;
   --color-alert: #f4f7fb;

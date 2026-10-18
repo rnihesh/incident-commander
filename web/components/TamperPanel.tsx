@@ -169,7 +169,7 @@ export function TamperPanel({
 
   return (
     <section aria-labelledby="tamper-h" className="border-b border-rule">
-      <PanelHead id="tamper-h" title="Tamper" meta={`writes only s:<your session>:world · ${incidentId}`} />
+      <PanelHead id="tamper-h" title="Tamper" meta={`changes only your sandbox's copy of the graph, ${incidentId}`} />
       <div className="space-y-2 border-b border-rule px-inset py-2.5" aria-label="Try these">
         <div className="flex flex-wrap items-center gap-2">
           <span className="text-label font-semibold text-ink">Try these</span>

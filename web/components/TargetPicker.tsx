@@ -50,7 +50,12 @@ export function TargetPicker({
 
   return (
     <section aria-labelledby="picker-h" className="@container flex min-h-0 flex-col border border-rule bg-deck">
-      <PanelHead id="picker-h" title="Pick a target" meta={loading ? "loading" : `${filtered.length} of ${targets.length} services`} />
+      <PanelHead
+        id="picker-h"
+        title="Pick a target"
+        meta={loading ? "loading" : `${filtered.length} of ${targets.length} services`}
+        hint="Choose the service to break. The agent is not told which one; dimmed services cannot raise an alert."
+      />
       <div className="flex flex-wrap items-center gap-x-3 gap-y-2 border-b border-rule px-inset py-2">
         <label className="sr-only" htmlFor="target-search">Search services</label>
         <Input
@@ -67,7 +72,7 @@ export function TargetPicker({
         </label>
       </div>
       {error && <p role="alert" className="px-inset py-2 text-label text-falsified">{error}</p>}
-      <div className="grid min-h-0 flex-1 grid-cols-1 @min-[440px]:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+      <div className="grid min-h-0 flex-1 grid-cols-1 @min-[440px]:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)]">
         <ul role="listbox" aria-label="Services" className="max-h-[46vh] min-h-0 overflow-y-auto border-b border-rule @min-[440px]:border-b-0 @min-[440px]:border-r">
           {shown.map((t) => {
             const reason = t.unavailable[faultClass];
@@ -82,8 +87,8 @@ export function TargetPicker({
                 >
                   <span className="flex w-full items-baseline gap-2">
                     <span className="truncate font-mono text-label text-ink">{t.name}</span>
-                    <span className="font-mono text-meta text-dim">{t.region}</span>
-                    <span className="ml-auto font-mono text-meta text-faint">tier {t.tier}</span>
+                    <span className="shrink-0 whitespace-nowrap font-mono text-meta text-dim">{t.region}</span>
+                    <span className="ml-auto shrink-0 whitespace-nowrap font-mono text-meta text-faint">tier {t.tier}</span>
                   </span>
                   {reason && <span className="text-meta text-drifted">{reason}</span>}
                 </button>

@@ -227,7 +227,7 @@ export default function JudgeConsole() {
               injectError={injectError}
             />
             <p className="px-1 text-meta text-faint">
-              Your world is a private copy of the demo graph (s:&lt;session&gt;:world). The answer key is stored by the API, outside every graph the agent can query.
+              Your sandbox is a private copy of the company graph. The answer key is kept by the API, outside every graph the agent can query.
             </p>
           </div>
         </main>
