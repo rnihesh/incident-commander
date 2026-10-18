@@ -29,9 +29,10 @@ CLAUSES = {
 
 
 def _c000() -> dict:
-    """The committed Opus 5.5 run, cut down to case c000 (both predictions there are wrong)."""
+    """The committed Opus 5.5 run, cut down to the wrong predictions on case c000 (full context
+    and vector RAG; the graph agent got it right)."""
     r = json.loads(OPUS.read_text())
-    r["results"] = [x for x in r["results"] if x["case"] == "c000"]
+    r["results"] = [x for x in r["results"] if x["case"] == "c000" and not x["correct"]]
     return r
 
 

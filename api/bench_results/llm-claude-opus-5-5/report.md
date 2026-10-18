@@ -1,20 +1,22 @@
 # Incident Commander benchmark
 
-10 injected faults (6 training-class, 4 held-out), each in its own isolated copy of the seed world. A prediction is correct when it names the exact root-cause entity id from the answer key.
+50 injected faults (30 training-class, 20 held-out), each in its own isolated copy of the seed world. A prediction is correct when it names the exact root-cause entity id from the answer key.
 
 ## Accuracy, time and tokens
 
 | Approach | Accuracy (seen) | Accuracy (held-out) | Overall | Mean ms / case | LLM tokens / case | Prompt tokens / case (est.) | Tool calls / case |
 |---|---|---|---|---|---|---|---|
-| full_context (llm: claude-opus-5-5) | 33% | 50% | 40% (4/10) | 7293 | 49608 | 23834 | 0.0 |
-| vector_rag (llm: claude-opus-5-5) | 17% | 0% | 10% (1/10) | 5282 | 1073 | 477 | 0.0 |
+| graph (llm: claude-opus-5-5) | 100% | 100% | 100% (50/50) | 12522 | 38334 | 0 | 6.3 |
+| vector_rag (llm: claude-opus-5-5) | 17% | 15% | 16% (8/50) | 3756 | 1061 | 473 | 0.0 |
+| full_context (llm: claude-opus-5-5) | 47% | 65% | 54% (27/50) | 6147 | 49617 | 23828 | 0.0 |
 
 ## Correct per fault class
 
 | Approach | bad_deploy | config_change | flag_flip | expiry (held-out) | undeclared_coupling (held-out) |
 |---|---|---|---|---|---|
-| full_context (llm: claude-opus-5-5) | 1/2 | 1/2 | 0/2 | 2/2 | 0/2 |
-| vector_rag (llm: claude-opus-5-5) | 0/2 | 1/2 | 0/2 | 0/2 | 0/2 |
+| graph (llm: claude-opus-5-5) | 10/10 | 10/10 | 10/10 | 10/10 | 10/10 |
+| vector_rag (llm: claude-opus-5-5) | 1/10 | 4/10 | 0/10 | 1/10 | 2/10 |
+| full_context (llm: claude-opus-5-5) | 4/10 | 5/10 | 5/10 | 10/10 | 3/10 |
 
 ## Per-step latency: FalkorDB vs Postgres
 
@@ -38,4 +40,4 @@ _Not yet measured (run `ic learn`)._
 
 ---
 
-Seed 42 · case seeds de513877d55f (full list in report.json) · commit `8b1d66e0508e8fbead15d339057025216dbd0c98` · 10 cases · LLM: claude-opus-5-5
+Seed 42 · case seeds 53b6b393b51d (full list in report.json) · commit `0ef6f6c9ba26714bd6ed10714c0cfaec413bbb0b` · 50 cases · LLM: claude-opus-5-5

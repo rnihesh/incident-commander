@@ -1,0 +1,4339 @@
+{
+ "case_list": [
+  {
+   "alert_service": "svc-growth-gateway@eu-west",
+   "alert_time": 1790831040,
+   "case": "c000",
+   "fault_class": "undeclared_coupling",
+   "held_out": true,
+   "incident_id": "inc-041",
+   "rng_seed": 78473,
+   "root_id": "chg-05690"
+  },
+  {
+   "alert_service": "svc-user-profile-scheduler@eu-west",
+   "alert_time": 1790830860,
+   "case": "c001",
+   "fault_class": "bad_deploy",
+   "held_out": false,
+   "incident_id": "inc-041",
+   "rng_seed": 529123,
+   "root_id": "chg-05691"
+  },
+  {
+   "alert_service": "svc-permissions-bff@us-east",
+   "alert_time": 1790826600,
+   "case": "c002",
+   "fault_class": "config_change",
+   "held_out": false,
+   "incident_id": "inc-041",
+   "rng_seed": 949669,
+   "root_id": "chg-05687"
+  },
+  {
+   "alert_service": "svc-identity-gateway@ap-south",
+   "alert_time": 1790828340,
+   "case": "c003",
+   "fault_class": "flag_flip",
+   "held_out": false,
+   "incident_id": "inc-041",
+   "rng_seed": 981231,
+   "root_id": "chg-05689"
+  },
+  {
+   "alert_service": "svc-mobile-bff-7@ap-south",
+   "alert_time": 1790826780,
+   "case": "c004",
+   "fault_class": "expiry",
+   "held_out": true,
+   "incident_id": "inc-041",
+   "rng_seed": 345666,
+   "root_id": "exp-0174"
+  },
+  {
+   "alert_service": "svc-user-profile-scheduler@us-east",
+   "alert_time": 1790825760,
+   "case": "c005",
+   "fault_class": "undeclared_coupling",
+   "held_out": true,
+   "incident_id": "inc-041",
+   "rng_seed": 531319,
+   "root_id": "chg-05688"
+  },
+  {
+   "alert_service": "svc-accounts-events@us-east",
+   "alert_time": 1790831460,
+   "case": "c006",
+   "fault_class": "bad_deploy",
+   "held_out": false,
+   "incident_id": "inc-041",
+   "rng_seed": 630907,
+   "root_id": "chg-05689"
+  },
+  {
+   "alert_service": "svc-analytics-api-batch@ap-south",
+   "alert_time": 1790828820,
+   "case": "c007",
+   "fault_class": "config_change",
+   "held_out": false,
+   "incident_id": "inc-041",
+   "rng_seed": 1225,
+   "root_id": "chg-05688"
+  },
+  {
+   "alert_service": "svc-payments-gateway@ap-south",
+   "alert_time": 1790833140,
+   "case": "c008",
+   "fault_class": "flag_flip",
+   "held_out": false,
+   "incident_id": "inc-041",
+   "rng_seed": 89651,
+   "root_id": "chg-05688"
+  },
+  {
+   "alert_service": "svc-referrals-events@eu-west",
+   "alert_time": 1790826840,
+   "case": "c009",
+   "fault_class": "expiry",
+   "held_out": true,
+   "incident_id": "inc-041",
+   "rng_seed": 263433,
+   "root_id": "exp-0175"
+  },
+  {
+   "alert_service": "svc-web-gateway@us-east",
+   "alert_time": 1790825520,
+   "case": "c010",
+   "fault_class": "undeclared_coupling",
+   "held_out": true,
+   "incident_id": "inc-041",
+   "rng_seed": 556528,
+   "root_id": "chg-05688"
+  },
+  {
+   "alert_service": "svc-signup-admin@ap-south",
+   "alert_time": 1790829300,
+   "case": "c011",
+   "fault_class": "bad_deploy",
+   "held_out": false,
+   "incident_id": "inc-041",
+   "rng_seed": 452251,
+   "root_id": "chg-05688"
+  },
+  {
+   "alert_service": "svc-settlement-v2@us-east",
+   "alert_time": 1790827800,
+   "case": "c012",
+   "fault_class": "config_change",
+   "held_out": false,
+   "incident_id": "inc-041",
+   "rng_seed": 372337,
+   "root_id": "chg-05688"
+  },
+  {
+   "alert_service": "svc-cdn-origin@ap-south",
+   "alert_time": 1790828820,
+   "case": "c013",
+   "fault_class": "flag_flip",
+   "held_out": false,
+   "incident_id": "inc-041",
+   "rng_seed": 414979,
+   "root_id": "chg-05690"
+  },
+  {
+   "alert_service": "svc-analytics-api-bff@eu-west",
+   "alert_time": 1790829540,
+   "case": "c014",
+   "fault_class": "expiry",
+   "held_out": true,
+   "incident_id": "inc-041",
+   "rng_seed": 312224,
+   "root_id": "exp-0172"
+  },
+  {
+   "alert_service": "svc-logistics-gateway@eu-west",
+   "alert_time": 1790826420,
+   "case": "c015",
+   "fault_class": "undeclared_coupling",
+   "held_out": true,
+   "incident_id": "inc-041",
+   "rng_seed": 292843,
+   "root_id": "chg-05687"
+  },
+  {
+   "alert_service": "svc-fulfillment-api@ap-south",
+   "alert_time": 1790828400,
+   "case": "c016",
+   "fault_class": "bad_deploy",
+   "held_out": false,
+   "incident_id": "inc-041",
+   "rng_seed": 623984,
+   "root_id": "chg-05691"
+  },
+  {
+   "alert_service": "svc-identity-gateway@ap-south",
+   "alert_time": 1790831100,
+   "case": "c017",
+   "fault_class": "config_change",
+   "held_out": false,
+   "incident_id": "inc-041",
+   "rng_seed": 77263,
+   "root_id": "chg-05691"
+  },
+  {
+   "alert_service": "svc-consent@eu-west",
+   "alert_time": 1790829660,
+   "case": "c018",
+   "fault_class": "flag_flip",
+   "held_out": false,
+   "incident_id": "inc-041",
+   "rng_seed": 83748,
+   "root_id": "chg-05687"
+  },
+  {
+   "alert_service": "svc-mobile-bff@ap-south",
+   "alert_time": 1790833620,
+   "case": "c019",
+   "fault_class": "expiry",
+   "held_out": true,
+   "incident_id": "inc-041",
+   "rng_seed": 168552,
+   "root_id": "exp-0174"
+  },
+  {
+   "alert_service": "svc-commerce-gateway-5@us-east",
+   "alert_time": 1790829240,
+   "case": "c020",
+   "fault_class": "undeclared_coupling",
+   "held_out": true,
+   "incident_id": "inc-041",
+   "rng_seed": 648438,
+   "root_id": "chg-05687"
+  },
+  {
+   "alert_service": "svc-identity-gateway@us-east",
+   "alert_time": 1790824920,
+   "case": "c021",
+   "fault_class": "bad_deploy",
+   "held_out": false,
+   "incident_id": "inc-041",
+   "rng_seed": 790517,
+   "root_id": "chg-05690"
+  },
+  {
+   "alert_service": "svc-payments-gateway@ap-south",
+   "alert_time": 1790830020,
+   "case": "c022",
+   "fault_class": "config_change",
+   "held_out": false,
+   "incident_id": "inc-041",
+   "rng_seed": 180690,
+   "root_id": "chg-05688"
+  },
+  {
+   "alert_service": "svc-web-gateway@eu-west",
+   "alert_time": 1790827260,
+   "case": "c023",
+   "fault_class": "flag_flip",
+   "held_out": false,
+   "incident_id": "inc-041",
+   "rng_seed": 110027,
+   "root_id": "chg-05691"
+  },
+  {
+   "alert_service": "svc-mobile-bff-7@eu-west",
+   "alert_time": 1790826120,
+   "case": "c024",
+   "fault_class": "expiry",
+   "held_out": true,
+   "incident_id": "inc-041",
+   "rng_seed": 198194,
+   "root_id": "exp-0172"
+  },
+  {
+   "alert_service": "svc-invoicing-scheduler@us-east",
+   "alert_time": 1790829960,
+   "case": "c025",
+   "fault_class": "undeclared_coupling",
+   "held_out": true,
+   "incident_id": "inc-041",
+   "rng_seed": 354378,
+   "root_id": "chg-05690"
+  },
+  {
+   "alert_service": "svc-orders@ap-south",
+   "alert_time": 1790825580,
+   "case": "c026",
+   "fault_class": "bad_deploy",
+   "held_out": false,
+   "incident_id": "inc-041",
+   "rng_seed": 903241,
+   "root_id": "chg-05689"
+  },
+  {
+   "alert_service": "svc-payments-gateway@ap-south",
+   "alert_time": 1790824980,
+   "case": "c027",
+   "fault_class": "config_change",
+   "held_out": false,
+   "incident_id": "inc-041",
+   "rng_seed": 717925,
+   "root_id": "chg-05687"
+  },
+  {
+   "alert_service": "svc-catalog-batch@ap-south",
+   "alert_time": 1790832480,
+   "case": "c028",
+   "fault_class": "flag_flip",
+   "held_out": false,
+   "incident_id": "inc-041",
+   "rng_seed": 870286,
+   "root_id": "chg-05690"
+  },
+  {
+   "alert_service": "svc-payments-gateway@ap-south",
+   "alert_time": 1790829000,
+   "case": "c029",
+   "fault_class": "expiry",
+   "held_out": true,
+   "incident_id": "inc-041",
+   "rng_seed": 46777,
+   "root_id": "exp-0172"
+  },
+  {
+   "alert_service": "svc-cdn-origin@eu-west",
+   "alert_time": 1790824260,
+   "case": "c030",
+   "fault_class": "undeclared_coupling",
+   "held_out": true,
+   "incident_id": "inc-041",
+   "rng_seed": 723294,
+   "root_id": "chg-05689"
+  },
+  {
+   "alert_service": "svc-cdn-origin@ap-south",
+   "alert_time": 1790831160,
+   "case": "c031",
+   "fault_class": "bad_deploy",
+   "held_out": false,
+   "incident_id": "inc-041",
+   "rng_seed": 372032,
+   "root_id": "chg-05687"
+  },
+  {
+   "alert_service": "svc-settlement@us-east",
+   "alert_time": 1790828700,
+   "case": "c032",
+   "fault_class": "config_change",
+   "held_out": false,
+   "incident_id": "inc-041",
+   "rng_seed": 929777,
+   "root_id": "chg-05688"
+  },
+  {
+   "alert_service": "svc-signup-api@ap-south",
+   "alert_time": 1790832180,
+   "case": "c033",
+   "fault_class": "flag_flip",
+   "held_out": false,
+   "incident_id": "inc-041",
+   "rng_seed": 602857,
+   "root_id": "chg-05688"
+  },
+  {
+   "alert_service": "svc-fraud-score-bff@us-east",
+   "alert_time": 1790824260,
+   "case": "c034",
+   "fault_class": "expiry",
+   "held_out": true,
+   "incident_id": "inc-041",
+   "rng_seed": 360386,
+   "root_id": "exp-0175"
+  },
+  {
+   "alert_service": "svc-wishlist@ap-south",
+   "alert_time": 1790831700,
+   "case": "c035",
+   "fault_class": "undeclared_coupling",
+   "held_out": true,
+   "incident_id": "inc-041",
+   "rng_seed": 112596,
+   "root_id": "chg-05690"
+  },
+  {
+   "alert_service": "svc-email-campaigns-scheduler@eu-west",
+   "alert_time": 1790829000,
+   "case": "c036",
+   "fault_class": "bad_deploy",
+   "held_out": false,
+   "incident_id": "inc-041",
+   "rng_seed": 485668,
+   "root_id": "chg-05688"
+  },
+  {
+   "alert_service": "svc-catalog-events@ap-south",
+   "alert_time": 1790832900,
+   "case": "c037",
+   "fault_class": "config_change",
+   "held_out": false,
+   "incident_id": "inc-041",
+   "rng_seed": 844842,
+   "root_id": "chg-05690"
+  },
+  {
+   "alert_service": "svc-api-gateway@eu-west",
+   "alert_time": 1790833740,
+   "case": "c038",
+   "fault_class": "flag_flip",
+   "held_out": false,
+   "incident_id": "inc-041",
+   "rng_seed": 60587,
+   "root_id": "chg-05690"
+  },
+  {
+   "alert_service": "svc-logistics-gateway@eu-west",
+   "alert_time": 1790832420,
+   "case": "c039",
+   "fault_class": "expiry",
+   "held_out": true,
+   "incident_id": "inc-041",
+   "rng_seed": 132904,
+   "root_id": "exp-0173"
+  },
+  {
+   "alert_service": "svc-payouts-bff@us-east",
+   "alert_time": 1790825220,
+   "case": "c040",
+   "fault_class": "undeclared_coupling",
+   "held_out": true,
+   "incident_id": "inc-041",
+   "rng_seed": 110978,
+   "root_id": "chg-05691"
+  },
+  {
+   "alert_service": "svc-settlement-bff@ap-south",
+   "alert_time": 1790825340,
+   "case": "c041",
+   "fault_class": "bad_deploy",
+   "held_out": false,
+   "incident_id": "inc-041",
+   "rng_seed": 819014,
+   "root_id": "chg-05688"
+  },
+  {
+   "alert_service": "svc-api-gateway-3@ap-south",
+   "alert_time": 1790827320,
+   "case": "c042",
+   "fault_class": "config_change",
+   "held_out": false,
+   "incident_id": "inc-041",
+   "rng_seed": 978514,
+   "root_id": "chg-05689"
+  },
+  {
+   "alert_service": "svc-settlement@us-east",
+   "alert_time": 1790828040,
+   "case": "c043",
+   "fault_class": "flag_flip",
+   "held_out": false,
+   "incident_id": "inc-041",
+   "rng_seed": 314890,
+   "root_id": "chg-05687"
+  },
+  {
+   "alert_service": "svc-sso-scheduler@eu-west",
+   "alert_time": 1790828940,
+   "case": "c044",
+   "fault_class": "expiry",
+   "held_out": true,
+   "incident_id": "inc-041",
+   "rng_seed": 360050,
+   "root_id": "exp-0174"
+  },
+  {
+   "alert_service": "svc-cart@ap-south",
+   "alert_time": 1790826540,
+   "case": "c045",
+   "fault_class": "undeclared_coupling",
+   "held_out": true,
+   "incident_id": "inc-041",
+   "rng_seed": 370286,
+   "root_id": "chg-05689"
+  },
+  {
+   "alert_service": "svc-sessions-v2@eu-west",
+   "alert_time": 1790832300,
+   "case": "c046",
+   "fault_class": "bad_deploy",
+   "held_out": false,
+   "incident_id": "inc-041",
+   "rng_seed": 820989,
+   "root_id": "chg-05688"
+  },
+  {
+   "alert_service": "svc-identity-gateway@ap-south",
+   "alert_time": 1790833620,
+   "case": "c047",
+   "fault_class": "config_change",
+   "held_out": false,
+   "incident_id": "inc-041",
+   "rng_seed": 431493,
+   "root_id": "chg-05688"
+  },
+  {
+   "alert_service": "svc-consent@ap-south",
+   "alert_time": 1790825700,
+   "case": "c048",
+   "fault_class": "flag_flip",
+   "held_out": false,
+   "incident_id": "inc-041",
+   "rng_seed": 28649,
+   "root_id": "chg-05687"
+  },
+  {
+   "alert_service": "svc-logistics-gateway@us-east",
+   "alert_time": 1790834400,
+   "case": "c049",
+   "fault_class": "expiry",
+   "held_out": true,
+   "incident_id": "inc-041",
+   "rng_seed": 660438,
+   "root_id": "exp-0174"
+  }
+ ],
+ "failures": [],
+ "latency": null,
+ "learning_curve": null,
+ "meta": {
+  "approaches": [
+   {
+    "label": "graph (llm: claude-haiku-5-5)",
+    "name": "graph"
+   },
+   {
+    "label": "vector_rag (llm: claude-haiku-5-5)",
+    "name": "vector_rag"
+   },
+   {
+    "label": "full_context (llm: claude-haiku-5-5)",
+    "name": "full_context"
+   }
+  ],
+  "case_seeds": [
+   78473,
+   529123,
+   949669,
+   981231,
+   345666,
+   531319,
+   630907,
+   1225,
+   89651,
+   263433,
+   556528,
+   452251,
+   372337,
+   414979,
+   312224,
+   292843,
+   623984,
+   77263,
+   83748,
+   168552,
+   648438,
+   790517,
+   180690,
+   110027,
+   198194,
+   354378,
+   903241,
+   717925,
+   870286,
+   46777,
+   723294,
+   372032,
+   929777,
+   602857,
+   360386,
+   112596,
+   485668,
+   844842,
+   60587,
+   132904,
+   110978,
+   819014,
+   978514,
+   314890,
+   360050,
+   370286,
+   820989,
+   431493,
+   28649,
+   660438
+  ],
+  "case_seeds_digest": "53b6b393b51d",
+  "cases": 50,
+  "class_order": [
+   "undeclared_coupling",
+   "bad_deploy",
+   "config_change",
+   "flag_flip",
+   "expiry"
+  ],
+  "classes": [
+   "bad_deploy",
+   "config_change",
+   "flag_flip",
+   "expiry",
+   "undeclared_coupling"
+  ],
+  "commit": "0ef6f6c9ba26714bd6ed10714c0cfaec413bbb0b",
+  "context_limit": 128000,
+  "dirty": false,
+  "generated_at": "2026-10-18T09:45:31Z",
+  "heldout_classes": [
+   "expiry",
+   "undeclared_coupling"
+  ],
+  "llm": "claude-haiku-5-5",
+  "n_heldout": 20,
+  "n_seen": 30,
+  "notes": [
+   "Correct = exact root entity id (change or expiry) from the answer key; an INCONCLUSIVE graph verdict makes no claim and counts as not correct.",
+   "Held-out classes (expiry, undeclared_coupling) were written after the triage prompts and tool descriptions, which do not change in this unit and never name them as fault classes (tested; Expiry as a graph label and the observed_calls tool predate them).",
+   "Every approach reads the same as-of snapshot (known view at alert time) and the same candidate window [earliest onset - 120 min, alert time].",
+   "full_context serializes the declared service catalog (DEPENDS_ON only, no OBSERVED_CALL); prompt tokens are estimated as len(text)/4 against a 128,000-token limit.",
+   "Mean ms is wall time per case for the approach alone (world copy, injection and snapshot builds excluded)."
+  ],
+  "requested_cases": 50,
+  "seed": 42,
+  "training_classes": [
+   "bad_deploy",
+   "config_change",
+   "flag_flip"
+  ],
+  "wall_s": 871.4,
+  "world": "seed:world"
+ },
+ "per_class": {
+  "full_context": {
+   "bad_deploy": {
+    "correct": 3,
+    "n": 10
+   },
+   "config_change": {
+    "correct": 2,
+    "n": 10
+   },
+   "expiry": {
+    "correct": 8,
+    "n": 10
+   },
+   "flag_flip": {
+    "correct": 1,
+    "n": 10
+   },
+   "undeclared_coupling": {
+    "correct": 1,
+    "n": 10
+   }
+  },
+  "graph": {
+   "bad_deploy": {
+    "correct": 10,
+    "n": 10
+   },
+   "config_change": {
+    "correct": 10,
+    "n": 10
+   },
+   "expiry": {
+    "correct": 10,
+    "n": 10
+   },
+   "flag_flip": {
+    "correct": 10,
+    "n": 10
+   },
+   "undeclared_coupling": {
+    "correct": 10,
+    "n": 10
+   }
+  },
+  "vector_rag": {
+   "bad_deploy": {
+    "correct": 1,
+    "n": 10
+   },
+   "config_change": {
+    "correct": 3,
+    "n": 10
+   },
+   "expiry": {
+    "correct": 1,
+    "n": 10
+   },
+   "flag_flip": {
+    "correct": 0,
+    "n": 10
+   },
+   "undeclared_coupling": {
+    "correct": 0,
+    "n": 10
+   }
+  }
+ },
+ "results": [
+  {
+   "approach": "graph",
+   "case": "c000",
+   "correct": true,
+   "error": null,
+   "fault_class": "undeclared_coupling",
+   "held_out": true,
+   "llm_tokens": 45261,
+   "ms": 8563.1,
+   "notes": {
+    "degraded": false,
+    "degraded_reason": null,
+    "rivals": [],
+    "steps": 7
+   },
+   "predicted": "chg-05690",
+   "prompt_tokens_est": 0,
+   "root_id": "chg-05690",
+   "tool_calls": 7,
+   "truncated": false,
+   "verdict": "DIAGNOSED"
+  },
+  {
+   "approach": "vector_rag",
+   "case": "c000",
+   "correct": false,
+   "error": null,
+   "fault_class": "undeclared_coupling",
+   "held_out": true,
+   "llm_tokens": 897,
+   "ms": 2113.7,
+   "notes": {
+    "candidates_in_top_k": 3,
+    "n_candidates": 7,
+    "top_k": [
+     "pm-007#symptoms",
+     "pm-033#symptoms",
+     "chg-05691",
+     "pm-027#symptoms",
+     "pm-036#symptoms",
+     "chg-05690",
+     "pm-038#symptoms",
+     "chg-05692"
+    ]
+   },
+   "predicted": "chg-05692",
+   "prompt_tokens_est": 338,
+   "root_id": "chg-05690",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "full_context",
+   "case": "c000",
+   "correct": false,
+   "error": null,
+   "fault_class": "undeclared_coupling",
+   "held_out": true,
+   "llm_tokens": 50096,
+   "ms": 4593.3,
+   "notes": {
+    "edges": 1569,
+    "n_candidates": 7
+   },
+   "predicted": "chg-05692",
+   "prompt_tokens_est": 23871,
+   "root_id": "chg-05690",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "graph",
+   "case": "c001",
+   "correct": true,
+   "error": null,
+   "fault_class": "bad_deploy",
+   "held_out": false,
+   "llm_tokens": 45794,
+   "ms": 8356.7,
+   "notes": {
+    "degraded": false,
+    "degraded_reason": null,
+    "rivals": [],
+    "steps": 7
+   },
+   "predicted": "chg-05691",
+   "prompt_tokens_est": 0,
+   "root_id": "chg-05691",
+   "tool_calls": 7,
+   "truncated": false,
+   "verdict": "DIAGNOSED"
+  },
+  {
+   "approach": "vector_rag",
+   "case": "c001",
+   "correct": false,
+   "error": null,
+   "fault_class": "bad_deploy",
+   "held_out": false,
+   "llm_tokens": 1051,
+   "ms": 2243.7,
+   "notes": {
+    "candidates_in_top_k": 0,
+    "n_candidates": 6,
+    "top_k": [
+     "pm-005#symptoms",
+     "pm-009#symptoms",
+     "pm-036#symptoms",
+     "pm-028#symptoms",
+     "pm-030#symptoms",
+     "pm-015#symptoms",
+     "pm-012#symptoms",
+     "pm-039#symptoms"
+    ]
+   },
+   "predicted": null,
+   "prompt_tokens_est": 430,
+   "root_id": "chg-05691",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "full_context",
+   "case": "c001",
+   "correct": true,
+   "error": null,
+   "fault_class": "bad_deploy",
+   "held_out": false,
+   "llm_tokens": 49629,
+   "ms": 3109.3,
+   "notes": {
+    "edges": 1569,
+    "n_candidates": 6
+   },
+   "predicted": "chg-05691",
+   "prompt_tokens_est": 23871,
+   "root_id": "chg-05691",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "graph",
+   "case": "c002",
+   "correct": true,
+   "error": null,
+   "fault_class": "config_change",
+   "held_out": false,
+   "llm_tokens": 44253,
+   "ms": 11657.5,
+   "notes": {
+    "degraded": false,
+    "degraded_reason": null,
+    "rivals": [],
+    "steps": 7
+   },
+   "predicted": "chg-05687",
+   "prompt_tokens_est": 0,
+   "root_id": "chg-05687",
+   "tool_calls": 7,
+   "truncated": false,
+   "verdict": "DIAGNOSED"
+  },
+  {
+   "approach": "vector_rag",
+   "case": "c002",
+   "correct": false,
+   "error": null,
+   "fault_class": "config_change",
+   "held_out": false,
+   "llm_tokens": 1475,
+   "ms": 2729.2,
+   "notes": {
+    "candidates_in_top_k": 1,
+    "n_candidates": 4,
+    "top_k": [
+     "pm-030#symptoms",
+     "pm-030#body",
+     "chg-05690",
+     "pm-033#symptoms",
+     "pm-037#body",
+     "pm-007#symptoms",
+     "pm-016#body",
+     "pm-037#symptoms"
+    ]
+   },
+   "predicted": "chg-05690",
+   "prompt_tokens_est": 670,
+   "root_id": "chg-05687",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "full_context",
+   "case": "c002",
+   "correct": true,
+   "error": null,
+   "fault_class": "config_change",
+   "held_out": false,
+   "llm_tokens": 50191,
+   "ms": 5309.0,
+   "notes": {
+    "edges": 1569,
+    "n_candidates": 4
+   },
+   "predicted": "chg-05687",
+   "prompt_tokens_est": 23821,
+   "root_id": "chg-05687",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "graph",
+   "case": "c003",
+   "correct": true,
+   "error": null,
+   "fault_class": "flag_flip",
+   "held_out": false,
+   "llm_tokens": 44201,
+   "ms": 7577.4,
+   "notes": {
+    "degraded": false,
+    "degraded_reason": null,
+    "rivals": [],
+    "steps": 7
+   },
+   "predicted": "chg-05689",
+   "prompt_tokens_est": 0,
+   "root_id": "chg-05689",
+   "tool_calls": 7,
+   "truncated": false,
+   "verdict": "DIAGNOSED"
+  },
+  {
+   "approach": "vector_rag",
+   "case": "c003",
+   "correct": false,
+   "error": null,
+   "fault_class": "flag_flip",
+   "held_out": false,
+   "llm_tokens": 966,
+   "ms": 2163.8,
+   "notes": {
+    "candidates_in_top_k": 0,
+    "n_candidates": 5,
+    "top_k": [
+     "pm-005#symptoms",
+     "pm-011#symptoms",
+     "pm-036#symptoms",
+     "pm-009#symptoms",
+     "pm-037#symptoms",
+     "pm-034#symptoms",
+     "pm-035#symptoms",
+     "pm-012#symptoms"
+    ]
+   },
+   "predicted": null,
+   "prompt_tokens_est": 374,
+   "root_id": "chg-05689",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "full_context",
+   "case": "c003",
+   "correct": false,
+   "error": null,
+   "fault_class": "flag_flip",
+   "held_out": false,
+   "llm_tokens": 49527,
+   "ms": 4459.6,
+   "notes": {
+    "edges": 1569,
+    "n_candidates": 5
+   },
+   "predicted": "chg-05691",
+   "prompt_tokens_est": 23819,
+   "root_id": "chg-05689",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "graph",
+   "case": "c004",
+   "correct": true,
+   "error": null,
+   "fault_class": "expiry",
+   "held_out": true,
+   "llm_tokens": 43964,
+   "ms": 8040.0,
+   "notes": {
+    "degraded": false,
+    "degraded_reason": null,
+    "rivals": [],
+    "steps": 7
+   },
+   "predicted": "exp-0174",
+   "prompt_tokens_est": 0,
+   "root_id": "exp-0174",
+   "tool_calls": 7,
+   "truncated": false,
+   "verdict": "DIAGNOSED"
+  },
+  {
+   "approach": "vector_rag",
+   "case": "c004",
+   "correct": false,
+   "error": null,
+   "fault_class": "expiry",
+   "held_out": true,
+   "llm_tokens": 781,
+   "ms": 1224.4,
+   "notes": {
+    "candidates_in_top_k": 1,
+    "n_candidates": 5,
+    "top_k": [
+     "exp-0172",
+     "pm-001#symptoms",
+     "pm-024#symptoms",
+     "pm-020#symptoms",
+     "pm-040#symptoms",
+     "pm-023#symptoms",
+     "pm-031#symptoms",
+     "pm-008#symptoms"
+    ]
+   },
+   "predicted": "exp-0172",
+   "prompt_tokens_est": 338,
+   "root_id": "exp-0174",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "full_context",
+   "case": "c004",
+   "correct": true,
+   "error": null,
+   "fault_class": "expiry",
+   "held_out": true,
+   "llm_tokens": 49608,
+   "ms": 2856.8,
+   "notes": {
+    "edges": 1569,
+    "n_candidates": 5
+   },
+   "predicted": "exp-0174",
+   "prompt_tokens_est": 23804,
+   "root_id": "exp-0174",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "graph",
+   "case": "c005",
+   "correct": true,
+   "error": null,
+   "fault_class": "undeclared_coupling",
+   "held_out": true,
+   "llm_tokens": 45083,
+   "ms": 7460.6,
+   "notes": {
+    "degraded": false,
+    "degraded_reason": null,
+    "rivals": [],
+    "steps": 7
+   },
+   "predicted": "chg-05688",
+   "prompt_tokens_est": 0,
+   "root_id": "chg-05688",
+   "tool_calls": 7,
+   "truncated": false,
+   "verdict": "DIAGNOSED"
+  },
+  {
+   "approach": "vector_rag",
+   "case": "c005",
+   "correct": false,
+   "error": null,
+   "fault_class": "undeclared_coupling",
+   "held_out": true,
+   "llm_tokens": 1216,
+   "ms": 3217.0,
+   "notes": {
+    "candidates_in_top_k": 4,
+    "n_candidates": 6,
+    "top_k": [
+     "chg-05687",
+     "chg-05691",
+     "pm-015#symptoms",
+     "chg-05690",
+     "pm-004#symptoms",
+     "pm-015#body",
+     "chg-05692",
+     "pm-010#symptoms"
+    ]
+   },
+   "predicted": "chg-05692",
+   "prompt_tokens_est": 480,
+   "root_id": "chg-05688",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "full_context",
+   "case": "c005",
+   "correct": false,
+   "error": null,
+   "fault_class": "undeclared_coupling",
+   "held_out": true,
+   "llm_tokens": 49921,
+   "ms": 3847.1,
+   "notes": {
+    "edges": 1569,
+    "n_candidates": 6
+   },
+   "predicted": "chg-05689",
+   "prompt_tokens_est": 23860,
+   "root_id": "chg-05688",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "graph",
+   "case": "c006",
+   "correct": true,
+   "error": null,
+   "fault_class": "bad_deploy",
+   "held_out": false,
+   "llm_tokens": 43388,
+   "ms": 7879.8,
+   "notes": {
+    "degraded": false,
+    "degraded_reason": null,
+    "rivals": [],
+    "steps": 7
+   },
+   "predicted": "chg-05689",
+   "prompt_tokens_est": 0,
+   "root_id": "chg-05689",
+   "tool_calls": 7,
+   "truncated": false,
+   "verdict": "DIAGNOSED"
+  },
+  {
+   "approach": "vector_rag",
+   "case": "c006",
+   "correct": false,
+   "error": null,
+   "fault_class": "bad_deploy",
+   "held_out": false,
+   "llm_tokens": 1030,
+   "ms": 1605.7,
+   "notes": {
+    "candidates_in_top_k": 1,
+    "n_candidates": 5,
+    "top_k": [
+     "pm-027#symptoms",
+     "chg-05688",
+     "pm-036#symptoms",
+     "pm-026#body",
+     "pm-017#symptoms",
+     "pm-003#symptoms",
+     "pm-038#symptoms",
+     "pm-038#body"
+    ]
+   },
+   "predicted": "chg-05688",
+   "prompt_tokens_est": 538,
+   "root_id": "chg-05689",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "full_context",
+   "case": "c006",
+   "correct": false,
+   "error": null,
+   "fault_class": "bad_deploy",
+   "held_out": false,
+   "llm_tokens": 49762,
+   "ms": 4750.6,
+   "notes": {
+    "edges": 1569,
+    "n_candidates": 5
+   },
+   "predicted": "chg-05690",
+   "prompt_tokens_est": 23798,
+   "root_id": "chg-05689",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "graph",
+   "case": "c007",
+   "correct": true,
+   "error": null,
+   "fault_class": "config_change",
+   "held_out": false,
+   "llm_tokens": 43118,
+   "ms": 7554.2,
+   "notes": {
+    "degraded": false,
+    "degraded_reason": null,
+    "rivals": [],
+    "steps": 7
+   },
+   "predicted": "chg-05688",
+   "prompt_tokens_est": 0,
+   "root_id": "chg-05688",
+   "tool_calls": 7,
+   "truncated": false,
+   "verdict": "DIAGNOSED"
+  },
+  {
+   "approach": "vector_rag",
+   "case": "c007",
+   "correct": false,
+   "error": null,
+   "fault_class": "config_change",
+   "held_out": false,
+   "llm_tokens": 966,
+   "ms": 2248.7,
+   "notes": {
+    "candidates_in_top_k": 2,
+    "n_candidates": 4,
+    "top_k": [
+     "chg-05690",
+     "pm-007#symptoms",
+     "pm-033#symptoms",
+     "chg-05688",
+     "pm-002#symptoms",
+     "pm-022#symptoms",
+     "pm-019#symptoms",
+     "pm-028#symptoms"
+    ]
+   },
+   "predicted": "chg-05690",
+   "prompt_tokens_est": 362,
+   "root_id": "chg-05688",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "full_context",
+   "case": "c007",
+   "correct": false,
+   "error": null,
+   "fault_class": "config_change",
+   "held_out": false,
+   "llm_tokens": 50005,
+   "ms": 5285.9,
+   "notes": {
+    "edges": 1569,
+    "n_candidates": 4
+   },
+   "predicted": "chg-05687",
+   "prompt_tokens_est": 23787,
+   "root_id": "chg-05688",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "graph",
+   "case": "c008",
+   "correct": true,
+   "error": null,
+   "fault_class": "flag_flip",
+   "held_out": false,
+   "llm_tokens": 45572,
+   "ms": 11642.5,
+   "notes": {
+    "degraded": false,
+    "degraded_reason": null,
+    "rivals": [],
+    "steps": 7
+   },
+   "predicted": "chg-05688",
+   "prompt_tokens_est": 0,
+   "root_id": "chg-05688",
+   "tool_calls": 7,
+   "truncated": false,
+   "verdict": "DIAGNOSED"
+  },
+  {
+   "approach": "vector_rag",
+   "case": "c008",
+   "correct": false,
+   "error": null,
+   "fault_class": "flag_flip",
+   "held_out": false,
+   "llm_tokens": 1290,
+   "ms": 2486.1,
+   "notes": {
+    "candidates_in_top_k": 0,
+    "n_candidates": 6,
+    "top_k": [
+     "pm-011#symptoms",
+     "pm-035#symptoms",
+     "pm-009#symptoms",
+     "pm-005#symptoms",
+     "pm-012#symptoms",
+     "pm-028#symptoms",
+     "pm-034#symptoms",
+     "pm-035#body"
+    ]
+   },
+   "predicted": null,
+   "prompt_tokens_est": 558,
+   "root_id": "chg-05688",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "full_context",
+   "case": "c008",
+   "correct": false,
+   "error": null,
+   "fault_class": "flag_flip",
+   "held_out": false,
+   "llm_tokens": 50209,
+   "ms": 5163.0,
+   "notes": {
+    "edges": 1569,
+    "n_candidates": 6
+   },
+   "predicted": "chg-05691",
+   "prompt_tokens_est": 23860,
+   "root_id": "chg-05688",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "graph",
+   "case": "c009",
+   "correct": true,
+   "error": null,
+   "fault_class": "expiry",
+   "held_out": true,
+   "llm_tokens": 45172,
+   "ms": 9450.3,
+   "notes": {
+    "degraded": false,
+    "degraded_reason": null,
+    "rivals": [],
+    "steps": 7
+   },
+   "predicted": "exp-0175",
+   "prompt_tokens_est": 0,
+   "root_id": "exp-0175",
+   "tool_calls": 7,
+   "truncated": false,
+   "verdict": "DIAGNOSED"
+  },
+  {
+   "approach": "vector_rag",
+   "case": "c009",
+   "correct": false,
+   "error": null,
+   "fault_class": "expiry",
+   "held_out": true,
+   "llm_tokens": 1559,
+   "ms": 3023.0,
+   "notes": {
+    "candidates_in_top_k": 0,
+    "n_candidates": 5,
+    "top_k": [
+     "pm-024#symptoms",
+     "pm-031#symptoms",
+     "pm-008#symptoms",
+     "pm-020#symptoms",
+     "pm-015#symptoms",
+     "pm-020#body",
+     "pm-008#body",
+     "pm-024#body"
+    ]
+   },
+   "predicted": null,
+   "prompt_tokens_est": 678,
+   "root_id": "exp-0175",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "full_context",
+   "case": "c009",
+   "correct": true,
+   "error": null,
+   "fault_class": "expiry",
+   "held_out": true,
+   "llm_tokens": 50175,
+   "ms": 8841.8,
+   "notes": {
+    "edges": 1569,
+    "n_candidates": 5
+   },
+   "predicted": "exp-0175",
+   "prompt_tokens_est": 23844,
+   "root_id": "exp-0175",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "graph",
+   "case": "c010",
+   "correct": true,
+   "error": null,
+   "fault_class": "undeclared_coupling",
+   "held_out": true,
+   "llm_tokens": 42778,
+   "ms": 7850.0,
+   "notes": {
+    "degraded": false,
+    "degraded_reason": null,
+    "rivals": [],
+    "steps": 7
+   },
+   "predicted": "chg-05688",
+   "prompt_tokens_est": 0,
+   "root_id": "chg-05688",
+   "tool_calls": 7,
+   "truncated": false,
+   "verdict": "DIAGNOSED"
+  },
+  {
+   "approach": "vector_rag",
+   "case": "c010",
+   "correct": false,
+   "error": null,
+   "fault_class": "undeclared_coupling",
+   "held_out": true,
+   "llm_tokens": 1002,
+   "ms": 2328.7,
+   "notes": {
+    "candidates_in_top_k": 0,
+    "n_candidates": 4,
+    "top_k": [
+     "pm-030#symptoms",
+     "pm-017#symptoms",
+     "pm-005#symptoms",
+     "pm-036#symptoms",
+     "pm-037#symptoms",
+     "pm-028#symptoms",
+     "pm-009#symptoms",
+     "pm-011#symptoms"
+    ]
+   },
+   "predicted": null,
+   "prompt_tokens_est": 379,
+   "root_id": "chg-05688",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "full_context",
+   "case": "c010",
+   "correct": false,
+   "error": null,
+   "fault_class": "undeclared_coupling",
+   "held_out": true,
+   "llm_tokens": 49900,
+   "ms": 4960.0,
+   "notes": {
+    "edges": 1569,
+    "n_candidates": 4
+   },
+   "predicted": "chg-05690",
+   "prompt_tokens_est": 23771,
+   "root_id": "chg-05688",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "graph",
+   "case": "c011",
+   "correct": true,
+   "error": null,
+   "fault_class": "bad_deploy",
+   "held_out": false,
+   "llm_tokens": 43211,
+   "ms": 8000.6,
+   "notes": {
+    "degraded": false,
+    "degraded_reason": null,
+    "rivals": [],
+    "steps": 7
+   },
+   "predicted": "chg-05688",
+   "prompt_tokens_est": 0,
+   "root_id": "chg-05688",
+   "tool_calls": 7,
+   "truncated": false,
+   "verdict": "DIAGNOSED"
+  },
+  {
+   "approach": "vector_rag",
+   "case": "c011",
+   "correct": false,
+   "error": null,
+   "fault_class": "bad_deploy",
+   "held_out": false,
+   "llm_tokens": 1047,
+   "ms": 2222.7,
+   "notes": {
+    "candidates_in_top_k": 2,
+    "n_candidates": 5,
+    "top_k": [
+     "pm-001#symptoms",
+     "pm-011#symptoms",
+     "chg-05689",
+     "pm-023#symptoms",
+     "pm-015#symptoms",
+     "chg-05687",
+     "pm-003#symptoms",
+     "pm-040#symptoms"
+    ]
+   },
+   "predicted": "chg-05689",
+   "prompt_tokens_est": 368,
+   "root_id": "chg-05688",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "full_context",
+   "case": "c011",
+   "correct": false,
+   "error": null,
+   "fault_class": "bad_deploy",
+   "held_out": false,
+   "llm_tokens": 49651,
+   "ms": 3808.5,
+   "notes": {
+    "edges": 1569,
+    "n_candidates": 5
+   },
+   "predicted": "chg-05689",
+   "prompt_tokens_est": 23798,
+   "root_id": "chg-05688",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "graph",
+   "case": "c012",
+   "correct": true,
+   "error": null,
+   "fault_class": "config_change",
+   "held_out": false,
+   "llm_tokens": 44436,
+   "ms": 8375.8,
+   "notes": {
+    "degraded": false,
+    "degraded_reason": null,
+    "rivals": [],
+    "steps": 7
+   },
+   "predicted": "chg-05688",
+   "prompt_tokens_est": 0,
+   "root_id": "chg-05688",
+   "tool_calls": 7,
+   "truncated": false,
+   "verdict": "DIAGNOSED"
+  },
+  {
+   "approach": "vector_rag",
+   "case": "c012",
+   "correct": false,
+   "error": null,
+   "fault_class": "config_change",
+   "held_out": false,
+   "llm_tokens": 1682,
+   "ms": 4637.6,
+   "notes": {
+    "candidates_in_top_k": 2,
+    "n_candidates": 4,
+    "top_k": [
+     "chg-05687",
+     "chg-05688",
+     "pm-029#symptoms",
+     "pm-024#symptoms",
+     "pm-038#symptoms",
+     "pm-005#body",
+     "pm-010#symptoms",
+     "pm-024#body"
+    ]
+   },
+   "predicted": "chg-05687",
+   "prompt_tokens_est": 517,
+   "root_id": "chg-05688",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "full_context",
+   "case": "c012",
+   "correct": false,
+   "error": null,
+   "fault_class": "config_change",
+   "held_out": false,
+   "llm_tokens": 51010,
+   "ms": 8437.3,
+   "notes": {
+    "edges": 1569,
+    "n_candidates": 4
+   },
+   "predicted": "chg-05690",
+   "prompt_tokens_est": 23813,
+   "root_id": "chg-05688",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "graph",
+   "case": "c013",
+   "correct": true,
+   "error": null,
+   "fault_class": "flag_flip",
+   "held_out": false,
+   "llm_tokens": 42705,
+   "ms": 7977.7,
+   "notes": {
+    "degraded": false,
+    "degraded_reason": null,
+    "rivals": [],
+    "steps": 7
+   },
+   "predicted": "chg-05690",
+   "prompt_tokens_est": 0,
+   "root_id": "chg-05690",
+   "tool_calls": 7,
+   "truncated": false,
+   "verdict": "DIAGNOSED"
+  },
+  {
+   "approach": "vector_rag",
+   "case": "c013",
+   "correct": false,
+   "error": null,
+   "fault_class": "flag_flip",
+   "held_out": false,
+   "llm_tokens": 772,
+   "ms": 1403.7,
+   "notes": {
+    "candidates_in_top_k": 2,
+    "n_candidates": 4,
+    "top_k": [
+     "chg-05688",
+     "pm-021#symptoms",
+     "pm-001#symptoms",
+     "pm-020#symptoms",
+     "pm-011#symptoms",
+     "chg-05690",
+     "pm-003#symptoms",
+     "pm-040#symptoms"
+    ]
+   },
+   "predicted": "chg-05688",
+   "prompt_tokens_est": 359,
+   "root_id": "chg-05690",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "full_context",
+   "case": "c013",
+   "correct": true,
+   "error": null,
+   "fault_class": "flag_flip",
+   "held_out": false,
+   "llm_tokens": 49938,
+   "ms": 5421.0,
+   "notes": {
+    "edges": 1569,
+    "n_candidates": 4
+   },
+   "predicted": "chg-05690",
+   "prompt_tokens_est": 23768,
+   "root_id": "chg-05690",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "graph",
+   "case": "c014",
+   "correct": true,
+   "error": null,
+   "fault_class": "expiry",
+   "held_out": true,
+   "llm_tokens": 45309,
+   "ms": 11150.1,
+   "notes": {
+    "degraded": false,
+    "degraded_reason": null,
+    "rivals": [],
+    "steps": 7
+   },
+   "predicted": "exp-0172",
+   "prompt_tokens_est": 0,
+   "root_id": "exp-0172",
+   "tool_calls": 7,
+   "truncated": false,
+   "verdict": "DIAGNOSED"
+  },
+  {
+   "approach": "vector_rag",
+   "case": "c014",
+   "correct": false,
+   "error": null,
+   "fault_class": "expiry",
+   "held_out": true,
+   "llm_tokens": 1356,
+   "ms": 3722.3,
+   "notes": {
+    "candidates_in_top_k": 1,
+    "n_candidates": 5,
+    "top_k": [
+     "pm-024#symptoms",
+     "pm-003#symptoms",
+     "pm-001#symptoms",
+     "pm-018#symptoms",
+     "pm-008#symptoms",
+     "pm-020#symptoms",
+     "pm-019#symptoms",
+     "exp-0174"
+    ]
+   },
+   "predicted": "exp-0174",
+   "prompt_tokens_est": 404,
+   "root_id": "exp-0172",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "full_context",
+   "case": "c014",
+   "correct": true,
+   "error": null,
+   "fault_class": "expiry",
+   "held_out": true,
+   "llm_tokens": 49963,
+   "ms": 3697.2,
+   "notes": {
+    "edges": 1569,
+    "n_candidates": 5
+   },
+   "predicted": "exp-0172",
+   "prompt_tokens_est": 23863,
+   "root_id": "exp-0172",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "graph",
+   "case": "c015",
+   "correct": true,
+   "error": null,
+   "fault_class": "undeclared_coupling",
+   "held_out": true,
+   "llm_tokens": 45189,
+   "ms": 8103.6,
+   "notes": {
+    "degraded": false,
+    "degraded_reason": null,
+    "rivals": [],
+    "steps": 7
+   },
+   "predicted": "chg-05687",
+   "prompt_tokens_est": 0,
+   "root_id": "chg-05687",
+   "tool_calls": 7,
+   "truncated": false,
+   "verdict": "DIAGNOSED"
+  },
+  {
+   "approach": "vector_rag",
+   "case": "c015",
+   "correct": false,
+   "error": null,
+   "fault_class": "undeclared_coupling",
+   "held_out": true,
+   "llm_tokens": 1190,
+   "ms": 2566.6,
+   "notes": {
+    "candidates_in_top_k": 0,
+    "n_candidates": 4,
+    "top_k": [
+     "pm-011#symptoms",
+     "pm-030#symptoms",
+     "pm-008#symptoms",
+     "pm-028#symptoms",
+     "pm-024#symptoms",
+     "pm-015#symptoms",
+     "pm-031#symptoms",
+     "pm-040#symptoms"
+    ]
+   },
+   "predicted": null,
+   "prompt_tokens_est": 472,
+   "root_id": "chg-05687",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "full_context",
+   "case": "c015",
+   "correct": false,
+   "error": null,
+   "fault_class": "undeclared_coupling",
+   "held_out": true,
+   "llm_tokens": 50234,
+   "ms": 5597.0,
+   "notes": {
+    "edges": 1569,
+    "n_candidates": 4
+   },
+   "predicted": "chg-05690",
+   "prompt_tokens_est": 23831,
+   "root_id": "chg-05687",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "graph",
+   "case": "c016",
+   "correct": true,
+   "error": null,
+   "fault_class": "bad_deploy",
+   "held_out": false,
+   "llm_tokens": 44576,
+   "ms": 8943.5,
+   "notes": {
+    "degraded": false,
+    "degraded_reason": null,
+    "rivals": [],
+    "steps": 7
+   },
+   "predicted": "chg-05691",
+   "prompt_tokens_est": 0,
+   "root_id": "chg-05691",
+   "tool_calls": 7,
+   "truncated": false,
+   "verdict": "DIAGNOSED"
+  },
+  {
+   "approach": "vector_rag",
+   "case": "c016",
+   "correct": false,
+   "error": null,
+   "fault_class": "bad_deploy",
+   "held_out": false,
+   "llm_tokens": 1261,
+   "ms": 2286.6,
+   "notes": {
+    "candidates_in_top_k": 1,
+    "n_candidates": 5,
+    "top_k": [
+     "pm-028#symptoms",
+     "pm-028#body",
+     "chg-05690",
+     "pm-014#symptoms",
+     "pm-029#symptoms",
+     "pm-024#symptoms",
+     "pm-019#symptoms",
+     "pm-005#body"
+    ]
+   },
+   "predicted": "chg-05690",
+   "prompt_tokens_est": 539,
+   "root_id": "chg-05691",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "full_context",
+   "case": "c016",
+   "correct": false,
+   "error": null,
+   "fault_class": "bad_deploy",
+   "held_out": false,
+   "llm_tokens": 50324,
+   "ms": 6244.1,
+   "notes": {
+    "edges": 1569,
+    "n_candidates": 5
+   },
+   "predicted": "chg-05689",
+   "prompt_tokens_est": 23825,
+   "root_id": "chg-05691",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "graph",
+   "case": "c017",
+   "correct": true,
+   "error": null,
+   "fault_class": "config_change",
+   "held_out": false,
+   "llm_tokens": 45469,
+   "ms": 7911.9,
+   "notes": {
+    "degraded": false,
+    "degraded_reason": null,
+    "rivals": [],
+    "steps": 7
+   },
+   "predicted": "chg-05691",
+   "prompt_tokens_est": 0,
+   "root_id": "chg-05691",
+   "tool_calls": 7,
+   "truncated": false,
+   "verdict": "DIAGNOSED"
+  },
+  {
+   "approach": "vector_rag",
+   "case": "c017",
+   "correct": false,
+   "error": null,
+   "fault_class": "config_change",
+   "held_out": false,
+   "llm_tokens": 1517,
+   "ms": 3952.3,
+   "notes": {
+    "candidates_in_top_k": 3,
+    "n_candidates": 8,
+    "top_k": [
+     "pm-011#symptoms",
+     "pm-006#symptoms",
+     "chg-05690",
+     "chg-05687",
+     "chg-05692",
+     "pm-021#symptoms",
+     "pm-006#body",
+     "pm-035#symptoms"
+    ]
+   },
+   "predicted": "chg-05690",
+   "prompt_tokens_est": 496,
+   "root_id": "chg-05691",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "full_context",
+   "case": "c017",
+   "correct": false,
+   "error": null,
+   "fault_class": "config_change",
+   "held_out": false,
+   "llm_tokens": 50574,
+   "ms": 7137.0,
+   "notes": {
+    "edges": 1569,
+    "n_candidates": 8
+   },
+   "predicted": "chg-05692",
+   "prompt_tokens_est": 23898,
+   "root_id": "chg-05691",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "graph",
+   "case": "c018",
+   "correct": true,
+   "error": null,
+   "fault_class": "flag_flip",
+   "held_out": false,
+   "llm_tokens": 44603,
+   "ms": 8314.9,
+   "notes": {
+    "degraded": false,
+    "degraded_reason": null,
+    "rivals": [],
+    "steps": 7
+   },
+   "predicted": "chg-05687",
+   "prompt_tokens_est": 0,
+   "root_id": "chg-05687",
+   "tool_calls": 7,
+   "truncated": false,
+   "verdict": "DIAGNOSED"
+  },
+  {
+   "approach": "vector_rag",
+   "case": "c018",
+   "correct": false,
+   "error": null,
+   "fault_class": "flag_flip",
+   "held_out": false,
+   "llm_tokens": 1274,
+   "ms": 3110.7,
+   "notes": {
+    "candidates_in_top_k": 0,
+    "n_candidates": 5,
+    "top_k": [
+     "pm-036#symptoms",
+     "pm-009#symptoms",
+     "pm-037#symptoms",
+     "pm-030#symptoms",
+     "pm-012#symptoms",
+     "pm-005#symptoms",
+     "pm-017#symptoms",
+     "pm-036#body"
+    ]
+   },
+   "predicted": null,
+   "prompt_tokens_est": 453,
+   "root_id": "chg-05687",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "full_context",
+   "case": "c018",
+   "correct": false,
+   "error": null,
+   "fault_class": "flag_flip",
+   "held_out": false,
+   "llm_tokens": 50734,
+   "ms": 8493.2,
+   "notes": {
+    "edges": 1569,
+    "n_candidates": 5
+   },
+   "predicted": "chg-05690",
+   "prompt_tokens_est": 23825,
+   "root_id": "chg-05687",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "graph",
+   "case": "c019",
+   "correct": true,
+   "error": null,
+   "fault_class": "expiry",
+   "held_out": true,
+   "llm_tokens": 45092,
+   "ms": 10527.8,
+   "notes": {
+    "degraded": false,
+    "degraded_reason": null,
+    "rivals": [],
+    "steps": 7
+   },
+   "predicted": "exp-0174",
+   "prompt_tokens_est": 0,
+   "root_id": "exp-0174",
+   "tool_calls": 7,
+   "truncated": false,
+   "verdict": "DIAGNOSED"
+  },
+  {
+   "approach": "vector_rag",
+   "case": "c019",
+   "correct": true,
+   "error": null,
+   "fault_class": "expiry",
+   "held_out": true,
+   "llm_tokens": 1398,
+   "ms": 3594.8,
+   "notes": {
+    "candidates_in_top_k": 2,
+    "n_candidates": 5,
+    "top_k": [
+     "exp-0175",
+     "pm-031#symptoms",
+     "pm-015#symptoms",
+     "pm-001#symptoms",
+     "pm-011#symptoms",
+     "pm-040#symptoms",
+     "pm-023#symptoms",
+     "exp-0174"
+    ]
+   },
+   "predicted": "exp-0174",
+   "prompt_tokens_est": 408,
+   "root_id": "exp-0174",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "full_context",
+   "case": "c019",
+   "correct": true,
+   "error": null,
+   "fault_class": "expiry",
+   "held_out": true,
+   "llm_tokens": 50137,
+   "ms": 4750.0,
+   "notes": {
+    "edges": 1569,
+    "n_candidates": 5
+   },
+   "predicted": "exp-0174",
+   "prompt_tokens_est": 23831,
+   "root_id": "exp-0174",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "graph",
+   "case": "c020",
+   "correct": true,
+   "error": null,
+   "fault_class": "undeclared_coupling",
+   "held_out": true,
+   "llm_tokens": 44350,
+   "ms": 7748.5,
+   "notes": {
+    "degraded": false,
+    "degraded_reason": null,
+    "rivals": [],
+    "steps": 7
+   },
+   "predicted": "chg-05687",
+   "prompt_tokens_est": 0,
+   "root_id": "chg-05687",
+   "tool_calls": 7,
+   "truncated": false,
+   "verdict": "DIAGNOSED"
+  },
+  {
+   "approach": "vector_rag",
+   "case": "c020",
+   "correct": false,
+   "error": null,
+   "fault_class": "undeclared_coupling",
+   "held_out": true,
+   "llm_tokens": 1604,
+   "ms": 3596.9,
+   "notes": {
+    "candidates_in_top_k": 3,
+    "n_candidates": 4,
+    "top_k": [
+     "pm-009#symptoms",
+     "chg-05689",
+     "pm-011#symptoms",
+     "chg-05688",
+     "pm-003#symptoms",
+     "pm-026#body",
+     "pm-009#body",
+     "chg-05687"
+    ]
+   },
+   "predicted": "chg-05689",
+   "prompt_tokens_est": 569,
+   "root_id": "chg-05687",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "full_context",
+   "case": "c020",
+   "correct": false,
+   "error": null,
+   "fault_class": "undeclared_coupling",
+   "held_out": true,
+   "llm_tokens": 49588,
+   "ms": 2844.9,
+   "notes": {
+    "edges": 1569,
+    "n_candidates": 4
+   },
+   "predicted": "chg-05690",
+   "prompt_tokens_est": 23810,
+   "root_id": "chg-05687",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "graph",
+   "case": "c021",
+   "correct": true,
+   "error": null,
+   "fault_class": "bad_deploy",
+   "held_out": false,
+   "llm_tokens": 44544,
+   "ms": 8516.5,
+   "notes": {
+    "degraded": false,
+    "degraded_reason": null,
+    "rivals": [],
+    "steps": 7
+   },
+   "predicted": "chg-05690",
+   "prompt_tokens_est": 0,
+   "root_id": "chg-05690",
+   "tool_calls": 7,
+   "truncated": false,
+   "verdict": "DIAGNOSED"
+  },
+  {
+   "approach": "vector_rag",
+   "case": "c021",
+   "correct": false,
+   "error": null,
+   "fault_class": "bad_deploy",
+   "held_out": false,
+   "llm_tokens": 1617,
+   "ms": 2591.9,
+   "notes": {
+    "candidates_in_top_k": 0,
+    "n_candidates": 4,
+    "top_k": [
+     "pm-011#symptoms",
+     "pm-009#symptoms",
+     "pm-003#symptoms",
+     "pm-011#body",
+     "pm-020#symptoms",
+     "pm-009#body",
+     "pm-023#symptoms",
+     "pm-038#body"
+    ]
+   },
+   "predicted": null,
+   "prompt_tokens_est": 728,
+   "root_id": "chg-05690",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "full_context",
+   "case": "c021",
+   "correct": true,
+   "error": null,
+   "fault_class": "bad_deploy",
+   "held_out": false,
+   "llm_tokens": 50356,
+   "ms": 6210.0,
+   "notes": {
+    "edges": 1569,
+    "n_candidates": 4
+   },
+   "predicted": "chg-05690",
+   "prompt_tokens_est": 23828,
+   "root_id": "chg-05690",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "graph",
+   "case": "c022",
+   "correct": true,
+   "error": null,
+   "fault_class": "config_change",
+   "held_out": false,
+   "llm_tokens": 43564,
+   "ms": 9018.8,
+   "notes": {
+    "degraded": false,
+    "degraded_reason": null,
+    "rivals": [],
+    "steps": 7
+   },
+   "predicted": "chg-05688",
+   "prompt_tokens_est": 0,
+   "root_id": "chg-05688",
+   "tool_calls": 7,
+   "truncated": false,
+   "verdict": "DIAGNOSED"
+  },
+  {
+   "approach": "vector_rag",
+   "case": "c022",
+   "correct": false,
+   "error": null,
+   "fault_class": "config_change",
+   "held_out": false,
+   "llm_tokens": 1584,
+   "ms": 3309.7,
+   "notes": {
+    "candidates_in_top_k": 0,
+    "n_candidates": 5,
+    "top_k": [
+     "pm-007#symptoms",
+     "pm-033#symptoms",
+     "pm-015#symptoms",
+     "pm-015#body",
+     "pm-011#symptoms",
+     "pm-002#symptoms",
+     "pm-038#symptoms",
+     "pm-033#body"
+    ]
+   },
+   "predicted": null,
+   "prompt_tokens_est": 646,
+   "root_id": "chg-05688",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "full_context",
+   "case": "c022",
+   "correct": false,
+   "error": null,
+   "fault_class": "config_change",
+   "held_out": false,
+   "llm_tokens": 50005,
+   "ms": 5268.8,
+   "notes": {
+    "edges": 1569,
+    "n_candidates": 5
+   },
+   "predicted": "chg-05690",
+   "prompt_tokens_est": 23809,
+   "root_id": "chg-05688",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "graph",
+   "case": "c023",
+   "correct": true,
+   "error": null,
+   "fault_class": "flag_flip",
+   "held_out": false,
+   "llm_tokens": 44233,
+   "ms": 8270.2,
+   "notes": {
+    "degraded": false,
+    "degraded_reason": null,
+    "rivals": [],
+    "steps": 7
+   },
+   "predicted": "chg-05691",
+   "prompt_tokens_est": 0,
+   "root_id": "chg-05691",
+   "tool_calls": 7,
+   "truncated": false,
+   "verdict": "DIAGNOSED"
+  },
+  {
+   "approach": "vector_rag",
+   "case": "c023",
+   "correct": false,
+   "error": null,
+   "fault_class": "flag_flip",
+   "held_out": false,
+   "llm_tokens": 782,
+   "ms": 1295.1,
+   "notes": {
+    "candidates_in_top_k": 1,
+    "n_candidates": 6,
+    "top_k": [
+     "chg-05687",
+     "pm-005#symptoms",
+     "pm-011#symptoms",
+     "pm-009#symptoms",
+     "pm-028#symptoms",
+     "pm-012#symptoms",
+     "pm-030#symptoms",
+     "pm-036#symptoms"
+    ]
+   },
+   "predicted": "chg-05687",
+   "prompt_tokens_est": 374,
+   "root_id": "chg-05691",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "full_context",
+   "case": "c023",
+   "correct": false,
+   "error": null,
+   "fault_class": "flag_flip",
+   "held_out": false,
+   "llm_tokens": 50395,
+   "ms": 7022.5,
+   "notes": {
+    "edges": 1569,
+    "n_candidates": 6
+   },
+   "predicted": "chg-05689",
+   "prompt_tokens_est": 23837,
+   "root_id": "chg-05691",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "graph",
+   "case": "c024",
+   "correct": true,
+   "error": null,
+   "fault_class": "expiry",
+   "held_out": true,
+   "llm_tokens": 45085,
+   "ms": 8076.9,
+   "notes": {
+    "degraded": false,
+    "degraded_reason": null,
+    "rivals": [],
+    "steps": 7
+   },
+   "predicted": "exp-0172",
+   "prompt_tokens_est": 0,
+   "root_id": "exp-0172",
+   "tool_calls": 7,
+   "truncated": false,
+   "verdict": "DIAGNOSED"
+  },
+  {
+   "approach": "vector_rag",
+   "case": "c024",
+   "correct": false,
+   "error": null,
+   "fault_class": "expiry",
+   "held_out": true,
+   "llm_tokens": 1072,
+   "ms": 1712.5,
+   "notes": {
+    "candidates_in_top_k": 1,
+    "n_candidates": 7,
+    "top_k": [
+     "exp-0174",
+     "pm-022#symptoms",
+     "pm-016#symptoms",
+     "pm-002#symptoms",
+     "pm-038#symptoms",
+     "pm-032#symptoms",
+     "pm-024#symptoms",
+     "pm-016#body"
+    ]
+   },
+   "predicted": "exp-0174",
+   "prompt_tokens_est": 469,
+   "root_id": "exp-0172",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "full_context",
+   "case": "c024",
+   "correct": false,
+   "error": null,
+   "fault_class": "expiry",
+   "held_out": true,
+   "llm_tokens": 50041,
+   "ms": 4239.3,
+   "notes": {
+    "edges": 1569,
+    "n_candidates": 7
+   },
+   "predicted": "exp-0176",
+   "prompt_tokens_est": 23885,
+   "root_id": "exp-0172",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "graph",
+   "case": "c025",
+   "correct": true,
+   "error": null,
+   "fault_class": "undeclared_coupling",
+   "held_out": true,
+   "llm_tokens": 45643,
+   "ms": 7882.7,
+   "notes": {
+    "degraded": false,
+    "degraded_reason": null,
+    "rivals": [],
+    "steps": 7
+   },
+   "predicted": "chg-05690",
+   "prompt_tokens_est": 0,
+   "root_id": "chg-05690",
+   "tool_calls": 7,
+   "truncated": false,
+   "verdict": "DIAGNOSED"
+  },
+  {
+   "approach": "vector_rag",
+   "case": "c025",
+   "correct": false,
+   "error": null,
+   "fault_class": "undeclared_coupling",
+   "held_out": true,
+   "llm_tokens": 1714,
+   "ms": 4144.8,
+   "notes": {
+    "candidates_in_top_k": 0,
+    "n_candidates": 5,
+    "top_k": [
+     "pm-011#symptoms",
+     "pm-040#symptoms",
+     "pm-024#symptoms",
+     "pm-014#symptoms",
+     "pm-001#symptoms",
+     "pm-020#symptoms",
+     "pm-031#symptoms",
+     "pm-014#body"
+    ]
+   },
+   "predicted": null,
+   "prompt_tokens_est": 564,
+   "root_id": "chg-05690",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "full_context",
+   "case": "c025",
+   "correct": true,
+   "error": null,
+   "fault_class": "undeclared_coupling",
+   "held_out": true,
+   "llm_tokens": 49646,
+   "ms": 2758.1,
+   "notes": {
+    "edges": 1569,
+    "n_candidates": 5
+   },
+   "predicted": "chg-05690",
+   "prompt_tokens_est": 23861,
+   "root_id": "chg-05690",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "graph",
+   "case": "c026",
+   "correct": true,
+   "error": null,
+   "fault_class": "bad_deploy",
+   "held_out": false,
+   "llm_tokens": 43432,
+   "ms": 7961.6,
+   "notes": {
+    "degraded": false,
+    "degraded_reason": null,
+    "rivals": [],
+    "steps": 7
+   },
+   "predicted": "chg-05689",
+   "prompt_tokens_est": 0,
+   "root_id": "chg-05689",
+   "tool_calls": 7,
+   "truncated": false,
+   "verdict": "DIAGNOSED"
+  },
+  {
+   "approach": "vector_rag",
+   "case": "c026",
+   "correct": true,
+   "error": null,
+   "fault_class": "bad_deploy",
+   "held_out": false,
+   "llm_tokens": 781,
+   "ms": 1986.8,
+   "notes": {
+    "candidates_in_top_k": 1,
+    "n_candidates": 4,
+    "top_k": [
+     "pm-009#symptoms",
+     "pm-031#symptoms",
+     "pm-004#symptoms",
+     "pm-008#symptoms",
+     "chg-05689",
+     "pm-010#symptoms",
+     "pm-006#symptoms",
+     "pm-020#symptoms"
+    ]
+   },
+   "predicted": "chg-05689",
+   "prompt_tokens_est": 355,
+   "root_id": "chg-05689",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "full_context",
+   "case": "c026",
+   "correct": false,
+   "error": null,
+   "fault_class": "bad_deploy",
+   "held_out": false,
+   "llm_tokens": 49851,
+   "ms": 4098.2,
+   "notes": {
+    "edges": 1569,
+    "n_candidates": 4
+   },
+   "predicted": "chg-05690",
+   "prompt_tokens_est": 23786,
+   "root_id": "chg-05689",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "graph",
+   "case": "c027",
+   "correct": true,
+   "error": null,
+   "fault_class": "config_change",
+   "held_out": false,
+   "llm_tokens": 43420,
+   "ms": 8030.4,
+   "notes": {
+    "degraded": false,
+    "degraded_reason": null,
+    "rivals": [],
+    "steps": 7
+   },
+   "predicted": "chg-05687",
+   "prompt_tokens_est": 0,
+   "root_id": "chg-05687",
+   "tool_calls": 7,
+   "truncated": false,
+   "verdict": "DIAGNOSED"
+  },
+  {
+   "approach": "vector_rag",
+   "case": "c027",
+   "correct": false,
+   "error": null,
+   "fault_class": "config_change",
+   "held_out": false,
+   "llm_tokens": 1296,
+   "ms": 2969.5,
+   "notes": {
+    "candidates_in_top_k": 0,
+    "n_candidates": 4,
+    "top_k": [
+     "pm-008#symptoms",
+     "pm-024#symptoms",
+     "pm-031#symptoms",
+     "pm-015#symptoms",
+     "pm-008#body",
+     "pm-032#symptoms",
+     "pm-011#symptoms",
+     "pm-020#symptoms"
+    ]
+   },
+   "predicted": null,
+   "prompt_tokens_est": 513,
+   "root_id": "chg-05687",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "full_context",
+   "case": "c027",
+   "correct": false,
+   "error": null,
+   "fault_class": "config_change",
+   "held_out": false,
+   "llm_tokens": 50599,
+   "ms": 7861.9,
+   "notes": {
+    "edges": 1569,
+    "n_candidates": 4
+   },
+   "predicted": "chg-05690",
+   "prompt_tokens_est": 23778,
+   "root_id": "chg-05687",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "graph",
+   "case": "c028",
+   "correct": true,
+   "error": null,
+   "fault_class": "flag_flip",
+   "held_out": false,
+   "llm_tokens": 45193,
+   "ms": 8863.7,
+   "notes": {
+    "degraded": false,
+    "degraded_reason": null,
+    "rivals": [],
+    "steps": 7
+   },
+   "predicted": "chg-05690",
+   "prompt_tokens_est": 0,
+   "root_id": "chg-05690",
+   "tool_calls": 7,
+   "truncated": false,
+   "verdict": "DIAGNOSED"
+  },
+  {
+   "approach": "vector_rag",
+   "case": "c028",
+   "correct": false,
+   "error": null,
+   "fault_class": "flag_flip",
+   "held_out": false,
+   "llm_tokens": 772,
+   "ms": 992.6,
+   "notes": {
+    "candidates_in_top_k": 1,
+    "n_candidates": 6,
+    "top_k": [
+     "pm-005#symptoms",
+     "pm-009#symptoms",
+     "pm-020#symptoms",
+     "pm-036#symptoms",
+     "chg-05688",
+     "pm-008#symptoms",
+     "pm-011#symptoms",
+     "pm-018#symptoms"
+    ]
+   },
+   "predicted": "chg-05688",
+   "prompt_tokens_est": 397,
+   "root_id": "chg-05690",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "full_context",
+   "case": "c028",
+   "correct": false,
+   "error": null,
+   "fault_class": "flag_flip",
+   "held_out": false,
+   "llm_tokens": 50246,
+   "ms": 5564.6,
+   "notes": {
+    "edges": 1569,
+    "n_candidates": 6
+   },
+   "predicted": "chg-05689",
+   "prompt_tokens_est": 23857,
+   "root_id": "chg-05690",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "graph",
+   "case": "c029",
+   "correct": true,
+   "error": null,
+   "fault_class": "expiry",
+   "held_out": true,
+   "llm_tokens": 44812,
+   "ms": 9297.6,
+   "notes": {
+    "degraded": false,
+    "degraded_reason": null,
+    "rivals": [],
+    "steps": 7
+   },
+   "predicted": "exp-0172",
+   "prompt_tokens_est": 0,
+   "root_id": "exp-0172",
+   "tool_calls": 7,
+   "truncated": false,
+   "verdict": "DIAGNOSED"
+  },
+  {
+   "approach": "vector_rag",
+   "case": "c029",
+   "correct": false,
+   "error": null,
+   "fault_class": "expiry",
+   "held_out": true,
+   "llm_tokens": 1010,
+   "ms": 1484.6,
+   "notes": {
+    "candidates_in_top_k": 1,
+    "n_candidates": 7,
+    "top_k": [
+     "pm-011#symptoms",
+     "pm-003#symptoms",
+     "exp-0173",
+     "pm-011#body",
+     "pm-015#symptoms",
+     "pm-023#symptoms",
+     "pm-018#symptoms",
+     "pm-040#symptoms"
+    ]
+   },
+   "predicted": "exp-0173",
+   "prompt_tokens_est": 501,
+   "root_id": "exp-0172",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "full_context",
+   "case": "c029",
+   "correct": true,
+   "error": null,
+   "fault_class": "expiry",
+   "held_out": true,
+   "llm_tokens": 49870,
+   "ms": 3791.5,
+   "notes": {
+    "edges": 1569,
+    "n_candidates": 7
+   },
+   "predicted": "exp-0172",
+   "prompt_tokens_est": 23850,
+   "root_id": "exp-0172",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "graph",
+   "case": "c030",
+   "correct": true,
+   "error": null,
+   "fault_class": "undeclared_coupling",
+   "held_out": true,
+   "llm_tokens": 43669,
+   "ms": 7831.9,
+   "notes": {
+    "degraded": false,
+    "degraded_reason": null,
+    "rivals": [],
+    "steps": 7
+   },
+   "predicted": "chg-05689",
+   "prompt_tokens_est": 0,
+   "root_id": "chg-05689",
+   "tool_calls": 7,
+   "truncated": false,
+   "verdict": "DIAGNOSED"
+  },
+  {
+   "approach": "vector_rag",
+   "case": "c030",
+   "correct": false,
+   "error": null,
+   "fault_class": "undeclared_coupling",
+   "held_out": true,
+   "llm_tokens": 856,
+   "ms": 3051.4,
+   "notes": {
+    "candidates_in_top_k": 1,
+    "n_candidates": 6,
+    "top_k": [
+     "pm-014#symptoms",
+     "pm-029#symptoms",
+     "pm-021#symptoms",
+     "chg-05688",
+     "pm-001#symptoms",
+     "pm-010#symptoms",
+     "pm-018#symptoms",
+     "pm-007#symptoms"
+    ]
+   },
+   "predicted": "chg-05688",
+   "prompt_tokens_est": 372,
+   "root_id": "chg-05689",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "full_context",
+   "case": "c030",
+   "correct": false,
+   "error": null,
+   "fault_class": "undeclared_coupling",
+   "held_out": true,
+   "llm_tokens": 50193,
+   "ms": 5495.9,
+   "notes": {
+    "edges": 1569,
+    "n_candidates": 6
+   },
+   "predicted": "chg-05687",
+   "prompt_tokens_est": 23822,
+   "root_id": "chg-05689",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "graph",
+   "case": "c031",
+   "correct": true,
+   "error": null,
+   "fault_class": "bad_deploy",
+   "held_out": false,
+   "llm_tokens": 44334,
+   "ms": 7921.8,
+   "notes": {
+    "degraded": false,
+    "degraded_reason": null,
+    "rivals": [],
+    "steps": 7
+   },
+   "predicted": "chg-05687",
+   "prompt_tokens_est": 0,
+   "root_id": "chg-05687",
+   "tool_calls": 7,
+   "truncated": false,
+   "verdict": "DIAGNOSED"
+  },
+  {
+   "approach": "vector_rag",
+   "case": "c031",
+   "correct": false,
+   "error": null,
+   "fault_class": "bad_deploy",
+   "held_out": false,
+   "llm_tokens": 999,
+   "ms": 1470.4,
+   "notes": {
+    "candidates_in_top_k": 1,
+    "n_candidates": 5,
+    "top_k": [
+     "pm-031#symptoms",
+     "pm-003#symptoms",
+     "pm-011#symptoms",
+     "chg-05689",
+     "pm-020#symptoms",
+     "pm-008#symptoms",
+     "pm-031#body",
+     "pm-023#symptoms"
+    ]
+   },
+   "predicted": "chg-05689",
+   "prompt_tokens_est": 444,
+   "root_id": "chg-05687",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "full_context",
+   "case": "c031",
+   "correct": true,
+   "error": null,
+   "fault_class": "bad_deploy",
+   "held_out": false,
+   "llm_tokens": 49590,
+   "ms": 2818.7,
+   "notes": {
+    "edges": 1569,
+    "n_candidates": 5
+   },
+   "predicted": "chg-05687",
+   "prompt_tokens_est": 23816,
+   "root_id": "chg-05687",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "graph",
+   "case": "c032",
+   "correct": true,
+   "error": null,
+   "fault_class": "config_change",
+   "held_out": false,
+   "llm_tokens": 45072,
+   "ms": 7950.0,
+   "notes": {
+    "degraded": false,
+    "degraded_reason": null,
+    "rivals": [],
+    "steps": 7
+   },
+   "predicted": "chg-05688",
+   "prompt_tokens_est": 0,
+   "root_id": "chg-05688",
+   "tool_calls": 7,
+   "truncated": false,
+   "verdict": "DIAGNOSED"
+  },
+  {
+   "approach": "vector_rag",
+   "case": "c032",
+   "correct": true,
+   "error": null,
+   "fault_class": "config_change",
+   "held_out": false,
+   "llm_tokens": 1406,
+   "ms": 3473.5,
+   "notes": {
+    "candidates_in_top_k": 2,
+    "n_candidates": 6,
+    "top_k": [
+     "pm-022#symptoms",
+     "pm-027#symptoms",
+     "pm-024#symptoms",
+     "pm-017#symptoms",
+     "pm-022#body",
+     "pm-024#body",
+     "chg-05688",
+     "chg-05689"
+    ]
+   },
+   "predicted": "chg-05688",
+   "prompt_tokens_est": 522,
+   "root_id": "chg-05688",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "full_context",
+   "case": "c032",
+   "correct": false,
+   "error": null,
+   "fault_class": "config_change",
+   "held_out": false,
+   "llm_tokens": 50289,
+   "ms": 5461.0,
+   "notes": {
+    "edges": 1569,
+    "n_candidates": 6
+   },
+   "predicted": "chg-05692",
+   "prompt_tokens_est": 23869,
+   "root_id": "chg-05688",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "graph",
+   "case": "c033",
+   "correct": true,
+   "error": null,
+   "fault_class": "flag_flip",
+   "held_out": false,
+   "llm_tokens": 43549,
+   "ms": 8186.9,
+   "notes": {
+    "degraded": false,
+    "degraded_reason": null,
+    "rivals": [],
+    "steps": 7
+   },
+   "predicted": "chg-05688",
+   "prompt_tokens_est": 0,
+   "root_id": "chg-05688",
+   "tool_calls": 7,
+   "truncated": false,
+   "verdict": "DIAGNOSED"
+  },
+  {
+   "approach": "vector_rag",
+   "case": "c033",
+   "correct": false,
+   "error": null,
+   "fault_class": "flag_flip",
+   "held_out": false,
+   "llm_tokens": 1212,
+   "ms": 2327.7,
+   "notes": {
+    "candidates_in_top_k": 1,
+    "n_candidates": 4,
+    "top_k": [
+     "pm-028#symptoms",
+     "pm-005#symptoms",
+     "chg-05689",
+     "pm-024#symptoms",
+     "pm-011#symptoms",
+     "pm-012#symptoms",
+     "pm-028#body",
+     "pm-005#body"
+    ]
+   },
+   "predicted": "chg-05689",
+   "prompt_tokens_est": 536,
+   "root_id": "chg-05688",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "full_context",
+   "case": "c033",
+   "correct": false,
+   "error": null,
+   "fault_class": "flag_flip",
+   "held_out": false,
+   "llm_tokens": 49889,
+   "ms": 4489.1,
+   "notes": {
+    "edges": 1569,
+    "n_candidates": 4
+   },
+   "predicted": "chg-05687",
+   "prompt_tokens_est": 23792,
+   "root_id": "chg-05688",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "graph",
+   "case": "c034",
+   "correct": true,
+   "error": null,
+   "fault_class": "expiry",
+   "held_out": true,
+   "llm_tokens": 44599,
+   "ms": 9209.1,
+   "notes": {
+    "degraded": false,
+    "degraded_reason": null,
+    "rivals": [],
+    "steps": 7
+   },
+   "predicted": "exp-0175",
+   "prompt_tokens_est": 0,
+   "root_id": "exp-0175",
+   "tool_calls": 7,
+   "truncated": false,
+   "verdict": "DIAGNOSED"
+  },
+  {
+   "approach": "vector_rag",
+   "case": "c034",
+   "correct": false,
+   "error": null,
+   "fault_class": "expiry",
+   "held_out": true,
+   "llm_tokens": 1096,
+   "ms": 2151.1,
+   "notes": {
+    "candidates_in_top_k": 2,
+    "n_candidates": 7,
+    "top_k": [
+     "exp-0172",
+     "exp-0173",
+     "pm-040#symptoms",
+     "pm-015#symptoms",
+     "pm-040#body",
+     "pm-020#symptoms",
+     "pm-001#symptoms",
+     "pm-018#symptoms"
+    ]
+   },
+   "predicted": "exp-0172",
+   "prompt_tokens_est": 437,
+   "root_id": "exp-0175",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "full_context",
+   "case": "c034",
+   "correct": true,
+   "error": null,
+   "fault_class": "expiry",
+   "held_out": true,
+   "llm_tokens": 51125,
+   "ms": 10933.6,
+   "notes": {
+    "edges": 1569,
+    "n_candidates": 7
+   },
+   "predicted": "exp-0175",
+   "prompt_tokens_est": 23868,
+   "root_id": "exp-0175",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "graph",
+   "case": "c035",
+   "correct": true,
+   "error": null,
+   "fault_class": "undeclared_coupling",
+   "held_out": true,
+   "llm_tokens": 43823,
+   "ms": 8127.0,
+   "notes": {
+    "degraded": false,
+    "degraded_reason": null,
+    "rivals": [],
+    "steps": 7
+   },
+   "predicted": "chg-05690",
+   "prompt_tokens_est": 0,
+   "root_id": "chg-05690",
+   "tool_calls": 7,
+   "truncated": false,
+   "verdict": "DIAGNOSED"
+  },
+  {
+   "approach": "vector_rag",
+   "case": "c035",
+   "correct": false,
+   "error": null,
+   "fault_class": "undeclared_coupling",
+   "held_out": true,
+   "llm_tokens": 1057,
+   "ms": 2276.8,
+   "notes": {
+    "candidates_in_top_k": 0,
+    "n_candidates": 5,
+    "top_k": [
+     "pm-005#symptoms",
+     "pm-036#symptoms",
+     "pm-009#symptoms",
+     "pm-027#symptoms",
+     "pm-028#symptoms",
+     "pm-037#symptoms",
+     "pm-026#body",
+     "pm-026#symptoms"
+    ]
+   },
+   "predicted": null,
+   "prompt_tokens_est": 440,
+   "root_id": "chg-05690",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "full_context",
+   "case": "c035",
+   "correct": false,
+   "error": null,
+   "fault_class": "undeclared_coupling",
+   "held_out": true,
+   "llm_tokens": 50972,
+   "ms": 9357.8,
+   "notes": {
+    "edges": 1569,
+    "n_candidates": 5
+   },
+   "predicted": "chg-05689",
+   "prompt_tokens_est": 23793,
+   "root_id": "chg-05690",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "graph",
+   "case": "c036",
+   "correct": true,
+   "error": null,
+   "fault_class": "bad_deploy",
+   "held_out": false,
+   "llm_tokens": 44353,
+   "ms": 7781.7,
+   "notes": {
+    "degraded": false,
+    "degraded_reason": null,
+    "rivals": [],
+    "steps": 7
+   },
+   "predicted": "chg-05688",
+   "prompt_tokens_est": 0,
+   "root_id": "chg-05688",
+   "tool_calls": 7,
+   "truncated": false,
+   "verdict": "DIAGNOSED"
+  },
+  {
+   "approach": "vector_rag",
+   "case": "c036",
+   "correct": false,
+   "error": null,
+   "fault_class": "bad_deploy",
+   "held_out": false,
+   "llm_tokens": 1028,
+   "ms": 1420.7,
+   "notes": {
+    "candidates_in_top_k": 1,
+    "n_candidates": 5,
+    "top_k": [
+     "pm-031#symptoms",
+     "pm-008#symptoms",
+     "pm-024#symptoms",
+     "chg-05690",
+     "pm-020#symptoms",
+     "pm-015#symptoms",
+     "pm-010#body",
+     "pm-008#body"
+    ]
+   },
+   "predicted": "chg-05690",
+   "prompt_tokens_est": 567,
+   "root_id": "chg-05688",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "full_context",
+   "case": "c036",
+   "correct": false,
+   "error": null,
+   "fault_class": "bad_deploy",
+   "held_out": false,
+   "llm_tokens": 50555,
+   "ms": 6915.5,
+   "notes": {
+    "edges": 1569,
+    "n_candidates": 5
+   },
+   "predicted": "chg-05689",
+   "prompt_tokens_est": 23826,
+   "root_id": "chg-05688",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "graph",
+   "case": "c037",
+   "correct": true,
+   "error": null,
+   "fault_class": "config_change",
+   "held_out": false,
+   "llm_tokens": 45705,
+   "ms": 8124.1,
+   "notes": {
+    "degraded": false,
+    "degraded_reason": null,
+    "rivals": [],
+    "steps": 7
+   },
+   "predicted": "chg-05690",
+   "prompt_tokens_est": 0,
+   "root_id": "chg-05690",
+   "tool_calls": 7,
+   "truncated": false,
+   "verdict": "DIAGNOSED"
+  },
+  {
+   "approach": "vector_rag",
+   "case": "c037",
+   "correct": true,
+   "error": null,
+   "fault_class": "config_change",
+   "held_out": false,
+   "llm_tokens": 1425,
+   "ms": 3272.8,
+   "notes": {
+    "candidates_in_top_k": 2,
+    "n_candidates": 8,
+    "top_k": [
+     "pm-027#symptoms",
+     "pm-026#body",
+     "pm-017#symptoms",
+     "pm-026#symptoms",
+     "chg-05690",
+     "pm-010#symptoms",
+     "chg-05692",
+     "pm-005#body"
+    ]
+   },
+   "predicted": "chg-05690",
+   "prompt_tokens_est": 535,
+   "root_id": "chg-05690",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "full_context",
+   "case": "c037",
+   "correct": false,
+   "error": null,
+   "fault_class": "config_change",
+   "held_out": false,
+   "llm_tokens": 49910,
+   "ms": 3443.5,
+   "notes": {
+    "edges": 1569,
+    "n_candidates": 8
+   },
+   "predicted": "chg-05693",
+   "prompt_tokens_est": 23902,
+   "root_id": "chg-05690",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "graph",
+   "case": "c038",
+   "correct": true,
+   "error": null,
+   "fault_class": "flag_flip",
+   "held_out": false,
+   "llm_tokens": 43081,
+   "ms": 8090.7,
+   "notes": {
+    "degraded": false,
+    "degraded_reason": null,
+    "rivals": [],
+    "steps": 7
+   },
+   "predicted": "chg-05690",
+   "prompt_tokens_est": 0,
+   "root_id": "chg-05690",
+   "tool_calls": 7,
+   "truncated": false,
+   "verdict": "DIAGNOSED"
+  },
+  {
+   "approach": "vector_rag",
+   "case": "c038",
+   "correct": false,
+   "error": null,
+   "fault_class": "flag_flip",
+   "held_out": false,
+   "llm_tokens": 1409,
+   "ms": 3859.4,
+   "notes": {
+    "candidates_in_top_k": 1,
+    "n_candidates": 5,
+    "top_k": [
+     "pm-011#symptoms",
+     "pm-009#symptoms",
+     "pm-024#symptoms",
+     "pm-015#symptoms",
+     "pm-011#body",
+     "pm-005#symptoms",
+     "chg-05689",
+     "pm-003#symptoms"
+    ]
+   },
+   "predicted": "chg-05689",
+   "prompt_tokens_est": 478,
+   "root_id": "chg-05690",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "full_context",
+   "case": "c038",
+   "correct": false,
+   "error": null,
+   "fault_class": "flag_flip",
+   "held_out": false,
+   "llm_tokens": 50521,
+   "ms": 7781.6,
+   "notes": {
+    "edges": 1569,
+    "n_candidates": 5
+   },
+   "predicted": "chg-05688",
+   "prompt_tokens_est": 23791,
+   "root_id": "chg-05690",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "graph",
+   "case": "c039",
+   "correct": true,
+   "error": null,
+   "fault_class": "expiry",
+   "held_out": true,
+   "llm_tokens": 45517,
+   "ms": 7049.0,
+   "notes": {
+    "degraded": false,
+    "degraded_reason": null,
+    "rivals": [],
+    "steps": 7
+   },
+   "predicted": "exp-0173",
+   "prompt_tokens_est": 0,
+   "root_id": "exp-0173",
+   "tool_calls": 7,
+   "truncated": false,
+   "verdict": "DIAGNOSED"
+  },
+  {
+   "approach": "vector_rag",
+   "case": "c039",
+   "correct": false,
+   "error": null,
+   "fault_class": "expiry",
+   "held_out": true,
+   "llm_tokens": 1074,
+   "ms": 1784.5,
+   "notes": {
+    "candidates_in_top_k": 1,
+    "n_candidates": 6,
+    "top_k": [
+     "pm-008#symptoms",
+     "pm-024#symptoms",
+     "pm-031#symptoms",
+     "pm-015#symptoms",
+     "exp-0175",
+     "pm-008#body",
+     "pm-020#symptoms",
+     "pm-011#symptoms"
+    ]
+   },
+   "predicted": "exp-0175",
+   "prompt_tokens_est": 513,
+   "root_id": "exp-0173",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "full_context",
+   "case": "c039",
+   "correct": false,
+   "error": null,
+   "fault_class": "expiry",
+   "held_out": true,
+   "llm_tokens": 49752,
+   "ms": 3337.2,
+   "notes": {
+    "edges": 1569,
+    "n_candidates": 6
+   },
+   "predicted": "chg-05687",
+   "prompt_tokens_est": 23855,
+   "root_id": "exp-0173",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "graph",
+   "case": "c040",
+   "correct": true,
+   "error": null,
+   "fault_class": "undeclared_coupling",
+   "held_out": true,
+   "llm_tokens": 43721,
+   "ms": 7912.2,
+   "notes": {
+    "degraded": false,
+    "degraded_reason": null,
+    "rivals": [],
+    "steps": 7
+   },
+   "predicted": "chg-05691",
+   "prompt_tokens_est": 0,
+   "root_id": "chg-05691",
+   "tool_calls": 7,
+   "truncated": false,
+   "verdict": "DIAGNOSED"
+  },
+  {
+   "approach": "vector_rag",
+   "case": "c040",
+   "correct": false,
+   "error": null,
+   "fault_class": "undeclared_coupling",
+   "held_out": true,
+   "llm_tokens": 1577,
+   "ms": 4834.7,
+   "notes": {
+    "candidates_in_top_k": 3,
+    "n_candidates": 5,
+    "top_k": [
+     "chg-05690",
+     "chg-05687",
+     "pm-017#symptoms",
+     "pm-016#body",
+     "pm-027#symptoms",
+     "pm-016#symptoms",
+     "chg-05691",
+     "pm-028#symptoms"
+    ]
+   },
+   "predicted": "chg-05690",
+   "prompt_tokens_est": 384,
+   "root_id": "chg-05691",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "full_context",
+   "case": "c040",
+   "correct": false,
+   "error": null,
+   "fault_class": "undeclared_coupling",
+   "held_out": true,
+   "llm_tokens": 50223,
+   "ms": 5686.9,
+   "notes": {
+    "edges": 1569,
+    "n_candidates": 5
+   },
+   "predicted": "chg-05690",
+   "prompt_tokens_est": 23794,
+   "root_id": "chg-05691",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "graph",
+   "case": "c041",
+   "correct": true,
+   "error": null,
+   "fault_class": "bad_deploy",
+   "held_out": false,
+   "llm_tokens": 43688,
+   "ms": 10102.5,
+   "notes": {
+    "degraded": false,
+    "degraded_reason": null,
+    "rivals": [],
+    "steps": 7
+   },
+   "predicted": "chg-05688",
+   "prompt_tokens_est": 0,
+   "root_id": "chg-05688",
+   "tool_calls": 7,
+   "truncated": false,
+   "verdict": "DIAGNOSED"
+  },
+  {
+   "approach": "vector_rag",
+   "case": "c041",
+   "correct": false,
+   "error": null,
+   "fault_class": "bad_deploy",
+   "held_out": false,
+   "llm_tokens": 1223,
+   "ms": 2394.9,
+   "notes": {
+    "candidates_in_top_k": 0,
+    "n_candidates": 6,
+    "top_k": [
+     "pm-024#symptoms",
+     "pm-008#symptoms",
+     "pm-031#symptoms",
+     "pm-015#symptoms",
+     "pm-020#symptoms",
+     "pm-024#body",
+     "pm-008#body",
+     "pm-001#symptoms"
+    ]
+   },
+   "predicted": null,
+   "prompt_tokens_est": 536,
+   "root_id": "chg-05688",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "full_context",
+   "case": "c041",
+   "correct": false,
+   "error": null,
+   "fault_class": "bad_deploy",
+   "held_out": false,
+   "llm_tokens": 50630,
+   "ms": 8186.9,
+   "notes": {
+    "edges": 1569,
+    "n_candidates": 6
+   },
+   "predicted": "chg-05692",
+   "prompt_tokens_est": 23828,
+   "root_id": "chg-05688",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "graph",
+   "case": "c042",
+   "correct": true,
+   "error": null,
+   "fault_class": "config_change",
+   "held_out": false,
+   "llm_tokens": 43577,
+   "ms": 8757.5,
+   "notes": {
+    "degraded": false,
+    "degraded_reason": null,
+    "rivals": [],
+    "steps": 7
+   },
+   "predicted": "chg-05689",
+   "prompt_tokens_est": 0,
+   "root_id": "chg-05689",
+   "tool_calls": 7,
+   "truncated": false,
+   "verdict": "DIAGNOSED"
+  },
+  {
+   "approach": "vector_rag",
+   "case": "c042",
+   "correct": false,
+   "error": null,
+   "fault_class": "config_change",
+   "held_out": false,
+   "llm_tokens": 1020,
+   "ms": 1812.6,
+   "notes": {
+    "candidates_in_top_k": 1,
+    "n_candidates": 6,
+    "top_k": [
+     "chg-05688",
+     "pm-033#symptoms",
+     "pm-002#symptoms",
+     "pm-024#symptoms",
+     "pm-038#symptoms",
+     "pm-033#body",
+     "pm-007#symptoms",
+     "pm-028#body"
+    ]
+   },
+   "predicted": "chg-05688",
+   "prompt_tokens_est": 521,
+   "root_id": "chg-05689",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "full_context",
+   "case": "c042",
+   "correct": false,
+   "error": null,
+   "fault_class": "config_change",
+   "held_out": false,
+   "llm_tokens": 50036,
+   "ms": 5376.0,
+   "notes": {
+    "edges": 1569,
+    "n_candidates": 6
+   },
+   "predicted": "chg-05692",
+   "prompt_tokens_est": 23823,
+   "root_id": "chg-05689",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "graph",
+   "case": "c043",
+   "correct": true,
+   "error": null,
+   "fault_class": "flag_flip",
+   "held_out": false,
+   "llm_tokens": 42983,
+   "ms": 7507.1,
+   "notes": {
+    "degraded": false,
+    "degraded_reason": null,
+    "rivals": [],
+    "steps": 7
+   },
+   "predicted": "chg-05687",
+   "prompt_tokens_est": 0,
+   "root_id": "chg-05687",
+   "tool_calls": 7,
+   "truncated": false,
+   "verdict": "DIAGNOSED"
+  },
+  {
+   "approach": "vector_rag",
+   "case": "c043",
+   "correct": false,
+   "error": null,
+   "fault_class": "flag_flip",
+   "held_out": false,
+   "llm_tokens": 1210,
+   "ms": 4197.8,
+   "notes": {
+    "candidates_in_top_k": 0,
+    "n_candidates": 4,
+    "top_k": [
+     "pm-024#symptoms",
+     "pm-020#symptoms",
+     "pm-024#body",
+     "pm-003#symptoms",
+     "pm-031#body",
+     "pm-023#symptoms",
+     "pm-022#symptoms",
+     "pm-008#symptoms"
+    ]
+   },
+   "predicted": null,
+   "prompt_tokens_est": 484,
+   "root_id": "chg-05687",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "full_context",
+   "case": "c043",
+   "correct": false,
+   "error": null,
+   "fault_class": "flag_flip",
+   "held_out": false,
+   "llm_tokens": 50564,
+   "ms": 7897.2,
+   "notes": {
+    "edges": 1569,
+    "n_candidates": 4
+   },
+   "predicted": "chg-05688",
+   "prompt_tokens_est": 23768,
+   "root_id": "chg-05687",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "graph",
+   "case": "c044",
+   "correct": true,
+   "error": null,
+   "fault_class": "expiry",
+   "held_out": true,
+   "llm_tokens": 45761,
+   "ms": 9301.4,
+   "notes": {
+    "degraded": false,
+    "degraded_reason": null,
+    "rivals": [],
+    "steps": 7
+   },
+   "predicted": "exp-0174",
+   "prompt_tokens_est": 0,
+   "root_id": "exp-0174",
+   "tool_calls": 7,
+   "truncated": false,
+   "verdict": "DIAGNOSED"
+  },
+  {
+   "approach": "vector_rag",
+   "case": "c044",
+   "correct": false,
+   "error": null,
+   "fault_class": "expiry",
+   "held_out": true,
+   "llm_tokens": 1150,
+   "ms": 2165.2,
+   "notes": {
+    "candidates_in_top_k": 2,
+    "n_candidates": 6,
+    "top_k": [
+     "pm-033#symptoms",
+     "pm-007#symptoms",
+     "exp-0173",
+     "exp-0175",
+     "pm-030#symptoms",
+     "pm-032#symptoms",
+     "pm-033#body",
+     "pm-022#symptoms"
+    ]
+   },
+   "predicted": "exp-0173",
+   "prompt_tokens_est": 503,
+   "root_id": "exp-0174",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "full_context",
+   "case": "c044",
+   "correct": true,
+   "error": null,
+   "fault_class": "expiry",
+   "held_out": true,
+   "llm_tokens": 49998,
+   "ms": 4260.0,
+   "notes": {
+    "edges": 1569,
+    "n_candidates": 6
+   },
+   "predicted": "exp-0174",
+   "prompt_tokens_est": 23882,
+   "root_id": "exp-0174",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "graph",
+   "case": "c045",
+   "correct": true,
+   "error": null,
+   "fault_class": "undeclared_coupling",
+   "held_out": true,
+   "llm_tokens": 42575,
+   "ms": 8133.3,
+   "notes": {
+    "degraded": false,
+    "degraded_reason": null,
+    "rivals": [],
+    "steps": 7
+   },
+   "predicted": "chg-05689",
+   "prompt_tokens_est": 0,
+   "root_id": "chg-05689",
+   "tool_calls": 7,
+   "truncated": false,
+   "verdict": "DIAGNOSED"
+  },
+  {
+   "approach": "vector_rag",
+   "case": "c045",
+   "correct": false,
+   "error": null,
+   "fault_class": "undeclared_coupling",
+   "held_out": true,
+   "llm_tokens": 829,
+   "ms": 2213.5,
+   "notes": {
+    "candidates_in_top_k": 0,
+    "n_candidates": 4,
+    "top_k": [
+     "pm-036#symptoms",
+     "pm-009#symptoms",
+     "pm-037#symptoms",
+     "pm-012#symptoms",
+     "pm-005#symptoms",
+     "pm-027#symptoms",
+     "pm-017#symptoms",
+     "pm-035#symptoms"
+    ]
+   },
+   "predicted": null,
+   "prompt_tokens_est": 336,
+   "root_id": "chg-05689",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "full_context",
+   "case": "c045",
+   "correct": false,
+   "error": null,
+   "fault_class": "undeclared_coupling",
+   "held_out": true,
+   "llm_tokens": 50076,
+   "ms": 5941.7,
+   "notes": {
+    "edges": 1569,
+    "n_candidates": 4
+   },
+   "predicted": "chg-05688",
+   "prompt_tokens_est": 23762,
+   "root_id": "chg-05689",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "graph",
+   "case": "c046",
+   "correct": true,
+   "error": null,
+   "fault_class": "bad_deploy",
+   "held_out": false,
+   "llm_tokens": 45261,
+   "ms": 8238.0,
+   "notes": {
+    "degraded": false,
+    "degraded_reason": null,
+    "rivals": [],
+    "steps": 7
+   },
+   "predicted": "chg-05688",
+   "prompt_tokens_est": 0,
+   "root_id": "chg-05688",
+   "tool_calls": 7,
+   "truncated": false,
+   "verdict": "DIAGNOSED"
+  },
+  {
+   "approach": "vector_rag",
+   "case": "c046",
+   "correct": false,
+   "error": null,
+   "fault_class": "bad_deploy",
+   "held_out": false,
+   "llm_tokens": 1269,
+   "ms": 2354.9,
+   "notes": {
+    "candidates_in_top_k": 1,
+    "n_candidates": 5,
+    "top_k": [
+     "pm-011#symptoms",
+     "pm-011#body",
+     "pm-037#symptoms",
+     "pm-001#symptoms",
+     "pm-031#symptoms",
+     "pm-015#symptoms",
+     "chg-05687",
+     "pm-009#symptoms"
+    ]
+   },
+   "predicted": "chg-05687",
+   "prompt_tokens_est": 522,
+   "root_id": "chg-05688",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "full_context",
+   "case": "c046",
+   "correct": false,
+   "error": null,
+   "fault_class": "bad_deploy",
+   "held_out": false,
+   "llm_tokens": 49447,
+   "ms": 2441.7,
+   "notes": {
+    "edges": 1569,
+    "n_candidates": 5
+   },
+   "predicted": "chg-05690",
+   "prompt_tokens_est": 23833,
+   "root_id": "chg-05688",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "graph",
+   "case": "c047",
+   "correct": true,
+   "error": null,
+   "fault_class": "config_change",
+   "held_out": false,
+   "llm_tokens": 44302,
+   "ms": 7774.6,
+   "notes": {
+    "degraded": false,
+    "degraded_reason": null,
+    "rivals": [],
+    "steps": 7
+   },
+   "predicted": "chg-05688",
+   "prompt_tokens_est": 0,
+   "root_id": "chg-05688",
+   "tool_calls": 7,
+   "truncated": false,
+   "verdict": "DIAGNOSED"
+  },
+  {
+   "approach": "vector_rag",
+   "case": "c047",
+   "correct": true,
+   "error": null,
+   "fault_class": "config_change",
+   "held_out": false,
+   "llm_tokens": 1091,
+   "ms": 2741.5,
+   "notes": {
+    "candidates_in_top_k": 3,
+    "n_candidates": 6,
+    "top_k": [
+     "pm-011#symptoms",
+     "pm-021#symptoms",
+     "pm-019#symptoms",
+     "chg-05691",
+     "chg-05688",
+     "chg-05687",
+     "pm-008#symptoms",
+     "pm-024#symptoms"
+    ]
+   },
+   "predicted": "chg-05688",
+   "prompt_tokens_est": 379,
+   "root_id": "chg-05688",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "full_context",
+   "case": "c047",
+   "correct": true,
+   "error": null,
+   "fault_class": "config_change",
+   "held_out": false,
+   "llm_tokens": 50057,
+   "ms": 5077.9,
+   "notes": {
+    "edges": 1569,
+    "n_candidates": 6
+   },
+   "predicted": "chg-05688",
+   "prompt_tokens_est": 23849,
+   "root_id": "chg-05688",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "graph",
+   "case": "c048",
+   "correct": true,
+   "error": null,
+   "fault_class": "flag_flip",
+   "held_out": false,
+   "llm_tokens": 44234,
+   "ms": 7941.5,
+   "notes": {
+    "degraded": false,
+    "degraded_reason": null,
+    "rivals": [],
+    "steps": 7
+   },
+   "predicted": "chg-05687",
+   "prompt_tokens_est": 0,
+   "root_id": "chg-05687",
+   "tool_calls": 7,
+   "truncated": false,
+   "verdict": "DIAGNOSED"
+  },
+  {
+   "approach": "vector_rag",
+   "case": "c048",
+   "correct": false,
+   "error": null,
+   "fault_class": "flag_flip",
+   "held_out": false,
+   "llm_tokens": 1264,
+   "ms": 2607.5,
+   "notes": {
+    "candidates_in_top_k": 0,
+    "n_candidates": 5,
+    "top_k": [
+     "pm-001#symptoms",
+     "pm-011#symptoms",
+     "pm-015#symptoms",
+     "pm-023#symptoms",
+     "pm-003#symptoms",
+     "pm-040#symptoms",
+     "pm-036#symptoms",
+     "pm-001#body"
+    ]
+   },
+   "predicted": null,
+   "prompt_tokens_est": 470,
+   "root_id": "chg-05687",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "full_context",
+   "case": "c048",
+   "correct": false,
+   "error": null,
+   "fault_class": "flag_flip",
+   "held_out": false,
+   "llm_tokens": 50486,
+   "ms": 6902.3,
+   "notes": {
+    "edges": 1569,
+    "n_candidates": 5
+   },
+   "predicted": "chg-05691",
+   "prompt_tokens_est": 23819,
+   "root_id": "chg-05687",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "graph",
+   "case": "c049",
+   "correct": true,
+   "error": null,
+   "fault_class": "expiry",
+   "held_out": true,
+   "llm_tokens": 44380,
+   "ms": 9001.4,
+   "notes": {
+    "degraded": false,
+    "degraded_reason": null,
+    "rivals": [],
+    "steps": 7
+   },
+   "predicted": "exp-0174",
+   "prompt_tokens_est": 0,
+   "root_id": "exp-0174",
+   "tool_calls": 7,
+   "truncated": false,
+   "verdict": "DIAGNOSED"
+  },
+  {
+   "approach": "vector_rag",
+   "case": "c049",
+   "correct": false,
+   "error": null,
+   "fault_class": "expiry",
+   "held_out": true,
+   "llm_tokens": 968,
+   "ms": 1742.3,
+   "notes": {
+    "candidates_in_top_k": 2,
+    "n_candidates": 5,
+    "top_k": [
+     "exp-0172",
+     "pm-024#symptoms",
+     "pm-008#symptoms",
+     "pm-031#symptoms",
+     "pm-015#symptoms",
+     "pm-011#symptoms",
+     "pm-020#symptoms",
+     "exp-0173"
+    ]
+   },
+   "predicted": "exp-0172",
+   "prompt_tokens_est": 400,
+   "root_id": "exp-0174",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  },
+  {
+   "approach": "full_context",
+   "case": "c049",
+   "correct": true,
+   "error": null,
+   "fault_class": "expiry",
+   "held_out": true,
+   "llm_tokens": 49977,
+   "ms": 4674.9,
+   "notes": {
+    "edges": 1569,
+    "n_candidates": 5
+   },
+   "predicted": "exp-0174",
+   "prompt_tokens_est": 23828,
+   "root_id": "exp-0174",
+   "tool_calls": 0,
+   "truncated": false,
+   "verdict": null
+  }
+ ],
+ "scale": null,
+ "summary": {
+  "full_context": {
+   "accuracy_heldout": 0.45,
+   "accuracy_overall": 0.3,
+   "accuracy_seen": 0.2,
+   "correct": 15,
+   "errors": 0,
+   "label": "full_context (llm: claude-haiku-5-5)",
+   "mean_llm_tokens": 50129.5,
+   "mean_ms": 5458.0,
+   "mean_prompt_tokens_est": 23827.6,
+   "mean_tool_calls": 0,
+   "n": 50,
+   "n_heldout": 20,
+   "n_seen": 30,
+   "truncated": 0
+  },
+  "graph": {
+   "accuracy_heldout": 1.0,
+   "accuracy_overall": 1.0,
+   "accuracy_seen": 1.0,
+   "correct": 50,
+   "errors": 0,
+   "label": "graph (llm: claude-haiku-5-5)",
+   "mean_llm_tokens": 44352.7,
+   "mean_ms": 8478.9,
+   "mean_prompt_tokens_est": 0,
+   "mean_tool_calls": 7,
+   "n": 50,
+   "n_heldout": 20,
+   "n_seen": 30,
+   "truncated": 0
+  },
+  "vector_rag": {
+   "accuracy_heldout": 0.05,
+   "accuracy_overall": 0.1,
+   "accuracy_seen": 0.1333,
+   "correct": 5,
+   "errors": 0,
+   "label": "vector_rag (llm: claude-haiku-5-5)",
+   "mean_llm_tokens": 1182.5,
+   "mean_ms": 2582.4,
+   "mean_prompt_tokens_est": 473.1,
+   "mean_tool_calls": 0,
+   "n": 50,
+   "n_heldout": 20,
+   "n_seen": 30,
+   "truncated": 0
+  }
+ }
+}

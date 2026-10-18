@@ -81,15 +81,24 @@ Separate runs with a real language model behind each approach (the headline tabl
 
 | Model | Cases | Approach | Overall | Seen | Held-out | LLM tokens / case | Tool calls / case | Mean ms / case | Fallback |
 |---|---|---|---|---|---|---|---|---|---|
+| claude-fable-5-1 | 50 | graph | 100% (50/50) | 100% | 100% | 44590 | 7.0 | 18371 | 0/50 |
+| claude-fable-5-1 | 50 | vector_rag | 12% (6/50) | 10% | 15% | 1036 | 0.0 | 3902 | - |
+| claude-fable-5-1 | 50 | full_context | 52% (26/50) | 47% | 60% | 48713 | 0.0 | 8125 | - |
+| claude-haiku-5-5 | 50 | graph | 100% (50/50) | 100% | 100% | 44353 | 7.0 | 8479 | 0/50 |
+| claude-haiku-5-5 | 50 | vector_rag | 10% (5/50) | 13% | 5% | 1182 | 0.0 | 2582 | - |
+| claude-haiku-5-5 | 50 | full_context | 30% (15/50) | 20% | 45% | 50130 | 0.0 | 5458 | - |
+| claude-opus-5-5 | 50 | graph | 100% (50/50) | 100% | 100% | 38334 | 6.3 | 12522 | 1/50 |
+| claude-opus-5-5 | 50 | vector_rag | 16% (8/50) | 17% | 15% | 1061 | 0.0 | 3756 | - |
+| claude-opus-5-5 | 50 | full_context | 54% (27/50) | 47% | 65% | 49617 | 0.0 | 6147 | - |
+| claude-sonnet-5-5 | 50 | graph | 100% (50/50) | 100% | 100% | 43869 | 7.0 | 11008 | 0/50 |
+| claude-sonnet-5-5 | 50 | vector_rag | 10% (5/50) | 10% | 10% | 1051 | 0.0 | 3215 | - |
+| claude-sonnet-5-5 | 50 | full_context | 38% (19/50) | 23% | 60% | 49992 | 0.0 | 7270 | - |
 | gpt-6-luna | 50 | graph | 100% (50/50) | 100% | 100% | 22393 | 7.0 | 13022 | 0/50 |
 | gpt-6-luna | 50 | vector_rag | 8% (4/50) | 3% | 15% | 570 | 0.0 | 2446 | - |
 | gpt-6-luna | 50 | full_context | 52% (26/50) | 53% | 50% | 29019 | 0.0 | 1761 | - |
 | qwen3:8b | 50 | graph | 100% (50/50) | 100% | 100% | 24998 | 6.5 | 23524 | 0/50 |
-| claude-opus-5-5 | 10 | full_context | 40% (4/10) | 33% | 50% | 49608 | 0.0 | 7293 | - |
-| claude-opus-5-5 | 10 | vector_rag | 10% (1/10) | 17% | 0% | 1073 | 0.0 | 5282 | - |
-| claude-haiku-5-5 | 5 | graph | 100% (5/5) | 100% | 100% | 44752 | 7.0 | 13003 | 0/5 |
 
-Runs: gpt-6-luna (50 cases, commit `76921df63c47`, 2026-10-09T15:36:16Z); qwen3:8b (50 cases, commit `1657c1f02e0d`, 2026-10-09T16:34:00Z); claude-opus-5-5 (10 cases, commit `8b1d66e0508e`, 2026-10-09T17:07:17Z); claude-haiku-5-5 (5 cases, commit `76921df63c47`, 2026-10-09T15:14:20Z).
+Runs: claude-fable-5-1 (50 cases, commit `0ef6f6c9ba26`, 2026-10-18T10:49:35Z); claude-haiku-5-5 (50 cases, commit `0ef6f6c9ba26`, 2026-10-18T09:45:31Z); claude-opus-5-5 (50 cases, commit `0ef6f6c9ba26`, 2026-10-18T10:23:48Z); claude-sonnet-5-5 (50 cases, commit `0ef6f6c9ba26`, 2026-10-18T10:04:31Z); gpt-6-luna (50 cases, commit `76921df63c47`, 2026-10-09T15:36:16Z); qwen3:8b (50 cases, commit `1657c1f02e0d`, 2026-10-09T16:34:00Z).
 
 ## Why it was wrong
 
@@ -97,19 +106,34 @@ Every wrong prediction in the live runs above, re-checked with `verify_claim` (t
 
 | Model | Cases | Approach | Wrong | after_onset | origin | signature | no_claim |
 |---|---|---|---|---|---|---|---|
+| claude-fable-5-1 | 50 | full_context | 24 | - | 3 | 20 | 1 |
+| claude-fable-5-1 | 50 | vector_rag | 44 | 1 | 21 | 6 | 16 |
+| claude-haiku-5-5 | 50 | full_context | 35 | - | 9 | 26 | - |
+| claude-haiku-5-5 | 50 | vector_rag | 45 | 1 | 24 | 4 | 16 |
+| claude-opus-5-5 | 50 | full_context | 23 | - | 2 | 21 | - |
+| claude-opus-5-5 | 50 | vector_rag | 42 | 1 | 20 | 5 | 16 |
+| claude-sonnet-5-5 | 50 | full_context | 31 | - | 7 | 24 | - |
+| claude-sonnet-5-5 | 50 | vector_rag | 45 | 1 | 22 | 6 | 16 |
 | gpt-6-luna | 50 | vector_rag | 46 | - | 5 | - | 41 |
 | gpt-6-luna | 50 | full_context | 24 | 1 | 4 | 19 | - |
-| claude-opus-5-5 | 10 | full_context | 6 | - | - | 6 | - |
-| claude-opus-5-5 | 10 | vector_rag | 9 | 1 | 3 | 1 | 4 |
 
 | Model | Case | Fault class | Approach | Predicted | Verdict | Why |
 |---|---|---|---|---|---|---|
-| gpt-6-luna | c003 | flag_flip | full_context | `chg-05691` | REFUTED · signature | config cannot produce latency |
-| gpt-6-luna | c007 | config_change | full_context | `chg-05689` | REFUTED · signature | deploy cannot produce saturation |
-| gpt-6-luna | c007 | config_change | vector_rag | `chg-05690` | REFUTED · origin | svc-analytics-api-batch@ap-south was not the first service to fail |
+| claude-fable-5-1 | c000 | undeclared_coupling | full_context | `chg-05692` | REFUTED · signature | deploy cannot produce saturation |
+| claude-fable-5-1 | c000 | undeclared_coupling | vector_rag | `chg-05692` | REFUTED · signature | deploy cannot produce saturation |
+| claude-fable-5-1 | c002 | config_change | vector_rag | `chg-05690` | REFUTED · origin | svc-promotions-sync@us-east was not the first service to fail |
+| claude-haiku-5-5 | c000 | undeclared_coupling | full_context | `chg-05692` | REFUTED · signature | deploy cannot produce saturation |
+| claude-haiku-5-5 | c000 | undeclared_coupling | vector_rag | `chg-05692` | REFUTED · signature | deploy cannot produce saturation |
+| claude-haiku-5-5 | c002 | config_change | vector_rag | `chg-05690` | REFUTED · origin | svc-promotions-sync@us-east was not the first service to fail |
 | claude-opus-5-5 | c000 | undeclared_coupling | full_context | `chg-05692` | REFUTED · signature | deploy cannot produce saturation |
 | claude-opus-5-5 | c000 | undeclared_coupling | vector_rag | `chg-05692` | REFUTED · signature | deploy cannot produce saturation |
 | claude-opus-5-5 | c002 | config_change | vector_rag | `chg-05690` | REFUTED · origin | svc-promotions-sync@us-east was not the first service to fail |
+| claude-sonnet-5-5 | c000 | undeclared_coupling | full_context | `chg-05692` | REFUTED · signature | deploy cannot produce saturation |
+| claude-sonnet-5-5 | c000 | undeclared_coupling | vector_rag | `chg-05692` | REFUTED · signature | deploy cannot produce saturation |
+| claude-sonnet-5-5 | c002 | config_change | vector_rag | `chg-05690` | REFUTED · origin | svc-promotions-sync@us-east was not the first service to fail |
+| gpt-6-luna | c003 | flag_flip | full_context | `chg-05691` | REFUTED · signature | config cannot produce latency |
+| gpt-6-luna | c007 | config_change | full_context | `chg-05689` | REFUTED · signature | deploy cannot produce saturation |
+| gpt-6-luna | c007 | config_change | vector_rag | `chg-05690` | REFUTED · origin | svc-analytics-api-batch@ap-south was not the first service to fail |
 
 Every row with its deciding query is in report.json (`live_llm_runs[].why_wrong`).
 
