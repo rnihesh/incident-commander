@@ -1,102 +1,124 @@
-# Video script: Incident Commander (120 s)
+# Video script: Incident Commander (2:50)
 
-Target: 2:00 exactly. One narrator, screen capture only. Every number spoken below comes from
-`api/bench_results/report.md` or from a run on seed 42. Do not round them differently on
-camera.
+A 2:30-3:00 YouTube demo of the redesigned console, recorded on the live site
+([commander.niheshr.com](https://commander.niheshr.com)). One narrator, screen capture only.
+Every click below was checked against the current UI. Change ids, service names and timings
+differ from run to run: read them off the screen, do not script them.
 
-## Recording settings
+Benchmark numbers come from `api/bench_results/` (the `/benchmark` "Live LLM runs" table):
+with `gpt-6-luna` behind every approach on 50 blind faults, the graph agent scored **50/50**,
+full context in the prompt **26/50** and vector RAG **4/50**. Say them exactly so.
 
-- **Resolution.** 1920×1080, 30 fps. Chrome in a clean profile with no extensions and the
-  window maximized. Hide the bookmarks bar.
-- **Zoom.** 110% for the console and judge pages (the console type is 11-14 px), 125% for
-  `/benchmark`, and 100% for the architecture card.
-- **World.** Run `uv run ic seed --seed 42`. The content hash must print
-  `879505a4501940838d15ac0743f6891686655da34e39d24e7521e99b577352ae`.
-- **Agent.** `api/.env` holds `IC_LLM_PROVIDER=openai`, `IC_LLM_MODEL=gpt-6-luna` and the key, so
-  the LLM triage agent runs (about $0.003 per incident; the breaker caps the day at $0.50).
-  Verdicts have no DEGRADED badge. Without a key the deterministic graph agent runs and
-  verdicts show DEGRADED; then say "deterministic graph agent" once on camera.
-- **First paint.** A fresh browser profile (no `ic.started` in sessionStorage, no session
-  incident) opening `/` plays the recorded hero run on its own, with its saved incident graph.
-  That is beat 1; no click is needed. X-ray and the judge challenge need a live incident, so
-  beats 2d and 3a use config B.
-- **Two API configurations.** Restart the API between them.
-  - **A (recorded hero, scrubbable).**
-    `IC_COOKIE_SECURE=false IC_SESSION_RUNS_PER_HOUR=0 uv run uvicorn ic.api.app:app --port 8000`.
-    With the run limit at 0, **Inject fault** plays the saved real run
-    (`api/src/ic/runs/recorded/hero.json`, regenerate with `uv run ic record-hero`). It comes
-    with the playback bar (0.5x-8x and a scrubber) and the banner "Recorded run". That banner is
-    the replay disclosure, so keep it visible in at least one frame.
-  - **B (live, judge beats).**
-    `IC_COOKIE_SECURE=false IC_IP_CONCURRENT_SESSIONS=8 IC_IP_SESSIONS_PER_HOUR=100 IC_IP_RUNS_PER_HOUR=100 IC_SESSION_RUNS_PER_HOUR=100 IC_GLOBAL_RUNS_PER_HOUR=200 uv run uvicorn ic.api.app:app --port 8000`.
-- **Do not** use `?scenario=` fixtures for the hero, judge or benchmark beats. They are
-  hand-built UI fixtures with placeholder hashes. If one is used anyway (for example
-  `?scenario=refused` for a cutaway), label it "UI fixture" on screen.
-- **Live runs are fast** (about 1.2 s end to end). Capture at full speed and slow the footage
-  in the edit, or pause on panels. Do not fake timing on screen. Put "time-compressed" or
-  "slowed 4x" captions where applicable.
-- **Audio.** Narration recorded separately at -16 LUFS, no music under the judge beat.
+## What the live site runs
 
-## Beat table
-
-| # | Time | On screen | Narration (at most 2 lines) | Launch |
-|---|---|---|---|---|
-| 1 | 0:00-0:08 | Black, then a pager notification card: "Request timeouts on exports-batch" (the recorded run's title). Cut to a fresh profile opening the console: the recorded run is already playing, "Recorded run" banner in frame. | "At 3 AM an alert names a symptom, not a cause. Most AI SRE tools give you a ranked guess. This one gives you proofs you can re-run, or break." | Fresh profile, `http://localhost:3001/` (autoplay) |
-| 2a | 0:08-0:14 | The reflex panel fills: search space, symptomatic count, top suspects, on-call, about 2 ms. | "Within milliseconds, before any model call: blast radius, suspects, who's on call. Labelled pre-snapshot." | Same page, playback 0.5x |
-| 2b | 0:14-0:24 | The elimination funnel cuts, then verdict DIAGNOSED. The absence certificate draws its clause bars (one five-segment bar per rival, first failure in amber) over the onset strip. Hover one bar. | "FalkorDB copies the world as it stood at alert time. Every change is cut clause by clause, and each rival shows exactly which clause it failed." | Scrub as needed |
-| 2c | 0:24-0:32 | Hypothesis chain with prev/hash, then the response panel: REHEARSAL CLEARED, PR, STATUS, PAGE, MEMORY, LEARNED. Caption: "simulated: no GitHub token in this take" unless a sandbox token is set. | "Each hypothesis is hash-chained before it runs. The rollback is rehearsed on a cloned world, then a PR, a page, and memory written back." | |
-| 2d | 0:32-0:42 | Live run (config B, **Inject fault**). Expand the `origin` cut, click **X-ray**: the operator tree with records and ms, total time. | "Every cut is a real FalkorDB query. X-ray shows its plan and a live profile, operator by operator." | API config B, `http://localhost:3001/` |
-| 3a | 0:42-0:50 | Drawer **Was it my deploy?**: pick an eliminated change, **Challenge**. REFUTED with the clause ("config cannot produce latency") and **Query that decided it**; "1 of 2 challenges left". | "Think it was your deploy? Challenge it. The same rule re-checks it live and tells you which clause rules it out." | Same page |
-| 3b | 0:50-1:00 | `/judge`: search a service, pick a fault class, **Commit and inject blind**. The commitment hash appears; the run streams. **Reveal** shows the recomputed hash and MATCH. | "Don't trust us. Judge mode: you pick the target, we publish only a hash, the agent investigates blind, and reveal checks it." | `http://localhost:3001/judge` |
-| 3c | 1:00-1:11 | **Find edits that flip the verdict**: "Try these" lists the single edits and the clause each breaks. Click one, **Review edit**, **Confirm and write** (Cypher shown), **Verify**: FALSIFIED, the responsible node named and highlighted. | "We even tell you how to break it: every single edit that would flip the verdict, each tried on its own copy. Apply one, and Verify turns the proof FALSIFIED." | Same page |
-| 4 | 1:11-1:23 | Console "Learning curve" panel (or `/benchmark`): bars 9, 5, 5, 5, 5, 5, 5, 5, 9; the confidence line rises to 0.99, halves twice (÷2) through the dashed 0.25 threshold; incident 9 is back to 9. | "Resolved incidents teach the graph a coupling no one declared: five tool calls, not nine. When the world changes, contradictions halve that memory until it is dropped." | `http://localhost:3001/` or `/benchmark` |
-| 4b | 1:23-1:33 | Console drawer, **Ask the graph** tab. Click the example "Who owns checkout and who is on call?" (or type "Who owns checkout and who is on call right now?"): answer with the LLM and grounded badges, source chips; expand **Show queries**. Quick second question: "Which changes caused incidents last week?". Then an off-graph question, "What is the weather in Paris today?": the answer reads "The graph has no information about the weather in Paris today." with a "no information" badge and 0 queries. | "Same graph, plain English. Ask who owns checkout and who is on call: every claim cites its nodes and the Cypher behind it. Ask something the graph does not hold, and it says so instead of guessing." | Drawer, Ask the graph (config B or a key set; about $0.001 per question) |
-| 5 | 1:33-1:50 | `/benchmark`: live LLM table (gpt-6-luna behind every approach: graph 50/50, full context 26/50, vector RAG 4/50). Open **Why it was wrong**: chips "signature 19", "origin 4", "after onset 1", "no claim 41"; open one deciding query. Then the scale table (closure 3.15 vs 5.62 ms, path 1.01 vs 10.16 ms). Caption: "same model in every row". | "Fifty blind faults: only the graph agent gets all fifty, and every wrong answer is refuted by the same rule. At eight thousand services FalkorDB is two to ten times faster." | `http://localhost:3001/benchmark` |
-| 6 | 1:50-2:00 | Architecture card (see below), then the repo URL. | "One FalkorDB instance, a graph per session, snapshots by GRAPH.COPY, and every claim a query you can run. Incident Commander." | Static card |
-
-Beat totals: 8 + 34 + 29 + 12 + 10 + 17 + 10 = 120 s.
-
-## Architecture card (beat 6)
-
-A single 1920×1080 slide on a dark background, built from `docs/architecture.md`:
-
-- **Left.** Browser, then FastAPI. Next to FastAPI: triage agent, ledger graph, remediation
-  agent.
-- **Centre.** FalkorDB with the graph names stacked: `seed:world`, `s:{sid}:world`,
-  `s:{sid}:ledger`, `asof:{iid}:true|known`, `rehearse:{iid}`, `storm:{id}`.
-- **Right.** GitHub PR + status, Discord page, MCP clients.
-- **Bottom strip** (monospace): `GRAPH.COPY · IMPACTS · shortestPath · algo.BFS · algo.SPpaths · algo.WCC · algo.betweenness(samplingSeed) · vector + full-text indexes`.
+- **Agent.** The live site runs **Claude Haiku** (`claude-haiku-5-5`). A live investigation
+  takes a few seconds end to end. Do not speed it up on screen; if you trim dead time in the
+  edit, add a small "trimmed" caption.
+- **Limits.** Each sandbox allows 3 live runs per hour (a Judge round counts as a run), 6 per
+  IP, and 20 Ask questions per hour. This plan uses 2 runs (one console incident, one Judge
+  round), which leaves one retake. Past a limit the page shows a plain message such as
+  "Hourly limit reached"; see the fallback plan.
+- **Simulated actions.** Without GitHub and Discord tokens the PR, commit status and page are
+  marked "(simulated)". Keep that word visible; do not crop it out.
+- **Navigation resets state.** Leaving the console or Judge page discards the run on screen
+  (the console reopens on the welcome screen). Finish each section before switching pages, or
+  open the next page in a new tab.
 
 ## Shot list
 
-| Shot | Beat | Capture | Notes |
-|---|---|---|---|
-| S1 | 1 | Pager card (static image), then a fresh-profile capture of `/` | Use the recorded run's title, "Request timeouts on exports-batch" (check `run_started.title` in `hero.json` if it was re-recorded). Do not invent a service name. Keep the "Recorded run" banner in frame for at least 1 s. |
-| S2 | 2a-2c | Same take, playback 0.5x | Pause on the funnel, the clause bars and the response panel. |
-| S3 | 2d | Screen capture, config B, `/`, a live **Inject fault** | Expand the `origin` cut, then **X-ray**. Crop so the records and ms columns stay readable at 1080p. |
-| S4 | 3a | Same take: drawer **Was it my deploy?** | Pick a change that fails `signature` or `origin`. Each incident allows two challenges. |
-| S5 | 3b | Screen capture, config B, `/judge` | Pick a service with an alert path. Wait for the verdict before **Reveal** (otherwise it opens after 120 s). |
-| S6 | 3c | Same take as S5: Try these, Tamper, Verify | Keep "Recorded before the alert" ticked so the flip is not marked late-arriving (simpler to narrate). |
-| S7 | 3c (optional) | FalkorDB Browser, `localhost:13000`, select `s:<ic_sid>:world` | Follow `docs/notes/browser-tamper.md`. Local only. Show the Cypher editor for 2 s. |
-| S8 | 4 | Learning curve panel | Static. Slow push-in on the ÷2 marks and the 0.25 line. |
-| S8b | 4b | Console drawer, Ask the graph, three questions | Questions 1 and 2 are the drawer's example chips; question 3 ("What is the weather in Paris today?") is off-graph and must show "no information". Hold the Show queries panel for 2 s. Needs the LLM key, otherwise the badge reads limited mode. |
-| S9 | 5 | `/benchmark` at 125% zoom: live LLM table, Why it was wrong, scale table | Hold each 6-8 s. Highlight the rows being spoken. |
-| S10 | 6 | Architecture card | Static. |
+| # | Time | Clicks | On screen | Voice-over |
+|---|---|---|---|---|
+| 1 | 0:00-0:10 | None. Title card over the welcome screen. | Card: "50 blind faults, same model behind every approach. Graph agent 50/50 · full context 26/50 · vector RAG 4/50." | "AI on-call tools guess. Give the same model fifty planted outages: with a FalkorDB graph it finds all fifty root causes. Full context finds 26, vector RAG finds 4." |
+| 2a | 0:10-0:18 | `/`. Leave **Bad deploy** selected under "What should break?". Click **Start an incident**. | Welcome screen: headline, the three fault cards, "How it works", then the console opening with the header badge "Investigating". | "This is Incident Commander. I break something in my own private copy of a company's service graph, and an AI on-call agent investigates." |
+| 2b | 0:18-0:30 | None; let it stream. Hover one dimmed node on the graph. | "First guess" strip (suspects, on-call, in a few ms), then the **Elimination funnel** rows cutting: `after_onset`, `origin`, `coverage`, `order`, `signature`. The graph lights the causal path in green. | "First it rebuilds the graph as it stood at alert time. Then every recent change is cut, rule by rule, until only a change that explains every symptom is left." |
+| 2c | 0:30-0:40 | None. Point at the right column. | **Verdict**: Root cause `chg-…`, who deployed it. **Absence certificate**: "No rival qualifies", one clause bar per rival with its first failing clause. | "The verdict names the change. And the absence certificate proves no other change fits: each rival, and the exact rule it failed." |
+| 2d | 0:40-0:50 | Scroll the right column to **Response**. | HANDOFF, **REHEARSAL CLEARED** (cloned world, candidates re-checked), PR, STATUS, PAGE, MEMORY; header badge "Resolved and remembered". | "Before acting, it rehearses the rollback on a cloned graph. Only then does it open the rollback PR, page the on-call owner, and write what it learned back into the graph." |
+| 3 | 0:50-1:08 | Scroll up to **Hypothesis chain**. On proof 1 click **Show query**, then **Re-run** (badge VERIFIED). Click **Verify chain** (every proof VERIFIED). | The stored Cypher with its parameters, the prev/hash pair, VERIFIED badges, "chain head … anchored at completion". | "Every claim was written down before it was tested, and each proof is a stored Cypher query in a hash chain. Show the query, re-run it, or verify the whole chain yourself." |
+| 4 | 1:08-1:25 | Click **Ask the graph** (bottom right). Click the starter **Why did you blame chg-…?**. Then open **Show queries** on the answer. | Chat panel: the question, the answer with "LLM" and "grounded" badges, source chips (Incident, Change), the Cypher behind it. | "I can just ask it. Why did you blame this change? The answer is grounded: every source it cites was touched by a query, and here are the queries." |
+| 5a | 1:25-1:40 | Close the chat (×). Header **Judge mode**. Type `elasticsearch-payments` in the search box, click a service marked ALERT PATH OK (e.g. `ap-south`), keep Fault class **bad deploy**, click **Commit and inject blind**. | "Pick a target" list and its detail (upstream services, recent changes); then the commitment hash and the blind run streaming. | "Don't trust me. In Judge mode you plant the fault. The server publishes only a hash of your choice, and the agent investigates blind." |
+| 5b | 1:40-1:50 | Wait for "VERDICT DIAGNOSED". Click **Reveal**. | Committed fault next to the agent's blind verdict, **MATCH**, "Recomputed hash = committed hash (also recomputed in this browser)". | "Reveal: the hash matches what was committed, and the agent named the exact change I planted." |
+| 5c | 1:50-2:05 | In **Tamper**, click **Find edits that flip the verdict**. Click the first "Try these" edit (it pre-fills **Remove edge**). **Review edit**, **Confirm and write**, then **Verify**. | "Try these": every single edit that would flip the verdict, each tried on its own copy. The exact Cypher of the write, CHANGED, then **FALSIFIED** with the responsible nodes ringed red on the graph. | "Now try to break it. It even lists the edits that would. I remove one dependency on the causal path, verify, and the proof flips to FALSIFIED, pointing at what changed." |
+| 6 | 2:05-2:18 | Same page. Click the `origin` row of the **Elimination funnel**, then **X-ray**. Scroll to "What we avoid / What we run". | FalkorDB's EXPLAIN plan of the naive valid-time query (Filter above the variable-length traverse, highlighted) beside the live PROFILE of the real query on the as-of snapshot, records and ms per operator. | "Every cut is a real FalkorDB query, and X-ray shows FalkorDB's own plan and profile. It also shows why we snapshot the graph instead of filtering time inside the traversal." |
+| 7 | 2:18-2:33 | Header **Benchmark**. Scroll to **Live LLM runs**. | `gpt-6-luna` rows: graph 100% (50/50), full_context 52% (26/50), vector_rag 8% (4/50); `qwen3:8b` graph 50/50. Optionally open **Why it was wrong**. | "Same model, fifty blind faults. Only the graph agent gets all fifty, and a small local model driving the same graph tools does too." |
+| 8 | 2:33-2:50 | Static closing card. | FalkorDB features used (list below) and the two links. | "One FalkorDB instance: a graph per sandbox, snapshots with GRAPH.COPY, graph algorithms for the investigation, and every claim a query you can run. Try it at commander.niheshr.com." |
+
+Section totals: hook 10 s, investigation 40 s, proof 18 s, Ask 17 s, Judge 40 s, X-ray 13 s,
+benchmark 15 s, close 17 s = 2:50.
+
+### Closing card (shot 8)
+
+A single 1920x1080 slide in the dark theme:
+
+- **Title:** Incident Commander, an on-call agent whose every answer is a proof.
+- **FalkorDB features used:** `GRAPH.COPY` (a world per sandbox, as-of snapshots, rollback
+  rehearsal, PR world copies) · bitemporal pruning to an as-of graph · `shortestPath` /
+  `allShortestPaths` over `IMPACTS` · `algo.BFS` · `algo.SPpaths` · `algo.WCC` (storm
+  collapse) · `algo.betweenness` with a seed (chokepoints) · vector and full-text indexes
+  (precedents) · `GRAPH.RO_QUERY` for every tool read · `GRAPH.EXPLAIN` / `GRAPH.PROFILE`
+  (X-ray) · conditional `SET` as the agents' only coordination.
+- **Links:** commander.niheshr.com · github.com/rnihesh/incident-commander
+
+## If short on time
+
+Cut in this order until the video fits; the hook, shots 2a-2d, 5a-5c and the close stay:
+
+1. Shot 6 (X-ray), or shorten it to the plan table only (save 8-13 s).
+2. Shot 3: keep **Re-run** on one proof, drop **Verify chain** (save 8 s).
+3. Shot 4: show the answer, skip **Show queries** (save 5 s).
+4. Shot 7: one 6 s hold on the gpt-6-luna rows, no "Why it was wrong".
+
+Optional extras if there is time to spare (each about 8 s): **Fire an alert storm** from the
+welcome screen (hundreds of pages collapse into 2-3 incidents, one jointly caused); the bottom
+tab **Was it my deploy?** (pick an eliminated change, **Challenge**, REFUTED with the clause);
+the header **Replay** link (scrub the timeline, as-happened / as-known); an off-graph Ask
+question such as "What is the weather in Paris today?" (answered "no information").
+
+## Recording tips
+
+- **Viewport 1440x900.** The layout is designed for it. Use a fresh Chrome profile with no
+  extensions, size the window so the page area is 1440x900 (for example
+  `open -na "Google Chrome" --args --user-data-dir=/tmp/ic-rec --window-size=1440,1010`, then
+  check `innerWidth` / `innerHeight` in the console), hide the bookmarks bar (Cmd+Shift+B),
+  and close DevTools before recording.
+- **Browser zoom.** 100% on the console and Judge pages (higher zoom wraps the right column
+  and pushes the verdict below the fold). 125% is fine on `/benchmark` for the table shot.
+- **Resolution.** Record on a Retina display (2x) and export 1080p or 1440p at 30 fps; small
+  monospace text (hashes, Cypher) stays readable.
+- **Theme.** Record in the **dark** theme: the green causal path, the red FALSIFIED rings and
+  the clause bars have the most contrast, and it matches the README images. The header sun /
+  moon toggle switches themes; a 2 s light-theme cutaway is optional.
+- **Clean frame.** Do Not Disturb on, no other tabs visible, no API keys or terminal windows in
+  frame, a cursor highlighter on for the click beats. Do not use `?scenario=` URLs; those
+  are UI fixtures, not runs.
+- **Audio.** Narration recorded separately at -16 LUFS; no music under the Judge section.
+
+## Fallback if a live run is slow or refused
+
+- If a run has not reached the verdict within about 20 s, reload the page (Cmd+R) to get the
+  welcome screen back and press **Watch a sample run**, or open
+  `commander.niheshr.com/?sample` directly. If the server refuses a live run at a limit, the
+  console switches to the same recording on its own and a plain notice (for example "Hourly
+  limit reached" or "The demo is busy") says why. The sample replays a saved real
+  investigation with the banner "Sample run (recording)" and a playback bar (**Pause**,
+  0.5x-8x, a scrubber), so shots 2a-2d can be paced exactly. Keep the banner in frame for at
+  least a second and say "a saved run" once.
+- A recording has no live incident behind it, so **Re-run**, **Verify chain**, **X-ray** and
+  "Was it my deploy?" are not available there. Take shot 3 and shot 6 from the Judge round
+  instead (its proofs, funnel and X-ray are live), or from a local take.
+- Local take: run the stack with relaxed limits (see `scripts/capture-media.md`). With a local
+  `qwen3:8b` on Ollama a run takes about 30-40 s, so trim it in the edit and caption the shot
+  "local model, trimmed". Say which agent ran in the video description.
 
 ## Pre-flight checklist
 
-- [ ] `docker compose --profile dev up -d`. `curl localhost:8000/health` returns `"falkordb": true`.
-- [ ] Seed hash matches (above).
-- [ ] A fresh profile on `/` autoplays the recorded run ("Recorded run" banner, playback bar).
-- [ ] Config A: Inject fault shows "Recorded run" and the playback bar.
-- [ ] Config B: a console run shows **X-ray** on its funnel cuts and the drawer challenge
-      answers REFUTED for an eliminated change.
-- [ ] Config B: a judge round ends DIAGNOSED, Reveal shows `commitment_ok: true` and a match,
-      "Try these" lists at least one edit, and tamper plus Verify shows FALSIFIED.
-- [ ] The drawer's **Ask the graph** answers "Who owns checkout and who is on call?" with LLM and grounded badges, and the Paris question with "no information".
-- [ ] `/benchmark` shows 50 cases, the scale table, the learning curve with its ÷2 marks, and
-      "Why it was wrong" for gpt-6-luna and claude-opus-5-5.
-- [ ] No API keys or tokens visible anywhere in frame (terminal, DevTools, `.env`).
-- [ ] The video description says which agent ran (gpt-6-luna, or deterministic if no key),
-      whether the hero beat is replayed from a recorded run, and that PR and page are
-      simulated unless a sandbox token was configured.
+- [ ] `https://commander.niheshr.com` opens on the welcome screen in a fresh profile.
+- [ ] A test run on a second profile ends with "Resolved and remembered" and no "Degraded"
+      banner (Haiku is answering), then that profile is closed so it does not use your runs.
+- [ ] The **Ask the graph** button is bottom right and the starter questions include "Why did
+      you blame …?" once an incident exists.
+- [ ] `/judge` lists services with "ALERT PATH OK" and **Commit and inject blind** is enabled
+      after picking one.
+- [ ] `/benchmark` shows the "Live LLM runs" table with gpt-6-luna 50/50, 26/50, 4/50.
+- [ ] The closing card and the title card are rendered at 1920x1080.
+- [ ] The video description says the agent is Claude Haiku on the live site, that PR, status
+      and page are simulated, and whether any shot is the sample recording.
