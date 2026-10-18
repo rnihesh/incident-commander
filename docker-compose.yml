@@ -123,6 +123,9 @@ services:
     environment:
       # Hostname Caddy serves and gets a certificate for, e.g. commander.example.com.
       SITE_ADDRESS: ${SITE_ADDRESS:-}
+      # Optional API-only host (e.g. api.commander.example.com). The default is a plain-http
+      # name nobody resolves, so Caddy requests no certificate for it.
+      API_SITE_ADDRESS: ${API_SITE_ADDRESS:-http://api.invalid}
       ACME_EMAIL: ${ACME_EMAIL:-}
     ports:
       - "80:80"

@@ -1,6 +1,8 @@
 # Caddy at the edge (KTD18): automatic TLS for {$SITE_ADDRESS}, one origin for web and API.
 #   /api/*, /mcp*, /health  -> api:8000 (uvicorn, SSE unbuffered)
 #   everything else         -> web:3000 (Next.js standalone server)
+# Optionally, {$API_SITE_ADDRESS} (e.g. api.commander.example.com) serves the API alone for
+# direct clients. The web app never uses it; it always calls /api on its own origin.
 # SITE_ADDRESS is a hostname such as commander.example.com (set in .env). The web image is
 # built with an empty NEXT_PUBLIC_API_URL, so the browser calls the API on the same origin
 # and the session cookie stays host-only.
@@ -13,9 +15,37 @@
 
 (api_headers) {
 	header {
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "DENY"
+		Permissions-Policy "camera=(), microphone=(), geolocation=(), interest-cohort=()"
+		-Server
+		-Via
 		Referrer-Policy "no-referrer"
 		Cross-Origin-Resource-Policy "same-origin"
 		Content-Security-Policy "default-src 'none'; frame-ancestors 'none'"
+	}
+}
+
+(api_proxy) {
+	import api_headers
+
+	# Request bodies are small JSON; refuse anything large before it reaches the API.
+	request_body {
+		max_size 64KB
+	}
+
+	reverse_proxy api:8000 {
+		# Server-sent events (/api/runs/{id}/events) and MCP streamable HTTP: flush every
+		# write immediately, no read/write timeouts.
+		flush_interval -1
+		transport http {
+			read_timeout 0
+			write_timeout 0
+			dial_timeout 5s
+		}
+		health_uri /health
+		health_interval 30s
 	}
 }
 
@@ -41,24 +71,7 @@
 
 	@api path /api/* /mcp /mcp/* /health
 	handle @api {
-		import api_headers
-
-		# Request bodies are small JSON; refuse anything large before it reaches the API.
-		request_body {
-			max_size 64KB
-		}
-
-		reverse_proxy api:8000 {
-			# Server-sent events (/api/runs/{id}/events): flush every write immediately.
-			flush_interval -1
-			transport http {
-				read_timeout 0
-				write_timeout 0
-				dial_timeout 5s
-			}
-			health_uri /health
-			health_interval 30s
-		}
+		import api_proxy
 	}
 
 	handle {
@@ -76,6 +89,17 @@
 			}
 		}
 	}
+
+	log {
+		output stdout
+		format console
+	}
+}
+
+# Direct API host. Unset, it falls back to a plain-http name nobody resolves, so no
+# certificate is requested.
+{$API_SITE_ADDRESS:http://api.invalid} {
+	import api_proxy
 
 	log {
 		output stdout
