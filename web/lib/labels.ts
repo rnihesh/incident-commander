@@ -39,8 +39,8 @@ export function labelRank(id: string, role: NodeRole, g: GraphView): number {
   return 4;
 }
 
-/** Greedy label placement. In rank order, each label tries below its node, then above, right and
- *  left; the first slot that clears every already-placed label (and, if possible, every labelled
+/** Greedy label placement. In rank order, each label tries below its node, then above, right,
+ *  left and the four diagonals; the first slot that clears every already-placed label (and, if possible, every labelled
  *  node's disc) wins. A label with no free slot is skipped (hover still names the node). `gap` is
  *  the node-to-text gap. With `view` (the visible canvas, same units) a slot that stays on screen
  *  beats one that would run off the edge. */
@@ -53,11 +53,17 @@ export function placeLabels(cands: LabelCandidate[], gap: number, view?: Box): P
     const above = c.y - c.r - gap - c.h;
     const mid = c.y - c.h / 2;
     const side = c.r + gap + c.w / 2;
+    // Diagonal slots (text beside the node, just below or above it) are tried last.
+    const diag = c.r * 0.7 + gap + c.w / 2;
     const slots: [number, number][] = [
       [c.x, below],
       [c.x, above],
       [c.x + side, mid],
       [c.x - side, mid],
+      [c.x + diag, c.y + c.r * 0.7],
+      [c.x + diag, c.y - c.r * 0.7 - c.h],
+      [c.x - diag, c.y + c.r * 0.7],
+      [c.x - diag, c.y - c.r * 0.7 - c.h],
     ];
     const boxes = slots.map(([tx, ty]) => ({ tx, ty, box: { x0: tx - c.w / 2, y0: ty, x1: tx + c.w / 2, y1: ty + c.h } }));
     const free = boxes.filter((s) => !placed.some((p) => hit(p.box, s.box)));
@@ -73,4 +79,21 @@ export function placeLabels(cands: LabelCandidate[], gap: number, view?: Box): P
     if (pick) placed.push({ id: c.id, ...pick });
   }
   return placed;
+}
+
+/** Longest label drawn on the canvas; longer names are cut with an ellipsis (hover shows the id). */
+export const LABEL_MAX = 28;
+
+/** Canvas label per node: the service name, with the region appended only when the same name
+ *  appears more than once in the graph (a service deployed in two regions), cut to LABEL_MAX. */
+export function labelNames(nodes: { id: string; name: string }[]): Map<string, string> {
+  const count = new Map<string, number>();
+  for (const n of nodes) count.set(n.name, (count.get(n.name) ?? 0) + 1);
+  return new Map(
+    nodes.map((n) => {
+      const region = n.id.includes("@") ? n.id.slice(n.id.lastIndexOf("@") + 1) : "";
+      const full = (count.get(n.name) ?? 0) > 1 && region ? `${n.name}@${region}` : n.name;
+      return [n.id, full.length > LABEL_MAX ? `${full.slice(0, LABEL_MAX - 1)}\u2026` : full];
+    }),
+  );
 }

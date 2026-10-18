@@ -2,6 +2,7 @@
 import type { IncidentGraphResponse } from "./api";
 import type { ConsoleState, GraphView } from "./reducer";
 import type { GraphEdge, GraphNode } from "./mock/hero-graph";
+import { layeredLayout } from "./graphLayout";
 
 export const CANVAS_W = 1000;
 export const CANVAS_H = 600;
@@ -41,11 +42,27 @@ export interface LiveGraph {
   edges: GraphEdge[];
 }
 
-export function toLiveGraph(resp: Pick<IncidentGraphResponse, "nodes" | "edges">): LiveGraph {
+/** Canvas nodes and edges for an incident graph. With an alerting or symptomatic service the
+ *  closure is laid out in layers left to right towards the alert (see layeredLayout); otherwise
+ *  the seeded world positions are rescaled into the canvas box. */
+export function toLiveGraph(
+  resp: Pick<IncidentGraphResponse, "nodes" | "edges"> & { alert_service_id?: string | null; changes?: { service_id: string }[] },
+): LiveGraph {
   const ids = new Set(resp.nodes.map((n) => n.id));
+  const edges = resp.edges.filter((e) => ids.has(e.source) && ids.has(e.target)).map((e) => ({ source: e.source, target: e.target }));
+  const alert = resp.nodes.find((n) => n.alerting)?.id ?? (resp.alert_service_id && ids.has(resp.alert_service_id) ? resp.alert_service_id : null);
+  const sym = new Set(resp.nodes.filter((n) => n.symptomatic).map((n) => n.id));
+  if (!alert && !sym.size) return { nodes: fitNodes(resp.nodes), edges };
+  const changed = new Set((resp.changes ?? []).map((c) => c.service_id));
+  const pos = layeredLayout(
+    resp.nodes.map((n) => n.id),
+    edges,
+    alert,
+    (id) => (id === alert || sym.has(id) ? 2 : changed.has(id) ? 1 : 0),
+  );
   return {
-    nodes: fitNodes(resp.nodes),
-    edges: resp.edges.filter((e) => ids.has(e.source) && ids.has(e.target)).map((e) => ({ source: e.source, target: e.target })),
+    nodes: resp.nodes.map((n) => ({ id: n.id, name: n.name, tier: n.tier ?? 0, ...pos.get(n.id)! })),
+    edges,
   };
 }
 

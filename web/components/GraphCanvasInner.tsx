@@ -4,9 +4,10 @@ import ForceGraph2D, { type ForceGraphMethods, type LinkObject, type NodeObject 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { GraphView } from "@/lib/reducer";
 import { roleOf, ROLE_LABEL } from "@/lib/roles";
-import { labelRank, placeLabels, type LabelCandidate } from "@/lib/labels";
+import { labelNames, labelRank, placeLabels, type LabelCandidate } from "@/lib/labels";
 import { labelAwareFit } from "@/lib/fit";
-import type { GraphEdge, GraphNode } from "@/lib/mock/hero-graph";
+import type { Caption } from "@/lib/graphLayout";
+import type { GraphEdge, GraphNode, NodeRole } from "@/lib/mock/hero-graph";
 import { subscribeTheme } from "@/lib/theme";
 
 export interface GraphCanvasProps {
@@ -18,6 +19,10 @@ export interface GraphCanvasProps {
   onNodeClick?: (id: string) => void;
   /** True once the run has settled (verdict or end of stream): the view refits once then. */
   settled?: boolean;
+  /** "map" is the judge's whole service map: edges only around the selected or hovered
+   *  service, names on hover, region and domain captions. Default "run". */
+  variant?: "run" | "map";
+  captions?: Caption[];
 }
 
 type NodeData = { id: string; name: string; fx: number; fy: number };
@@ -42,8 +47,10 @@ function readPalette() {
     falsified: v("falsified"),
     chokepoint: v("tampered"),
     deck: v("deck"),
+    rule: v("rule-hi"),
     ink: v("ink"),
     dim: v("dim"),
+    faint: v("faint"),
     edge: v("dim"),
     // next/font exposes the mono family as a CSS variable; the canvas needs the resolved list.
     font: getComputedStyle(document.body).getPropertyValue("--font-data").trim() || "ui-monospace, monospace",
@@ -60,25 +67,32 @@ function alpha(hex: string, a: number) {
   return `rgba(${(n >> 16) & 255},${(n >> 8) & 255},${n & 255},${a})`;
 }
 
-const BASE_R = { plain: 4, eliminated: 3.4, symptomatic: 6, suspect: 7, path: 7, alerting: 9 } as const;
+/** Node radius in screen pixels at zoom 1, by role: a clear size step from background to alert. */
+const SCREEN_R: Record<NodeRole, number> = { plain: 3.2, eliminated: 4, symptomatic: 7, suspect: 8, path: 8, alerting: 10 };
 
-/** Node radius in graph units at zoom k. Zooming in past ~1.5x stops growing the dots (a fitted
- *  dense graph would otherwise turn into overlapping discs); highlighted roles may grow a bit more. */
-function nodeRadius(role: keyof typeof BASE_R, k: number) {
-  const cap = role === "plain" || role === "eliminated" ? 1.5 : 2.2;
-  return BASE_R[role] * Math.min(1, cap / Math.max(k, 1e-6));
+/** Node radius in graph units at zoom k. Dots keep roughly their screen size: they shrink a
+ *  little when zoomed far out (a dense map) and grow a little when zoomed in, never more. */
+function nodeRadius(role: NodeRole, k: number) {
+  const kk = Math.max(k, 1e-6);
+  return (SCREEN_R[role] * Math.min(1.25, Math.max(0.75, kk))) / kk;
 }
 
+const isKey = (role: NodeRole) => role !== "plain" && role !== "eliminated";
+
 /** Screen pixels kept clear around a fitted graph. */
-const FIT_PAD = 20;
-/** Advance of one label character: 11px JetBrains Mono is 0.6em wide. */
-const LABEL_CH_W = 6.6;
+const FIT_PAD = 28;
+/** Label font size in screen pixels, and the pill padding around the text. */
+const LABEL_PX = 12;
+const PILL_X = 4;
+const PILL_Y = 2;
+/** Advance of one label character: JetBrains Mono is 0.6em wide. */
+const LABEL_CH_W = LABEL_PX * 0.6;
 /** How long a focused node stays zoomed and ringed before the view refits. */
 const FOCUS_HOLD_MS = 2600;
 
 const endId = (e: unknown) => (typeof e === "object" && e ? (e as { id: string }).id : (e as string));
 
-export default function GraphCanvasInner({ nodes, edges, graph, view, focus, onNodeClick, settled = false }: GraphCanvasProps) {
+export default function GraphCanvasInner({ nodes, edges, graph, view, focus, onNodeClick, settled = false, variant = "run", captions }: GraphCanvasProps) {
   const fg = useRef<ForceGraphMethods<N, L> | undefined>(undefined);
   const box = useRef<HTMLDivElement>(null);
   const [size, setSize] = useState({ w: 800, h: 480 });
@@ -103,12 +117,19 @@ export default function GraphCanvasInner({ nodes, edges, graph, view, focus, onN
     graphRef.current = graph;
     viewRef.current = view;
   }, [graph, view]);
+  const isMap = variant === "map";
+  const mapRef = useRef(isMap);
+  const captionsRef = useRef(captions ?? []);
+  useEffect(() => {
+    mapRef.current = isMap;
+    captionsRef.current = captions ?? [];
+  }, [isMap, captions]);
 
   // Large worlds (the judge's whole service map) only label plain nodes on hover.
   const crowdedRef = useRef(false);
   useEffect(() => {
-    crowdedRef.current = nodes.length > 150;
-  }, [nodes]);
+    crowdedRef.current = isMap || nodes.length > 150;
+  }, [nodes, isMap]);
 
   const data = useMemo(
     () => ({
@@ -117,6 +138,20 @@ export default function GraphCanvasInner({ nodes, edges, graph, view, focus, onN
     }),
     [nodes, edges],
   );
+  const names = useMemo(() => labelNames(nodes), [nodes]);
+  const namesRef = useRef(names);
+  useEffect(() => {
+    namesRef.current = names;
+  }, [names]);
+  // Neighbours of each node, for fading the background of a run to its incident subgraph.
+  const adj = useMemo(() => {
+    const m = new Map<string, string[]>();
+    for (const e of edges) {
+      (m.get(e.source) ?? m.set(e.source, []).get(e.source)!).push(e.target);
+      (m.get(e.target) ?? m.set(e.target, []).get(e.target)!).push(e.source);
+    }
+    return m;
+  }, [edges]);
 
   const pathKeys = useMemo(() => {
     const s = new Set<string>();
@@ -132,6 +167,23 @@ export default function GraphCanvasInner({ nodes, edges, graph, view, focus, onN
     pathKeysRef.current = pathKeys;
   }, [pathKeys]);
 
+  // Run graphs: plain services more than one hop from every highlighted one are drawn as faint
+  // specks, so the incident subgraph stands out. Recomputed when the roles change.
+  const near = useMemo(() => {
+    const s = new Set<string>();
+    if (isMap) return s;
+    for (const n of nodes) {
+      if (roleOf(n.id, graph) === "plain") continue;
+      s.add(n.id);
+      for (const m of adj.get(n.id) ?? []) s.add(m);
+    }
+    return s;
+  }, [nodes, graph, adj, isMap]);
+  const nearRef = useRef(near);
+  useEffect(() => {
+    nearRef.current = near;
+  }, [near]);
+
   useEffect(() => {
     const el = box.current;
     if (!el) return;
@@ -142,26 +194,29 @@ export default function GraphCanvasInner({ nodes, edges, graph, view, focus, onN
     return () => ro.disconnect();
   }, []);
 
-  // Fit the bulk of the graph, not its stragglers: a couple of far-out plain nodes would
-  // otherwise shrink the whole picture to a dot. Highlighted nodes are always kept in frame.
-  const fitFilter = useMemo(() => {
+  // What the fit frames. A run frames its incident subgraph (alerting, symptomatic, suspects,
+  // causal path) when it has at least two such nodes; the map, or a run with fewer, frames the
+  // bulk of the graph without its far stragglers (highlighted nodes always stay in frame).
+  const makeFitFilter = useCallback(() => {
     const q = (xs: number[], p: number) => xs[Math.min(xs.length - 1, Math.max(0, Math.round(p * (xs.length - 1))))];
     const xs = data.nodes.map((n) => n.x).sort((a, b) => a - b);
     const ys = data.nodes.map((n) => n.y).sort((a, b) => a - b);
-    const trim = data.nodes.length >= 20 ? 0.03 : 0;
-    // Quantile box grown by a fifth of its size: an evenly spread graph keeps every node,
-    // only nodes far outside the bulk fall away.
+    const trim = data.nodes.length >= 20 && !isMap ? 0.03 : 0;
     const [x0, x1, y0, y1] = [q(xs, trim), q(xs, 1 - trim), q(ys, trim), q(ys, 1 - trim)];
     const px = (x1 - x0) * 0.2;
     const py = (y1 - y0) * 0.2;
-    const box = { x0: x0 - px, x1: x1 + px, y0: y0 - py, y1: y1 + py };
+    const bulk = { x0: x0 - px, x1: x1 + px, y0: y0 - py, y1: y1 + py };
+    const g = graphRef.current;
+    const key = (id: string) => isKey(roleOf(id, g)) || g.falsified.includes(id) || !!g.chokepoints?.includes(id);
+    const subgraph = !isMap && data.nodes.filter((m) => key(m.id)).length >= 2;
     return (n: N) => {
+      if (subgraph) return key(n.id as string);
       const x = n.x ?? 0;
       const y = n.y ?? 0;
-      if (x >= box.x0 && x <= box.x1 && y >= box.y0 && y <= box.y1) return true;
-      return roleOf(n.id as string, graphRef.current) !== "plain";
+      if (x >= bulk.x0 && x <= bulk.x1 && y >= bulk.y0 && y <= bulk.y1) return true;
+      return roleOf(n.id as string, g) !== "plain";
     };
-  }, [data]);
+  }, [data, isMap]);
 
   // Frame the fitted nodes with their labels inside the canvas. Highlighted roles are always
   // labelled; plain ones too once zoomed past 3x on a small graph (see paintNode), so a fit that
@@ -170,14 +225,14 @@ export default function GraphCanvasInner({ nodes, edges, graph, view, focus, onN
   const fitView = useCallback(
     (ms: number) => {
       const g = graphRef.current;
-      const nodes = data.nodes.filter((n) => fitFilter(n as N) && !(viewRef.current === "known" && g.late.includes(n.id)));
-      const pts = (all: boolean) =>
-        nodes.map((n) => {
-          const role = roleOf(n.id, g);
-          const labelled = all || (role !== "plain" && role !== "eliminated");
-          return { x: n.x, y: n.y, lw: labelled ? n.name.length * LABEL_CH_W : 0 };
-        });
-      const opts = { pad: FIT_PAD, r: 10, lh: 16, kMax: 4 };
+      const fitFilter = makeFitFilter();
+      const shown = data.nodes.filter((n) => fitFilter(n as N) && !(viewRef.current === "known" && g.late.includes(n.id)));
+      const pillW = (id: string) => (namesRef.current.get(id) ?? id).length * LABEL_CH_W + 2 * PILL_X;
+      const pts = (all: boolean) => [
+        ...shown.map((n) => ({ x: n.x, y: n.y, lw: all || isKey(roleOf(n.id, g)) ? pillW(n.id) : 0 })),
+        ...(mapRef.current ? captionsRef.current.map((c) => ({ x: c.x, y: c.y, lw: c.text.length * 8 })) : []),
+      ];
+      const opts = { pad: FIT_PAD, r: 14, lh: LABEL_PX + 2 * PILL_Y + 4, kMax: mapRef.current ? 3 : 2.4 };
       let f = labelAwareFit(pts(false), size.w, size.h, opts);
       if (f && f.k > 3 && !crowdedRef.current) {
         const all = labelAwareFit(pts(true), size.w, size.h, opts);
@@ -187,7 +242,7 @@ export default function GraphCanvasInner({ nodes, edges, graph, view, focus, onN
       fg.current?.centerAt(f.cx, f.cy, ms);
       fg.current?.zoom(f.k, ms);
     },
-    [data, fitFilter, size],
+    [data, makeFitFilter, size],
   );
   // Effects below read the latest fit through a ref, so a resize never replays a focus.
   const fitRef = useRef(fitView);
@@ -230,7 +285,7 @@ export default function GraphCanvasInner({ nodes, edges, graph, view, focus, onN
     const cx = pts.reduce((a, p) => a + p.x, 0) / pts.length;
     const cy = pts.reduce((a, p) => a + p.y, 0) / pts.length;
     fg.current?.centerAt(cx, cy, 500);
-    fg.current?.zoom(pts.length > 1 ? 1.6 : 2.4, 500);
+    fg.current?.zoom(pts.length > 1 ? 1.6 : 2.2, 500);
     // Once the focus ring fades, ease back to the whole graph.
     const t = setTimeout(() => {
       focusRef.current = new Set();
@@ -240,6 +295,8 @@ export default function GraphCanvasInner({ nodes, edges, graph, view, focus, onN
   }, [focus, data]);
 
   const hidden = useCallback((id: string) => viewRef.current === "known" && graphRef.current.late.includes(id), []);
+  // A background speck: a plain run node away from the incident subgraph.
+  const faded = useCallback((id: string) => !mapRef.current && nearRef.current.size > 0 && !nearRef.current.has(id), []);
 
   const paintNode = useCallback((node: N, ctx: CanvasRenderingContext2D, k: number) => {
     const id = node.id as string;
@@ -249,65 +306,83 @@ export default function GraphCanvasInner({ nodes, edges, graph, view, focus, onN
     const x = node.x ?? 0;
     const y = node.y ?? 0;
     const r = nodeRadius(role, k);
+    const u = 1 / k; // one screen pixel in graph units: rings and strokes keep their screen size
     const now = performance.now();
     const C = colors();
+    const speck = role === "plain" && faded(id) && hoverRef.current !== id;
 
     if (role === "alerting") {
       const pulse = 0.5 + 0.5 * Math.sin(now / 420);
       ctx.beginPath();
-      ctx.arc(x, y, r + 5 + pulse * 4, 0, 6.283);
+      ctx.arc(x, y, r + (5 + pulse * 4) * u, 0, 6.283);
       ctx.strokeStyle = alpha(C.falsified, 0.25 + pulse * 0.4);
-      ctx.lineWidth = 1.5;
+      ctx.lineWidth = 1.5 * u;
       ctx.stroke();
     }
+    if (role === "suspect" && mapRef.current) {
+      // The selected target on the dense map: a soft halo so it is found at a glance.
+      ctx.beginPath();
+      ctx.arc(x, y, r + 7 * u, 0, 6.283);
+      ctx.fillStyle = alpha(C.suspect, 0.22);
+      ctx.fill();
+    }
     ctx.beginPath();
-    ctx.arc(x, y, r, 0, 6.283);
+    ctx.arc(x, y, speck ? r * 0.75 : r, 0, 6.283);
     if (role === "suspect") {
       ctx.fillStyle = C.deck;
       ctx.fill();
-      ctx.lineWidth = 2;
+      ctx.lineWidth = 2.5 * u;
       ctx.strokeStyle = C.suspect;
       ctx.stroke();
     } else {
-      ctx.fillStyle = C[role];
+      ctx.fillStyle = speck ? alpha(C.plain, 0.45) : C[role];
       ctx.fill();
       if (role === "symptomatic") {
         ctx.beginPath();
-        ctx.arc(x, y, r + 2.5, 0, 6.283);
-        ctx.strokeStyle = alpha(C.symptomatic, 0.35);
-        ctx.lineWidth = 1;
+        ctx.arc(x, y, r + 3 * u, 0, 6.283);
+        ctx.strokeStyle = alpha(C.symptomatic, 0.4);
+        ctx.lineWidth = 1.2 * u;
         ctx.stroke();
       }
     }
-    if (role === "eliminated") {
-      ctx.strokeStyle = C.eliminatedMark;
-      ctx.lineWidth = 1;
+    // The verdict's root (a suspect drawn as a path hop) keeps a suspect ring around the hop.
+    if (role === "path" && g.suspects.includes(id)) {
       ctx.beginPath();
-      ctx.moveTo(x - 2, y - 2);
-      ctx.lineTo(x + 2, y + 2);
-      ctx.moveTo(x + 2, y - 2);
-      ctx.lineTo(x - 2, y + 2);
+      ctx.arc(x, y, r + 3.5 * u, 0, 6.283);
+      ctx.strokeStyle = C.suspect;
+      ctx.lineWidth = 2 * u;
+      ctx.stroke();
+    }
+    if (role === "eliminated") {
+      const m = r * 0.55;
+      ctx.strokeStyle = C.eliminatedMark;
+      ctx.lineWidth = 1 * u;
+      ctx.beginPath();
+      ctx.moveTo(x - m, y - m);
+      ctx.lineTo(x + m, y + m);
+      ctx.moveTo(x + m, y - m);
+      ctx.lineTo(x - m, y + m);
       ctx.stroke();
     }
     if (viewRef.current === "true" && g.late.includes(id)) {
       ctx.beginPath();
-      ctx.setLineDash([2.5, 2.5]);
-      ctx.arc(x, y, r + 4.5, 0, 6.283);
+      ctx.setLineDash([2.5 * u, 2.5 * u]);
+      ctx.arc(x, y, r + 5 * u, 0, 6.283);
       ctx.strokeStyle = C.late;
-      ctx.lineWidth = 1.4;
+      ctx.lineWidth = 1.5 * u;
       ctx.stroke();
       ctx.setLineDash([]);
     }
     if (g.falsified.includes(id)) {
       ctx.beginPath();
-      ctx.arc(x, y, r + 5, 0, 6.283);
+      ctx.arc(x, y, r + 6 * u, 0, 6.283);
       ctx.strokeStyle = C.falsified;
-      ctx.lineWidth = 2;
+      ctx.lineWidth = 2.5 * u;
       ctx.stroke();
     }
     if (g.chokepoints?.includes(id)) {
       // Storm chokepoint (seeded betweenness): a diamond outline around the node.
-      const d = r + 6;
+      const d = r + 6 * u;
       ctx.beginPath();
       ctx.moveTo(x, y - d);
       ctx.lineTo(x + d, y);
@@ -315,60 +390,76 @@ export default function GraphCanvasInner({ nodes, edges, graph, view, focus, onN
       ctx.lineTo(x - d, y);
       ctx.closePath();
       ctx.strokeStyle = C.chokepoint;
-      ctx.lineWidth = 1.6;
+      ctx.lineWidth = 1.6 * u;
       ctx.stroke();
     }
     if (focusRef.current.has(id)) {
       ctx.beginPath();
-      ctx.arc(x, y, r + 8, 0, 6.283);
+      ctx.arc(x, y, r + 9 * u, 0, 6.283);
       ctx.strokeStyle = alpha(C.alerting, 0.9);
-      ctx.lineWidth = 1.5;
+      ctx.lineWidth = 1.5 * u;
       ctx.stroke();
     }
-    const showLabel = role !== "plain" && role !== "eliminated" ? true : (k > 3 && !crowdedRef.current) || hoverRef.current === id;
+    const showLabel = isKey(role) ? true : (k > 3 && !crowdedRef.current) || hoverRef.current === id;
     if (showLabel) {
       // Labels are queued here and drawn after every node, so they can avoid each other.
-      ctx.font = `500 ${11 / k}px ${C.font}`;
-      const name = node.name as string;
+      ctx.font = `500 ${LABEL_PX * u}px ${C.font}`;
+      const name = namesRef.current.get(id) ?? (node.name as string);
       // Clear the outermost ring drawn above, so a FALSIFIED or alert ring never strikes the text.
       const ring = Math.max(
-        role === "alerting" ? r + 7 : role === "symptomatic" ? r + 2.5 : r,
-        viewRef.current === "true" && g.late.includes(id) ? r + 4.5 : 0,
-        g.falsified.includes(id) ? r + 5 : 0,
-        g.chokepoints?.includes(id) ? r + 6 : 0,
+        role === "alerting" ? r + 9 * u : role === "symptomatic" ? r + 3 * u : r + 3.5 * u,
+        viewRef.current === "true" && g.late.includes(id) ? r + 5 * u : 0,
+        g.falsified.includes(id) ? r + 6 * u : 0,
+        g.chokepoints?.includes(id) ? r + 6 * u : 0,
       );
       labelsRef.current.push({
-        id, x, y, r: ring, w: ctx.measureText(name).width, h: 11 / k,
+        id, x, y, r: ring, w: ctx.measureText(name).width + 2 * PILL_X * u, h: (LABEL_PX + 2 * PILL_Y) * u,
         rank: hoverRef.current === id ? -1 : labelRank(id, role, g),
-        name, dim: role === "plain" || role === "eliminated",
+        name, dim: !isKey(role),
       });
     }
-  }, [hidden]);
+  }, [hidden, faded]);
 
   const clearLabels = useCallback(() => {
     labelsRef.current = [];
   }, []);
 
-  // 11 screen pixels at any zoom, on a dark halo so labels stay legible over edges. Overlapping
-  // labels move to a free side of their node or are skipped, highest-priority role first.
+  // Labels: 12 screen pixels at any zoom, on a pill so they stay legible over edges and dots.
+  // Overlapping labels move to a free side of their node or are skipped, highest-priority role
+  // first (hover names any node). The map also draws its region and domain captions here.
   const drawLabels = useCallback((ctx: CanvasRenderingContext2D, k: number) => {
     const C = colors();
+    const u = 1 / k;
+    if (mapRef.current) {
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      for (const c of captionsRef.current) {
+        const region = c.kind === "region";
+        ctx.font = `${region ? 600 : 500} ${(region ? 13 : 11) * u}px ${C.font}`;
+        ctx.fillStyle = region ? C.ink : C.faint;
+        ctx.fillText(region ? c.text : c.text.toUpperCase(), c.x, c.y);
+      }
+    }
     const queued = new Map(labelsRef.current.map((l) => [l.id, l]));
-    ctx.font = `500 ${11 / k}px ${C.font}`;
+    ctx.font = `500 ${LABEL_PX * u}px ${C.font}`;
     ctx.textAlign = "center";
-    ctx.textBaseline = "top";
-    ctx.lineJoin = "round";
-    ctx.lineWidth = 3 / k;
+    ctx.textBaseline = "middle";
     // The visible canvas in graph units, so edge labels flip inward instead of running off it.
     const a = fg.current?.screen2GraphCoords(0, 0);
     const b = fg.current?.screen2GraphCoords(sizeRef.current.w, sizeRef.current.h);
     const view = a && b ? { x0: a.x, y0: a.y, x1: b.x, y1: b.y } : undefined;
-    for (const p of placeLabels(labelsRef.current, 3 / k, view)) {
+    for (const p of placeLabels(labelsRef.current, 3 * u, view)) {
       const l = queued.get(p.id)!;
-      ctx.strokeStyle = alpha(C.deck, 0.85);
-      ctx.strokeText(l.name, p.tx, p.ty);
+      const { x0, y0, x1, y1 } = p.box;
+      ctx.beginPath();
+      ctx.roundRect(x0, y0, x1 - x0, y1 - y0, 4 * u);
+      ctx.fillStyle = alpha(C.deck, 0.9);
+      ctx.fill();
+      ctx.strokeStyle = alpha(C.rule, l.dim ? 0.5 : 0.9);
+      ctx.lineWidth = 1 * u;
+      ctx.stroke();
       ctx.fillStyle = l.dim ? C.dim : C.ink;
-      ctx.fillText(l.name, p.tx, p.ty);
+      ctx.fillText(l.name, (x0 + x1) / 2, (y0 + y1) / 2 + 0.5 * u);
     }
   }, []);
 
@@ -381,16 +472,37 @@ export default function GraphCanvasInner({ nodes, edges, graph, view, focus, onN
   }, [hidden]);
 
   const linkOnPath = useCallback((l: L) => pathKeysRef.current.has(`${endId(l.source)}>${endId(l.target)}`), []);
-  const linkColor = useCallback((l: L) => {
-    if (linkOnPath(l)) return colors().path;
+  // How much a non-path link matters: 2 both ends highlighted, 1 one end, 0 background.
+  const linkTier = useCallback((l: L) => {
     const g = graphRef.current;
     const a = endId(l.source) as string;
     const b = endId(l.target) as string;
-    if (g.symptomatic.includes(a) && g.symptomatic.includes(b)) return alpha(colors().symptomatic, 0.45);
-    return alpha(colors().edge, 0.18);
-  }, [linkOnPath]);
-  const linkWidth = useCallback((l: L) => (linkOnPath(l) ? 2.4 : 0.7), [linkOnPath]);
-  const linkVisible = useCallback((l: L) => !hidden(endId(l.source) as string) && !hidden(endId(l.target) as string), [hidden]);
+    return (isKey(roleOf(a, g)) ? 1 : 0) + (isKey(roleOf(b, g)) ? 1 : 0);
+  }, []);
+  const linkColor = useCallback((l: L) => {
+    const C = colors();
+    if (linkOnPath(l)) return C.path;
+    if (mapRef.current) return alpha(C.suspect, 0.6);
+    const g = graphRef.current;
+    const a = endId(l.source) as string;
+    const b = endId(l.target) as string;
+    if (g.symptomatic.includes(a) && g.symptomatic.includes(b)) return alpha(C.symptomatic, 0.55);
+    const t = linkTier(l);
+    if (t === 2) return alpha(C.edge, 0.5);
+    return alpha(C.edge, faded(a) || faded(b) ? 0.06 : t ? 0.2 : 0.12);
+  }, [linkOnPath, linkTier, faded]);
+  const linkWidth = useCallback((l: L) => (linkOnPath(l) ? 3.5 : mapRef.current ? 1.2 : linkTier(l) === 2 ? 1.4 : 0.8), [linkOnPath, linkTier]);
+  // Arrowheads only where they carry meaning: many faint arrows into the alert read as a brush.
+  const linkArrow = useCallback((l: L) => (linkOnPath(l) ? 6 : linkTier(l) === 2 || mapRef.current ? 4 : 0), [linkOnPath, linkTier]);
+  const linkVisible = useCallback((l: L) => {
+    const a = endId(l.source) as string;
+    const b = endId(l.target) as string;
+    if (hidden(a) || hidden(b)) return false;
+    if (!mapRef.current) return true;
+    // The map draws only the dependencies of the selected or hovered service.
+    const on = (id: string) => graphRef.current.suspects.includes(id) || hoverRef.current === id;
+    return on(a) || on(b);
+  }, [hidden]);
   // New function identity only when the path changes, which makes the library re-seed particles.
   const particles = useMemo(() => {
     const keys = pathKeys;
@@ -400,7 +512,7 @@ export default function GraphCanvasInner({ nodes, edges, graph, view, focus, onN
   const hovered = hover ? { role: roleOf(hover.id, graph), clause: graph.eliminated[hover.id] } : null;
 
   return (
-    <div ref={box} className={`relative h-full w-full overflow-hidden transition-opacity duration-200 ${fitted ? "opacity-100" : "opacity-0"}`} role="img" aria-label="Service graph. A text list of the causal path is beside the canvas.">
+    <div ref={box} className={`relative h-full w-full overflow-hidden transition-opacity duration-200 ${fitted ? "opacity-100" : "opacity-0"}`} role="img" aria-label={isMap ? "Service map, grouped by region and domain. The list beside it has every service." : "Service graph. A text list of the causal path is beside the canvas."}>
       <ForceGraph2D<NodeData>
         ref={fg}
         width={size.w}
@@ -420,10 +532,10 @@ export default function GraphCanvasInner({ nodes, edges, graph, view, focus, onN
         linkColor={linkColor as never}
         linkWidth={linkWidth as never}
         linkVisibility={linkVisible as never}
-        linkDirectionalArrowLength={3}
+        linkDirectionalArrowLength={linkArrow as never}
         linkDirectionalArrowRelPos={0.92}
         linkDirectionalParticles={particles as never}
-        linkDirectionalParticleWidth={3}
+        linkDirectionalParticleWidth={4}
         linkDirectionalParticleSpeed={0.007}
         linkDirectionalParticleColor={() => colors().pathParticle}
         onNodeHover={(n) => {
@@ -440,7 +552,7 @@ export default function GraphCanvasInner({ nodes, edges, graph, view, focus, onN
           style={{ left: Math.min(hover.x + 12, size.w - 230), top: Math.max(hover.y - 8, 4) }}
         >
           <div className="text-ink">{hover.id}</div>
-          <div className="text-dim">{ROLE_LABEL[hovered.role]}</div>
+          <div className="text-dim">{isMap ? (graph.suspects.includes(hover.id) ? "Selected target" : "Click to select") : ROLE_LABEL[hovered.role]}</div>
           {hovered.clause && (
             <div className="mt-1 text-drifted">
               eliminated by {hovered.clause.clause} ({hovered.clause.change})

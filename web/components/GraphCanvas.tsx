@@ -18,6 +18,11 @@ const LEGEND: { key: string; label: string; swatch: React.ReactNode }[] = [
   { key: "late", label: "Late-arriving", swatch: <i className="inline-block size-2.5 rounded-full border-2 border-dashed border-late" /> },
   { key: "falsified", label: "FALSIFIED / new node", swatch: <i className="inline-block size-2.5 rounded-full border-2 border-falsified" /> },
 ];
+const MAP_LEGEND: typeof LEGEND = [
+  { key: "service", label: "Service (hover for its name)", swatch: <i className="inline-block size-2 rounded-full bg-node" /> },
+  { key: "selected", label: "Selected target", swatch: <i className="inline-block size-2.5 rounded-full border-2 border-drifted" /> },
+  { key: "deps", label: "Its dependencies", swatch: <i className="inline-block h-0.5 w-3 bg-drifted/70" /> },
+];
 const CHOKEPOINT = { key: "chokepoint", label: "Chokepoint (betweenness)", swatch: <i className="inline-block size-2.5 rotate-45 border-2 border-tampered" /> };
 
 export function GraphCanvas(props: GraphCanvasProps) {
@@ -29,7 +34,7 @@ export function GraphCanvas(props: GraphCanvasProps) {
         </div>
       </div>
       <ul className="flex flex-wrap gap-x-4 gap-y-1 border-t border-rule/60 px-3 py-2 text-meta text-dim" aria-label="Legend">
-        {(props.graph.chokepoints?.length ? [...LEGEND, CHOKEPOINT] : LEGEND).map((l) => (
+        {(props.variant === "map" ? MAP_LEGEND : props.graph.chokepoints?.length ? [...LEGEND, CHOKEPOINT] : LEGEND).map((l) => (
           <li key={l.key} className="flex items-center gap-1.5 whitespace-nowrap">
             {l.swatch}
             {l.label}
