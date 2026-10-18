@@ -9,7 +9,7 @@ to run an investigation against a fresh copy of the world graph.
 
 ![Incident Commander: from the welcome screen, Start an incident; the live run narrows the elimination funnel, names the root-cause change with its absence certificate, then rehearses the rollback and writes the result back to the graph](docs/media/console-investigation.gif)
 
-<sub>A live run on a local stack (agent: <code>qwen3:8b</code> on Ollama), time-compressed about 3x. The live site runs Claude Haiku.</sub>
+<sub>A live run recorded on a local stack, time-compressed about 3x.</sub>
 
 Incident Commander takes a production alert, rebuilds the service graph in **FalkorDB** as it
 stood at alert time, and finds the root-cause change. It doesn't rank guesses. It rules out
@@ -37,9 +37,10 @@ Built for **Graph Hacks: Context for AI Agents** (WeMakeDevs x FalkorDB).
 - **Query X-ray.** FalkorDB's `GRAPH.EXPLAIN` / `GRAPH.PROFILE` for any proof's query.
 - **Ask the graph.** Plain-English company questions, with every answer citing its nodes and
   Cypher. The same tools are served over MCP.
-- **Benchmark.** Across 50 blind faults with `gpt-6-luna` behind every approach, the graph
-  agent got **50/50**, full catalog in the prompt got 26/50, and vector RAG got 4/50. A local
-  `qwen3:8b` driving the graph agent also got 50/50.
+- **Benchmark.** 50 blind faults, the same model behind every approach, repeated with six
+  models (GPT, four Claude models and a local 8B model). The graph agent named the exact root
+  cause in **50/50 with every model**. The full catalog in the prompt got 15-27/50, vector RAG
+  4-8/50.
 
 ## Tracks entered
 
@@ -52,7 +53,7 @@ Built for **Graph Hacks: Context for AI Agents** (WeMakeDevs x FalkorDB).
 ## Screenshots
 
 All stills are from the redesigned console at 1440x900 in the dark theme, captured from live
-runs on a local stack (agent: `qwen3:8b` on Ollama). PR, commit status and page are simulated
+runs on a local stack. PR, commit status and page are simulated
 without GitHub and Discord tokens.
 
 <table>
@@ -318,18 +319,27 @@ allowed in `WITH`/`RETURN`, `allShortestPaths` needs its endpoints bound by a pr
 
 50 injected faults (30 from training classes, 20 from held-out classes), each in its own
 isolated copy of the world. A prediction counts only if it names the exact root-cause id from
-the answer key. The same model, `gpt-6-luna`, drives every approach:
+the answer key. In each row, one model drives all three approaches; only what it can look at
+changes:
 
-| Approach | Seen | Held-out | Overall | Tool calls / case |
-|---|---|---|---|---|
-| **graph agent** | 100% | 100% | **50/50** | 7.0 |
-| full catalog in prompt | 53% | 50% | 26/50 | 0 |
-| vector RAG | 3% | 15% | 4/50 | 0 |
+| Model | Graph agent | Full catalog in prompt | Vector RAG |
+|---|---|---|---|
+| `gpt-6-luna` | **50/50** | 26/50 | 4/50 |
+| `claude-haiku-5-5` | **50/50** | 15/50 | 5/50* |
+| `claude-sonnet-5-5` | **50/50** | 19/50 | 5/50* |
+| `claude-opus-5-5` | **50/50** | 27/50 | 8/50* |
+| `claude-fable-5-1` | **50/50** | 26/50 | 6/50* |
+| `qwen3:8b` (local, Ollama) | **50/50** | - | - |
 
-- A local `qwen3:8b` on Ollama driving the graph agent also got 50/50, with no fallback.
-- All 70 wrong `gpt-6-luna` answers were re-checked with `verify_claim`. Every one that named
-  a cause came back REFUTED with the clause it fails, mostly `signature` ("config cannot
-  produce latency"). Most vector-RAG misses named no cause at all.
+\* Anthropic has no embeddings API, so vector RAG for the Claude rows ranks candidates with the
+local hashing embedder; the `gpt-6-luna` row uses `text-embedding-3-small`.
+
+- Held-out classes: every model's graph agent got 20/20. The graph agent made about 7 tool
+  calls per case. One of the 300 graph verdicts (`claude-opus-5-5`) came from the deterministic
+  funnel after the model failed; every other verdict is the model's own.
+- Every wrong full-context and vector-RAG answer was re-checked with `verify_claim`. Each one
+  that named a cause came back REFUTED with the clause it fails, mostly `signature` ("config
+  cannot produce latency") or `origin`.
 - Graph accuracy is partly true by construction: faults are checked at injection time against
   the same explanation rule. The held-out classes and the leakage test guard against shortcuts.
 
@@ -479,5 +489,5 @@ cd api && uv run ic seed --seed 42 && uv run pytest -q   # needs FalkorDB on loc
 cd web && pnpm test             # vitest
 ```
 
-**662 API tests and 213 web tests**, all passing. CI runs both suites on every push (the 12
+**678 API tests and 240 web tests**, all passing. CI runs both suites on every push (the 12
 Postgres-twin tests are skipped there, as CI has no Postgres).

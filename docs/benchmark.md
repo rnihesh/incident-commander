@@ -24,40 +24,42 @@ answer key.
 
 ## Live LLM run
 
-From [api/bench_results/llm-gpt-6-luna/report.md](../api/bench_results/llm-gpt-6-luna/report.md):
-the same 50 cases (same seed, same case seeds), every approach driven by `gpt-6-luna` over the
-OpenAI API. Run with `uv run ic bench --seed 42 --llm llm --no-latency` and a key in `api/.env`.
-No verdict fell back to the deterministic funnel (0/50 DEGRADED) and no case errored. With an
-OpenAI key, `vector_rag` embeds with `text-embedding-3-small` instead of the hashing embedder. The
-whole run used 2.6M tokens.
+From [api/bench_results/report.md](../api/bench_results/report.md#live-llm-runs): the same 50
+cases (same seed, same case seeds), with each model driving all three approaches in turn. Run
+with `uv run ic bench --seed 42 --llm llm --no-latency --out bench_results/llm-<model>` and the
+provider's key in `api/.env`, then `uv run ic bench --attach-llm <dir>`.
 
-| Approach | Accuracy (seen) | Accuracy (held-out) | Overall | Mean ms / case | LLM tokens / case | Tool calls / case |
-|---|---|---|---|---|---|---|
-| graph (llm: gpt-6-luna) | 100% | 100% | 100% (50/50) | 13022 | 22393 | 7.0 |
-| vector_rag (llm: gpt-6-luna) | 3% | 15% | 8% (4/50) | 2446 | 570 | 0.0 |
-| full_context (llm: gpt-6-luna) | 53% | 50% | 52% (26/50) | 1761 | 29019 | 0.0 |
+| Model | Approach | Seen (30) | Held-out (20) | Overall | LLM tokens / case | Tool calls / case | Fallback |
+|---|---|---|---|---|---|---|---|
+| `gpt-6-luna` | graph | 100% | 100% | **50/50** | 22,393 | 7.0 | 0/50 |
+| | full_context | 53% | 50% | 26/50 | 29,019 | 0 | - |
+| | vector_rag | 3% | 15% | 4/50 | 570 | 0 | - |
+| `claude-haiku-5-5` | graph | 100% | 100% | **50/50** | 44,353 | 7.0 | 0/50 |
+| | full_context | 20% | 45% | 15/50 | 50,130 | 0 | - |
+| | vector_rag* | 13% | 5% | 5/50 | 1,182 | 0 | - |
+| `claude-sonnet-5-5` | graph | 100% | 100% | **50/50** | 43,869 | 7.0 | 0/50 |
+| | full_context | 23% | 60% | 19/50 | 49,992 | 0 | - |
+| | vector_rag* | 10% | 10% | 5/50 | 1,051 | 0 | - |
+| `claude-opus-5-5` | graph | 100% | 100% | **50/50** | 38,334 | 6.3 | 1/50 |
+| | full_context | 47% | 65% | 27/50 | 49,617 | 0 | - |
+| | vector_rag* | 17% | 15% | 8/50 | 1,061 | 0 | - |
+| `claude-fable-5-1` | graph | 100% | 100% | **50/50** | 44,590 | 7.0 | 0/50 |
+| | full_context | 47% | 60% | 26/50 | 48,713 | 0 | - |
+| | vector_rag* | 10% | 15% | 6/50 | 1,036 | 0 | - |
+| `qwen3:8b` (local) | graph | 100% | 100% | **50/50** | 24,998 | 6.5 | 0/50 |
 
-| Approach | bad_deploy | config_change | flag_flip | expiry (held-out) | undeclared_coupling (held-out) |
-|---|---|---|---|---|---|
-| graph (llm: gpt-6-luna) | 10/10 | 10/10 | 10/10 | 10/10 | 10/10 |
-| vector_rag (llm: gpt-6-luna) | 0/10 | 1/10 | 0/10 | 2/10 | 1/10 |
-| full_context (llm: gpt-6-luna) | 7/10 | 4/10 | 5/10 | 6/10 | 4/10 |
+\* Anthropic has no embeddings API, so for the Claude rows `vector_rag` ranks candidates with
+the local hashing embedder and the model picks from those. The `gpt-6-luna` row uses
+`text-embedding-3-small`. `qwen3:8b` drove the graph agent only.
 
-The model is the same in every row. What changes is what it gets to look at. With graph tools
-it calls 7 of them per case and every verdict still has to pass the proof gate. Given the
-catalog as text, it reads about 24k tokens and guesses.
-
-The graph agent does not need a frontier model. With `qwen3:8b` running locally on Ollama
-([api/bench_results/llm-qwen3-8b/report.md](../api/bench_results/llm-qwen3-8b/report.md)) it also
-named the exact root in **50/50** (20/20 held-out), at 6.5 tool calls and about 24 s per case,
-with no fallback. A 5-case smoke with `claude-haiku-5-5` went 5/5
-([api/bench_results/llm-smoke/](../api/bench_results/llm-smoke/)). "Fallback" counts verdicts the
-deterministic funnel produced after the model failed (timeout, step cap); every live graph
-verdict above is the model's own. A stronger model does not close the full-context gap either: on the
-first 10 cases `claude-opus-5-5` with the whole catalog in its prompt got 4/10 (vector RAG
-1/10), where the graph agent got 10/10 and `gpt-6-luna` full context got 7/10
-([api/bench_results/llm-claude-opus-5-5/report.md](../api/bench_results/llm-claude-opus-5-5/report.md)). qwen3 runs with thinking off: with it on, a single tool step
-took 11.7 s instead of 0.7 s and most steps ran past the 30 s per-call limit.
+The model is the same within each row group; what changes is what it gets to look at. With
+graph tools it calls about 7 of them per case, and every verdict still has to pass the proof
+gate. Given the catalog as text, it reads about 24k prompt tokens and guesses. A stronger model
+helps the text baseline somewhat (15/50 for the smallest Claude model, 26-27/50 for the
+largest) but does not close the gap. "Fallback" counts verdicts the deterministic funnel
+produced after the model failed (timeout, step cap): one of the 300 graph verdicts across all
+models; every other graph verdict is the model's own. qwen3 runs with thinking off: with it on,
+a single tool step took 11.7 s instead of 0.7 s and most steps ran past the 30 s per-call limit.
 
 **Why it was wrong.** `uv run ic bench --why-wrong` re-checks every wrong live-LLM prediction
 with `verify_claim` on the regenerated case world (no LLM calls), and `/benchmark` lists each
@@ -65,10 +67,11 @@ one with its failing clause and deciding query. For `gpt-6-luna`, vector RAG's 4
 are 41 where the model named no root cause and 5 refuted on `origin` (the change's service was
 not the first to fail). Full context's 24 are 19 refuted on `signature` (the change kind cannot
 produce the observed symptoms, e.g. "config cannot produce latency"), 4 on `origin` and 1 on
-`after_onset` (the change landed after the first symptom). For `claude-opus-5-5` on 10 cases,
-all 6 full-context misses fail `signature`; vector RAG's 9 are 4 with no claim, 3 `origin`, 1
-`after_onset` and 1 `signature`. Every named wrong answer (29 + 11) came back REFUTED; none was
-a RIVAL that also qualified.
+`after_onset` (the change landed after the first symptom). The four Claude models follow the
+same pattern: their full-context misses are mostly `signature` (20-26 per model) with a few
+`origin`, and their vector-RAG misses split between `origin` (20-24) and no claim (16). Across
+all five models, 253 wrong answers named a cause, and every one came back REFUTED; none was a
+RIVAL that also qualified.
 
 ## Latency and scale
 
