@@ -97,7 +97,7 @@ export function StormCard({ incident, selected = false, onSelect }: { incident: 
           <ul className="mt-2 space-y-1">
             {i.explaining.map((c) => (
               <li key={c.id} className="flex items-baseline gap-2 text-label">
-                <span className="font-mono text-verified">{c.id}</span>
+                <span className="shrink-0 whitespace-nowrap font-mono text-verified">{c.id}</span>
                 <span className="font-mono text-meta text-dim">{c.kind}</span>
                 <span className="truncate text-ink/90">{c.summary ?? ""}</span>
                 <span className="ml-auto shrink-0 font-mono text-meta text-faint">{shortSvc(c.service_id)} {hhmm(c.event_time)}</span>

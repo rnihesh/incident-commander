@@ -51,7 +51,8 @@ export function Welcome({
   useEffect(() => {
     let cancelled = false;
     getSessionIncidents()
-      .then((ids) => !cancelled && setLastIncident(ids.length ? ids[ids.length - 1] : null))
+      // Storm ids have no replay page: only single incidents are offered.
+      .then((ids) => !cancelled && setLastIncident(ids.filter((i) => i.startsWith("inc-")).at(-1) ?? null))
       .catch(() => { /* no session yet */ });
     return () => {
       cancelled = true;

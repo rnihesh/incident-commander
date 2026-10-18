@@ -53,7 +53,7 @@ const PHASE_LABEL: Record<string, string> = {
 
 /** The live event stream's status in plain words. */
 const STREAM_LABEL: Record<string, string> = {
-  idle: "Waiting", connecting: "Connecting", streaming: "Live", reconnecting: "Reconnecting", closed: "Finished", error: "Stream lost",
+  connecting: "Connecting", streaming: "Live", reconnecting: "Reconnecting", closed: "Finished", error: "Stream lost",
 };
 
 const PHASE_TONE: Record<string, Tone> = {
@@ -352,10 +352,10 @@ function RunConsole({
         }
         right={
           <>
-            {stream.kind === "live" && (
+            {stream.kind === "live" && stream.status !== "idle" && !storm && (
               <span className="flex items-center gap-1.5 text-meta tabular-nums text-dim" aria-live="polite" title={`${stream.total} events received`}>
                 {stream.status === "streaming" && <span className="size-1.5 animate-pulse rounded-full bg-verified motion-reduce:animate-none" aria-hidden />}
-                {stream.kind === "live" && stream.status !== "idle" ? `${STREAM_LABEL[stream.status] ?? stream.status} run, ${stream.total} events` : STREAM_LABEL.idle}
+                {`${STREAM_LABEL[stream.status] ?? stream.status} run, ${stream.total} events`}
               </span>
             )}
             {replayable && (
