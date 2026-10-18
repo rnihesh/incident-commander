@@ -1,6 +1,9 @@
-# Caddy in front of the API (KTD18): automatic TLS for api.{$DOMAIN}, SSE unbuffered.
-# The web app is on Vercel at app.{$DOMAIN}; it calls this host directly with
-# credentials (CORS is enforced by the API for IC_WEB_ORIGIN only).
+# Caddy at the edge (KTD18): automatic TLS for {$SITE_ADDRESS}, one origin for web and API.
+#   /api/*, /mcp*, /health  -> api:8000 (uvicorn, SSE unbuffered)
+#   everything else         -> web:3000 (Next.js standalone server)
+# SITE_ADDRESS is a hostname such as commander.example.com (set in .env). The web image is
+# built with an empty NEXT_PUBLIC_API_URL, so the browser calls the API on the same origin
+# and the session cookie stays host-only.
 # No trusted_proxies here: Caddy is the edge, so it replaces any client-sent
 # X-Forwarded-For with the real peer address, and the API trusts XFF only from Caddy's
 # fixed address (IC_TRUSTED_PROXIES).
@@ -8,34 +11,70 @@
 	email {$ACME_EMAIL}
 }
 
-api.{$DOMAIN} {
+(api_headers) {
 	header {
-		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		Referrer-Policy "no-referrer"
+		Cross-Origin-Resource-Policy "same-origin"
+		Content-Security-Policy "default-src 'none'; frame-ancestors 'none'"
+	}
+}
+
+(web_headers) {
+	header {
+		Referrer-Policy "strict-origin-when-cross-origin"
+		# Next.js inlines its bootstrap scripts and styles, hence 'unsafe-inline'. Fonts are
+		# self-hosted by next/font; the API is same-origin, so connect-src stays 'self'.
+		Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
+	}
+}
+
+{$SITE_ADDRESS} {
+	header {
+		Strict-Transport-Security "max-age=31536000"
 		X-Content-Type-Options "nosniff"
 		X-Frame-Options "DENY"
-		Referrer-Policy "no-referrer"
-		Cross-Origin-Resource-Policy "same-site"
 		Permissions-Policy "camera=(), microphone=(), geolocation=(), interest-cohort=()"
-		Content-Security-Policy "default-src 'none'; frame-ancestors 'none'"
 		-Server
 		-Via
+		-X-Powered-By
 	}
 
-	# Request bodies are small JSON; refuse anything large before it reaches the API.
-	request_body {
-		max_size 64KB
-	}
+	@api path /api/* /mcp /mcp/* /health
+	handle @api {
+		import api_headers
 
-	reverse_proxy api:8000 {
-		# Server-sent events (/api/runs/{id}/events): flush every write immediately.
-		flush_interval -1
-		transport http {
-			read_timeout 0
-			write_timeout 0
-			dial_timeout 5s
+		# Request bodies are small JSON; refuse anything large before it reaches the API.
+		request_body {
+			max_size 64KB
 		}
-		health_uri /health
-		health_interval 30s
+
+		reverse_proxy api:8000 {
+			# Server-sent events (/api/runs/{id}/events): flush every write immediately.
+			flush_interval -1
+			transport http {
+				read_timeout 0
+				write_timeout 0
+				dial_timeout 5s
+			}
+			health_uri /health
+			health_interval 30s
+		}
+	}
+
+	handle {
+		import web_headers
+		# Compression only for the web pages: an encoder in front of SSE would buffer events.
+		encode zstd gzip
+
+		request_body {
+			max_size 64KB
+		}
+
+		reverse_proxy web:3000 {
+			transport http {
+				dial_timeout 5s
+			}
+		}
 	}
 
 	log {

@@ -3,7 +3,8 @@ name: incident-commander
 # Profiles:
 #   dev   FalkorDB + bundled Browser on localhost only (16379 / 13000), no auth.
 #   prod  The public deploy (KTD18): falkordb-prod (ACL users, no host ports, no Browser),
-#         api (api/Dockerfile) and caddy (TLS on 80/443). See docs/notes/deploy.md.
+#         api (api/Dockerfile), web (web/Dockerfile, Next.js) and caddy (TLS on 80/443,
+#         one origin: /api/* to the API, the rest to the web). See docs/notes/deploy.md.
 #         docker compose --profile prod up -d --build
 
 services:
@@ -89,7 +90,8 @@ services:
       # Container-specific values override anything in .env.
       IC_FALKORDB_URL: falkor://ic:${FALKORDB_IC_PASSWORD:-}@falkordb-prod:6379
       IC_STORE_PATH: /app/data/ic.sqlite3
-      IC_WEB_ORIGIN: ${IC_WEB_ORIGIN_PROD:-https://app.${DOMAIN:-example.invalid}}
+      # The single public origin (CORS and proof links); IC_WEB_ORIGIN_PROD overrides it.
+      IC_WEB_ORIGIN: ${IC_WEB_ORIGIN_PROD:-https://${SITE_ADDRESS:-example.invalid}}
       IC_COOKIE_SECURE: "true"
       IC_COOKIE_DOMAIN: ${IC_COOKIE_DOMAIN:-}
       # Only Caddy (fixed address on the edge network) may set X-Forwarded-For.
@@ -99,13 +101,27 @@ services:
     networks: [backend, edge]
     # No `ports:`: only Caddy talks to the API.
 
+  web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+      args:
+        # Empty: the browser calls /api/* on the origin that served the page (Caddy).
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL_PROD:-}
+    image: incident-commander-web:latest
+    profiles: ["prod"]
+    restart: unless-stopped
+    networks: [edge]
+    # No `ports:`: only Caddy talks to the web server.
+
   caddy:
     image: caddy:2.10.2-alpine
     profiles: ["prod"]
     restart: unless-stopped
-    depends_on: [api]
+    depends_on: [api, web]
     environment:
-      DOMAIN: ${DOMAIN:-}
+      # Hostname Caddy serves and gets a certificate for, e.g. commander.example.com.
+      SITE_ADDRESS: ${SITE_ADDRESS:-}
       ACME_EMAIL: ${ACME_EMAIL:-}
     ports:
       - "80:80"
