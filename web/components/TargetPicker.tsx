@@ -53,7 +53,7 @@ export function TargetPicker({
       <PanelHead
         id="picker-h"
         title="Pick a target"
-        meta={loading ? "loading" : `${filtered.length} of ${targets.length} services`}
+        meta={loading ? "loading" : `${filtered.length} of ${targets.length} service instances (service × region)`}
         hint="Choose the service to break. The agent is not told which one; dimmed services cannot raise an alert."
       />
       <div className="flex flex-wrap items-center gap-x-3 gap-y-2 border-b border-rule px-inset py-2">

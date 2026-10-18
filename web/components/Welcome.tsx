@@ -67,7 +67,7 @@ export function Welcome({
             An AI on-call engineer that shows its work
           </h1>
           <p className="mt-4 text-lead text-dim">
-            Incident Commander runs a simulated company of 400 services as a graph in FalkorDB. Break
+            Incident Commander runs a simulated company of 400 services across 3 regions as a graph in FalkorDB. Break
             something, and the agent finds the one change that caused the outage, proving each step
             with a query you can run yourself.
           </p>
