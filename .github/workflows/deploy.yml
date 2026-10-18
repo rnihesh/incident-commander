@@ -1,0 +1,69 @@
+name: Deploy
+
+# Redeploys the EC2 host (docs/notes/deploy.md) after CI passes on a push to main.
+# The host pulls the tested commit and rebuilds the compose `prod` profile.
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-prod
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy to commander.niheshr.com
+    if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment:
+      name: production
+      url: https://commander.niheshr.com
+    steps:
+      - name: Configure SSH
+        env:
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          DEPLOY_KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$DEPLOY_SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          printf '%s\n' "$DEPLOY_KNOWN_HOSTS" > ~/.ssh/known_hosts
+
+      - name: Pull and rebuild on the host
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          SHA: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes \
+            -o ServerAliveInterval=30 "$DEPLOY_USER@$DEPLOY_HOST" bash -s -- "$SHA" <<'EOF'
+          set -euo pipefail
+          sha="$1"
+          cd ~/incident-commander
+          git fetch --quiet origin main
+          # Deploy the commit CI tested (an ancestor of main is a no-op).
+          git merge --ff-only --quiet "$sha"
+          git log --oneline -1
+          docker compose --profile prod up -d --build --remove-orphans
+          docker image prune -f
+          docker builder prune -f --filter until=72h
+          docker compose --profile prod ps
+          EOF
+
+      - name: Check the live site
+        run: |
+          for i in $(seq 1 30); do
+            if curl -fsS --max-time 10 https://commander.niheshr.com/health | grep -q '"falkordb":true' \
+              && curl -fsS --max-time 10 -o /dev/null https://commander.niheshr.com/; then
+              echo "site healthy"; exit 0
+            fi
+            sleep 10
+          done
+          echo "site did not become healthy" >&2
+          exit 1
