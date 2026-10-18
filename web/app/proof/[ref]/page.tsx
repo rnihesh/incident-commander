@@ -2,10 +2,14 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import { PageLoading } from "@/components/Shell";
 import ProofPage from "@/components/ProofPage";
+import { pageMetadata } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Proof · Incident Commander",
-  description: "The proof chain behind a rollback PR: every hypothesis, its query and hash, re-runnable against the PR's copy of the world.",
+  ...pageMetadata({
+    title: "Proof",
+    description:
+      "The proof chain behind a rollback PR: every hypothesis, its Cypher query and hash, re-runnable against the PR's copy of the world.",
+  }),
   robots: { index: false, follow: false },
 };
 

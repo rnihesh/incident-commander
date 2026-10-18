@@ -2,11 +2,13 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import { PageLoading } from "@/components/Shell";
 import ReplayConsole from "@/components/ReplayConsole";
+import { pageMetadata } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Replay · Incident Commander",
-  description: "Scrub through the outage: changes landing and services turning symptomatic, as it happened or as the agent knew it.",
-};
+export const metadata: Metadata = pageMetadata({
+  title: "Replay",
+  description:
+    "Scrub through the outage: changes landing and services turning symptomatic, as it happened or as the agent knew it.",
+});
 
 // Next 16: dynamic segment params arrive as a Promise, so reading them sits inside Suspense.
 async function Replay({ params }: { params: Promise<{ incident: string }> }) {
