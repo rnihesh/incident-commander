@@ -8,7 +8,7 @@
   --color-rule-hi: #33465c;
   --color-ink: #d7e0ea;
   --color-dim: #8394a8;
-  --color-faint: #526379;
+  --color-faint: #6b7d93;
 
   /* verdict states: the console's main accents */
   --color-verified: #3ee59b;
@@ -61,6 +61,37 @@
 :root {
   --graph-node: var(--color-node);
   --graph-particle: var(--color-verified-hi);
+  color-scheme: dark;
+}
+
+/* Light theme: cool paper surfaces, and every accent darkened so text in it keeps WCAG AA
+   (4.5:1 or better) on the page, the panels and its own 10% tint. The inline script in
+   layout.tsx sets data-theme before first paint; GraphCanvasInner re-reads these on change. */
+[data-theme="light"] {
+  color-scheme: light;
+  --color-void: #eef1f5;
+  --color-deck: #ffffff;
+  --color-raise: #f4f6f9;
+  --color-rule: #dbe1e8;
+  --color-rule-hi: #b9c4d0;
+  --color-ink: #111923;
+  --color-dim: #46566a;
+  --color-faint: #5d6b7e;
+
+  --color-verified: #08774b;
+  --color-drifted: #935700;
+  --color-falsified: #c4232b;
+  --color-tampered: #9c2398;
+  --color-degraded: #5b6774;
+
+  --color-symptom: #086690;
+  --color-late: #6440c8;
+
+  --color-node: #a3b1c1;
+  --color-node-out: #d2d9e1;
+  --color-node-out-mark: #8f9daf;
+  --color-alert: #111923;
+  --color-verified-hi: #19b877;
 }
 
 html,

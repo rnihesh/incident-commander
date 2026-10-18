@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Instrument_Sans, JetBrains_Mono } from "next/font/google";
-import { AUTHOR, COLOR_VOID, SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
+import { AUTHOR, COLOR_PAPER, COLOR_VOID, SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
+import { THEME_BOOT_SCRIPT } from "@/lib/theme";
 import "./globals.css";
 
 const body = Instrument_Sans({ variable: "--font-body", subsets: ["latin"] });
@@ -40,13 +41,20 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: COLOR_VOID,
-  colorScheme: "dark",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: COLOR_PAPER },
+    { media: "(prefers-color-scheme: dark)", color: COLOR_VOID },
+  ],
+  colorScheme: "dark light",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${body.variable} ${data.variable} h-full antialiased`}>
+    // data-theme is set by the inline script before paint, so the server markup cannot match it.
+    <html lang="en" className={`${body.variable} ${data.variable} h-full antialiased`} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_BOOT_SCRIPT }} />
+      </head>
       <body className="h-full overflow-hidden">{children}</body>
     </html>
   );

@@ -60,7 +60,7 @@ const BTN_BASE =
   "inline-flex items-center justify-center gap-1.5 rounded-ctl border font-sans font-medium whitespace-nowrap transition-colors disabled:cursor-not-allowed disabled:opacity-40";
 const BTN_VARIANT: Record<ButtonVariant, string> = {
   // One accent per page: the primary action is the only filled control.
-  primary: "border-ink bg-ink text-void hover:border-white hover:bg-white",
+  primary: "border-ink bg-ink text-void hover:border-ink/85 hover:bg-ink/85",
   secondary: "border-rule-hi bg-raise text-ink hover:border-dim",
   ghost: "border-transparent text-dim hover:bg-raise hover:text-ink",
   danger: "border-falsified/50 text-falsified hover:bg-falsified/10",

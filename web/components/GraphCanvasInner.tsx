@@ -7,6 +7,7 @@ import { roleOf, ROLE_LABEL } from "@/lib/roles";
 import { labelRank, placeLabels, type LabelCandidate } from "@/lib/labels";
 import { labelAwareFit } from "@/lib/fit";
 import type { GraphEdge, GraphNode } from "@/lib/mock/hero-graph";
+import { subscribeTheme } from "@/lib/theme";
 
 export interface GraphCanvasProps {
   nodes: GraphNode[];
@@ -52,7 +53,10 @@ type Palette = ReturnType<typeof readPalette>;
 
 /** `#rrggbb` plus alpha as an rgba() string for canvas strokes. */
 function alpha(hex: string, a: number) {
-  const n = parseInt(hex.replace("#", ""), 16);
+  let h = hex.replace("#", "");
+  // Computed tokens may come back in the short form (#fff): expand it.
+  if (h.length === 3) h = h.replace(/./g, (c) => c + c);
+  const n = parseInt(h.slice(0, 6), 16);
   return `rgba(${(n >> 16) & 255},${(n >> 8) & 255},${n & 255},${a})`;
 }
 
@@ -85,6 +89,9 @@ export default function GraphCanvasInner({ nodes, edges, graph, view, focus, onN
   const [hover, setHover] = useState<{ id: string; x: number; y: number } | null>(null);
   const pal = useRef<Palette | null>(null);
   const colors = () => (pal.current ??= readPalette());
+  // The canvas redraws every frame (autoPauseRedraw off), so dropping the cached palette on a
+  // theme switch is enough for the next frame to paint in the new colours.
+  useEffect(() => subscribeTheme(() => { pal.current = null; }), []);
 
   // Highlights live in refs; graphData is built once so the layout never moves or restarts.
   const graphRef = useRef(graph);

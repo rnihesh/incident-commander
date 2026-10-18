@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { Mark } from "./Mark";
+import { ThemeToggle } from "./ThemeToggle";
 
 /** Every page's top bar: brand / title on the left, page status beside it, page actions and
  *  navigation on the right. One row, one height, so the pages read as one product. */
@@ -34,7 +35,10 @@ export function PageHeader({
           <Title className="min-w-0 break-words text-title font-semibold tracking-tight text-ink sm:truncate">{title}</Title>
         </div>
         {status && <div className="flex min-w-0 items-center gap-2">{status}</div>}
-        {right && <div className="ml-auto flex max-w-full flex-wrap items-center justify-end gap-2">{right}</div>}
+        <div className="ml-auto flex max-w-full flex-wrap items-center justify-end gap-2">
+          {right}
+          <ThemeToggle />
+        </div>
       </div>
       {children}
     </header>

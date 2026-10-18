@@ -11,6 +11,8 @@ export const SITE_DESCRIPTION =
 export const AUTHOR = "Nihesh Rachakonda";
 /** Theme colour from app/globals.css (--color-void). */
 export const COLOR_VOID = "#090d12";
+/** The light theme's page colour ([data-theme="light"] --color-void). */
+export const COLOR_PAPER = "#eef1f5";
 
 export const OG_ALT =
   "Incident Commander: graph agent 50/50, full context 26/50, vector RAG 4/50 root causes found (same model)";
