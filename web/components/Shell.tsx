@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { Mark } from "./Mark";
 
 /** Every page's top bar: brand / title on the left, page status beside it, page actions and
  *  navigation on the right. One row, one height, so the pages read as one product. */
@@ -26,6 +27,7 @@ export function PageHeader({
       <div className="flex min-h-12 flex-wrap items-center gap-x-4 gap-y-2 px-4 py-2 sm:px-5">
         <div className="flex min-w-0 items-baseline gap-2.5">
           <Link href="/" className="shrink-0 font-mono text-label font-medium text-dim hover:text-ink">
+            <Mark size={16} className="mr-2 inline-block align-[-3px]" />
             incident-commander
           </Link>
           <span className="text-faint" aria-hidden>/</span>
