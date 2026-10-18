@@ -79,6 +79,8 @@ export default function Console() {
   // The chat outlives runs: its history and open state sit above the keyed run console.
   const chat = useAskChat();
   const [chatOpen, setChatOpen] = useState(false);
+  // The fault choice survives the remount a new run causes, so the header shows what was picked.
+  const [fault, setFault] = useState<FaultClass>("bad_deploy");
 
   const start = (x: LiveSession | null) => {
     setSession(x);
@@ -94,6 +96,8 @@ export default function Console() {
       onSession={start}
       chat={chat}
       chatOpen={chatOpen}
+      fault={fault}
+      onFault={setFault}
       onChatOpen={setChatOpen}
     />
   );
@@ -109,6 +113,8 @@ function RunConsole({
   chat,
   chatOpen,
   onChatOpen,
+  fault,
+  onFault: setFault,
 }: {
   scenario: Scenario | null;
   verifyParam: VerifyMode | null;
@@ -118,6 +124,8 @@ function RunConsole({
   chat: AskChat;
   chatOpen: boolean;
   onChatOpen: (open: boolean) => void;
+  fault: FaultClass;
+  onFault: (f: FaultClass) => void;
 }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -128,7 +136,6 @@ function RunConsole({
   const incidentId = liveSession && "runId" in liveSession ? liveSession.incidentId : null;
   const useLiveVerify = incidentId !== null && verifyParam === null && stream.kind === "live";
   const replayable = stream.kind !== "live";
-  const [fault, setFault] = useState<FaultClass>("bad_deploy");
   const [injecting, setInjecting] = useState(false);
   const locked = controlsDisabled({ scenario: !!scenario, injecting, streamActive: stream.active, streamRecorded: stream.kind === "recorded" });
   const [injectError, setInjectError] = useState<string | null>(null);
