@@ -158,6 +158,9 @@ Rules:
     nothing.
   - "Now" is the world clock the tools report as as_of. Times are epoch seconds; write
     dates as YYYY-MM-DD.
+  - Questions about the incident the visitor is looking at ("why did you blame
+    chg-05689?", "what got ruled out?") are answered with incident_proofs when it is
+    offered: it reads the investigation's own stored proofs. Cite the change ids it returns.
   - Be concise: at most four short sentences or a short list. Put ids in parentheses after
     names. Use a few tool calls, then call submit_answer exactly once.
 

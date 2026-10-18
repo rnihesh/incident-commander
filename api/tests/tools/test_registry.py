@@ -41,6 +41,7 @@ EXPECTED_TOOLS = {
     "person_profile",
     "decisions_for",
     "incident_history",
+    "incident_proofs",
 }
 
 

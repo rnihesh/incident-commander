@@ -7,7 +7,7 @@ from __future__ import annotations
 import json
 
 import pytest
-from api_helpers import cleanup_store_graphs, http, sid_of, test_settings
+from api_helpers import cleanup_store_graphs, http, inject, sid_of, stream, test_settings
 
 from ic.agent import ask as A
 from ic.agent.llm import ScriptedLLM, call, reply
@@ -143,3 +143,70 @@ async def test_bad_requests(aapp):
         assert r.status_code == 422
         r = await c.post("/api/ask", content="question=hi", headers={"Content-Type": "text/plain"})
         assert r.status_code == 415
+
+
+# --- the visitor's own incident (incident_proofs over the session's ledger) -------------
+
+
+@pytest.fixture(scope="module")
+async def solved(aapp, astate):
+    """One finished deterministic investigation in its own session."""
+    c = http(aapp, "10.80.1.1")
+    r = await inject(c, "bad_deploy", 3)
+    assert r.status_code == 200, r.text
+    body = r.json()
+    _, events = await stream(c, body["run_id"])
+    assert events[-1]["type"] == "done"
+    answer = astate.store.get_answer(body["incident_id"], sid_of(c))
+    yield c, body["incident_id"], answer["root_id"]
+    await c.aclose()
+
+
+async def ask_about(c, iid: str, question: str) -> dict:
+    r = await c.post("/api/ask", json={"question": question, "incident_id": iid})
+    assert r.status_code == 200, r.text
+    return r.json()
+
+
+async def test_limited_mode_explains_the_blamed_change_from_the_proofs(solved):
+    c, iid, root = solved
+    body = await ask_about(c, iid, f"Why did you blame {root}?")
+    assert body["mode"] == "limited" and body["found"] and body["grounded"]
+    assert [x["tool"] for x in body["calls"]] == ["incident_proofs"]
+    assert body["answer"].startswith(f"{root} was blamed for {iid}")
+    assert "Ruled out:" in body["answer"] and "KTD" not in body["answer"]
+    assert root in {x["id"] for x in body["citations"]}
+    assert all(x["cypher"] and x["params"] for x in body["calls"])
+
+
+async def test_limited_mode_names_the_failing_clause_of_a_ruled_out_change(solved):
+    c, iid, root = solved
+    body = await ask_about(c, iid, "What got ruled out?")
+    assert [x["tool"] for x in body["calls"]] == ["incident_proofs"]
+    ruled = [x["id"] for x in body["citations"] if x["id"] not in (root, iid)]
+    assert ruled, body["answer"]
+    body = await ask_about(c, iid, f"Why was {ruled[0]} ruled out?")
+    assert body["answer"].startswith(f"{ruled[0]} was ruled out for {iid}: it fails the ")
+
+
+async def test_incident_proofs_is_offered_only_for_the_sessions_own_incident(
+    aapp, astate, solved, monkeypatch
+):
+    c, iid, root = solved
+
+    def answer(messages, tools):
+        res = json.loads(messages[-1]["content"])["result"]
+        return reply(call("submit_answer", answer="Blamed.", citations=[res["blamed"]], found=True))
+
+    llm = ScriptedLLM([reply(call("incident_proofs")), answer])
+    monkeypatch.setattr(astate, "llm", llm)
+    body = await ask_about(c, iid, "Why this change?")
+    assert "incident_proofs" in {t["function"]["name"] for t in llm.calls[0][1]}
+    assert [x["id"] for x in body["citations"]] == [root] and body["grounded"]
+
+    # another session asking about the same incident id sees nothing of this ledger
+    llm = ScriptedLLM([reply(call("submit_answer", answer="No.", citations=[], found=False))])
+    monkeypatch.setattr(astate, "llm", llm)
+    async with http(aapp, "10.80.1.2") as other:
+        await ask_about(other, iid, "Why this change?")
+    assert "incident_proofs" not in {t["function"]["name"] for t in llm.calls[0][1]}

@@ -135,6 +135,7 @@ def _load_builtin_tools() -> None:
         claims,
         company,
         fragility,
+        incident_proofs,
         investigate,
         precedent,
         recall,

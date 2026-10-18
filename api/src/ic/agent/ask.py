@@ -50,6 +50,8 @@ ASK_TOOLS = (
 )
 # Added when the visitor is looking at an incident whose snapshots exist.
 INCIDENT_TOOLS = ("observed_calls", "find_precedents", "recall")
+# Added when the session's proof ledger holds that incident: its verdict and proofs.
+LEDGER_TOOLS = ("incident_proofs",)
 SUBMIT_ANSWER = "submit_answer"
 ASK_LIMITS = LoopLimits(max_steps=8, step_timeout_s=20.0, retries=1)
 MAX_TOKENS = 40_000  # prompt + completion per question; the loop stops past it
@@ -149,21 +151,27 @@ async def ask(
     *,
     incident_id: str | None = None,
     incident_tools: bool = False,
+    ledger_tools: bool = False,
     limits: LoopLimits | None = None,
     on_usage: UsageHook | None = None,
     should_stop: Callable[[], bool] | None = None,
 ) -> AskResult:
     """Answer one question (single turn). ``incident_tools`` adds the snapshot tools, for
-    which ``ctx`` must carry the incident's snapshots."""
+    which ``ctx`` must carry the incident's snapshots; ``ledger_tools`` adds the incident's
+    stored proofs, for which ``ctx`` must carry ``iid`` and the session's ledger graph."""
     t0 = time.perf_counter()
     if llm is None:
-        return await limited(question, ctx, t0, NOTE_NO_MODEL)
+        return await limited(question, ctx, t0, NOTE_NO_MODEL, ledger_tools=ledger_tools)
     if should_stop is not None and should_stop():
-        return await limited(question, ctx, t0, NOTE_SPEND)
+        return await limited(question, ctx, t0, NOTE_SPEND, ledger_tools=ledger_tools)
 
     calls: list[dict] = []
     runner = _runner(ctx, calls)
-    allowed = ASK_TOOLS + (INCIDENT_TOOLS if incident_tools else ())
+    allowed = (
+        ASK_TOOLS
+        + (INCIDENT_TOOLS if incident_tools else ())
+        + (LEDGER_TOOLS if ledger_tools else ())
+    )
     tokens = 0
 
     async def on_submit(args: dict) -> TerminalDecision:
@@ -199,7 +207,8 @@ async def ask(
         nudge=prompts.ASK_NUDGE,
     )
     if out.status != "verdict" or out.decision is None:
-        res = await limited(question, ctx, t0, _fallback_note(out, tokens))
+        note = _fallback_note(out, tokens)
+        res = await limited(question, ctx, t0, note, ledger_tools=ledger_tools)
         res.tokens = tokens
         return res
 
@@ -243,6 +252,11 @@ INTENTS: dict[str, re.Pattern[str]] = {
     "changes": re.compile(r"\b(chang\w*|deploy\w*|rollouts?|releases?|shipped)\b"),
 }
 INCIDENT_WORDS = re.compile(r"\b(after|outages?|incidents?|postmortems?|last|latest)\b")
+# Questions about the investigation the visitor is looking at (answered from its proofs).
+CURRENT_INCIDENT = re.compile(
+    r"\b(blam\w*|ruled? out|rule\w* out|eliminat\w*|root[- ]cause|culprit|verdict|proofs?|"
+    r"this incident|the incident|why (did|was|is) (you|it)|exonerat\w*|refut\w*)\b"
+)
 WINDOWS = (
     (re.compile(r"\b(last|past|this) (\d{1,3}) days?\b"), None),
     (re.compile(r"\b(last|past|this) week\b"), 7),
@@ -254,6 +268,9 @@ TRY_ASKING = (
     "“Who owns checkout and who is on call?”, “Recent changes to checkout”, "
     "“Incidents on search” or “What did we decide after the last search "
     "outage?”"
+)
+TRY_ASKING_INCIDENT = (
+    " About this incident, try: “Why did you blame the root cause?” or “What got ruled out?”"
 )
 SHOWN = 4  # rows listed in a templated answer
 
@@ -295,10 +312,12 @@ def _others(matches: list[dict]) -> str:
     return f" Other matches: {', '.join(rest)}." if rest else ""
 
 
-async def limited(question: str, ctx: ToolContext, t0: float, note: str) -> AskResult:
+async def limited(
+    question: str, ctx: ToolContext, t0: float, note: str, *, ledger_tools: bool = False
+) -> AskResult:
     calls: list[dict] = []
     runner = _runner(ctx, calls)
-    r = await route(question, runner)
+    r = await route(question, runner, incident=ledger_tools)
     citations = await describe(ctx.world_graph, list(dict.fromkeys(r.cites)))
     return AskResult(
         answer=clip(r.answer),
@@ -312,9 +331,13 @@ async def limited(question: str, ctx: ToolContext, t0: float, note: str) -> AskR
     )
 
 
-async def route(question: str, runner: ToolRunner) -> Routed:
+async def route(question: str, runner: ToolRunner, *, incident: bool = False) -> Routed:
+    """``incident``: the visitor's incident has stored proofs, so questions about it (why
+    this change, what was ruled out) are answered from them."""
     found = intents_of(question)
     try:
+        if incident and CURRENT_INCIDENT.search(question.lower()):
+            return await _incident_story(question, runner)
         if "decisions" in found:
             return await _decisions(question, runner)
         if "owner" in found or "on_call" in found:
@@ -325,7 +348,49 @@ async def route(question: str, runner: ToolRunner) -> Routed:
             return await _changes(question, runner)
     except Exception as e:  # a tool refused (unknown id...): say so, never a 500
         return Routed(f"The graph could not answer that: {str(e)[:200]}", [], False)
-    return Routed(TRY_ASKING, [], False)
+    return Routed(TRY_ASKING + (TRY_ASKING_INCIDENT if incident else ""), [], False)
+
+
+CHANGE_ID = re.compile(r"\b(chg-\d+|exp-\d+)\b")
+
+
+async def _incident_story(question: str, runner: ToolRunner) -> Routed:
+    """Why the investigation blamed its change and what it ruled out, from the ledger."""
+    m = CHANGE_ID.search(question.lower())
+    asked = m.group(1) if m else None
+    p = (await runner.run("incident_proofs", {})).result
+    iid, blamed, out = p["incident_id"], p["blamed"], p["ruled_out"]
+    if not p["proofs"]:
+        return Routed(f"{iid} has no stored proofs yet: the investigation is still running.", [])
+    ruled = {r["change_id"]: r for r in out}
+    lines: list[str] = []
+    cites: list[str] = []
+    if asked and asked in ruled:
+        r = ruled[asked]
+        why = f" ({r['failed_clause_means'].lower()})" if r["failed_clause_means"] else ""
+        clause = r["failed_clause"]
+        lines.append(f"{asked} was ruled out for {iid}: it fails the {clause} clause{why}.")
+        cites.append(asked)
+    elif blamed and asked in (None, blamed):
+        lines.append(
+            f"{blamed} was blamed for {iid} because it passes every clause of the explanation "
+            "rule, and with it removed no other change explains the symptoms."
+        )
+        cites.append(blamed)
+    elif asked:
+        lines.append(f"{asked} does not appear in the proofs for {iid}.")
+    else:
+        left = ", ".join(p["candidates_left"]) or "none"
+        lines.append(f"No single change was blamed for {iid}; still standing: {left}.")
+        cites += p["candidates_left"]
+    if out and not (asked and asked in ruled):
+        items = "; ".join(f"{r['change_id']} (fails {r['failed_clause']})" for r in out[:SHOWN])
+        more = f" and {len(out) - SHOWN} more" if len(out) > SHOWN else ""
+        lines.append(f"Ruled out: {items}{more}.")
+        cites += [r["change_id"] for r in out[:SHOWN]]
+    n = len(p["proofs"])
+    lines.append(f"Each step is one of {n} stored proofs you can re-run with Verify.")
+    return Routed(" ".join(lines), [*cites, iid])
 
 
 async def _find(runner: ToolRunner, question: str, kinds: list[str], limit: int = 10):
