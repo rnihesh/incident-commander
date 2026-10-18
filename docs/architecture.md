@@ -349,16 +349,19 @@ One Docker host runs `docker compose --profile prod up -d --build`:
   `/app/data` volume for SQLite, and serves `uvicorn` with one worker (runs, SSE, locks and
   limits live in one process). A healthcheck hits `/health`. It joins the internal network
   (FalkorDB) and the edge network (Caddy and outbound calls to GitHub, Discord and the LLM).
-- **`caddy`.** Automatic TLS for `api.{$DOMAIN}`, `reverse_proxy api:8000` with
-  `flush_interval -1` for SSE, and HSTS / nosniff / DENY / no-referrer / CSP headers. It has
-  a fixed address on the edge network, which is the only peer the API trusts for
-  `X-Forwarded-For` (`IC_TRUSTED_PROXIES`).
-- **Web.** Vercel at `app.<domain>` with `NEXT_PUBLIC_API_URL=https://api.<domain>`. The browser
-  calls the API directly (SSE is not proxied through Vercel). The cookie domain is
-  `.<domain>`, and CORS allows exactly `https://app.<domain>`.
+- **`web`.** `web/Dockerfile` builds the Next.js app with `output: "standalone"` and an empty
+  `NEXT_PUBLIC_API_URL`, so the browser calls `/api/*` on the page's own origin. It runs as
+  the unprivileged `node` user on its own network, shared only with Caddy.
+- **`caddy`.** Automatic TLS for `{$SITE_ADDRESS}` (for example `commander.niheshr.com`). It
+  routes `/api/*`, `/mcp` and `/health` to `api:8000` with `flush_interval -1` for SSE and a
+  `default-src 'none'` CSP, and everything else to `web:3000` with a page CSP
+  (`default-src 'self'`). HSTS, nosniff and DENY apply to both. Caddy has a fixed address on
+  the edge network, outside the dynamic `ip_range`, and it is the only peer the API trusts for
+  `X-Forwarded-For` (`IC_TRUSTED_PROXIES`). With one origin, the session cookie is host-only
+  and CORS allows exactly `https://{$SITE_ADDRESS}`.
 
-Operations (DNS, seeding, firewall, monitoring, budgets, rotation) are in
-`docs/notes/deploy.md`.
+Operations (DNS, seeding, continuous deployment, firewall, monitoring, budgets, rotation) are
+in `docs/notes/deploy.md`.
 
 ## Benchmark harness
 

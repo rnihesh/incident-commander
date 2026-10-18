@@ -4,6 +4,9 @@
 
 An on-call agent whose every answer is a proof you can re-run or break.
 
+**Live demo: [commander.niheshr.com](https://commander.niheshr.com)**. Press **Inject fault**
+to run an investigation against a fresh copy of the world graph.
+
 ![Incident Commander: the recorded gpt-6-luna run autoplays through the elimination funnel, the clause-bar certificate and the verdict](docs/media/console-investigation.gif)
 
 Incident Commander takes a production alert, rebuilds the service graph in **FalkorDB** as it
@@ -386,10 +389,11 @@ app and `IC_WEB_ORIGIN` for the API (CORS).
 
 **Production deploy.** `docker compose --profile prod up -d --build` on any Docker host runs
 FalkorDB (ACL users, persistence, no host ports), the API image (`api/Dockerfile`: uv,
-non-root, one uvicorn worker) and Caddy (TLS for `api.<domain>`, SSE unbuffered). The web app
-goes on Vercel at `app.<domain>`. The step-by-step guide (provisioning, DNS, seeding,
-firewall, monitoring, budgets, PAT scope, secret rotation) is in
-[docs/notes/deploy.md](docs/notes/deploy.md).
+non-root, one uvicorn worker), the web image (`web/Dockerfile`: Next.js standalone) and Caddy
+(TLS for one origin: `/api/*` to the API with SSE unbuffered, everything else to the web).
+Pushes to `main` redeploy after CI passes. The step-by-step guide (provisioning, DNS,
+seeding, continuous deployment, firewall, monitoring, budgets, PAT scope, secret rotation) is
+in [docs/notes/deploy.md](docs/notes/deploy.md).
 
 ## Docs
 
@@ -427,8 +431,8 @@ run uses no LLM.
 ```text
 .
 ├── docker-compose.yml        dev profile (FalkorDB on localhost) + prod profile
-│                             (falkordb-prod with ACL users, api, caddy)
-├── Caddyfile                 TLS for api.{$DOMAIN}, SSE flush, security headers
+│                             (falkordb-prod with ACL users, api, web, caddy)
+├── Caddyfile                 TLS for one origin, /api/* to the API (SSE flush), rest to web
 ├── .env.example
 ├── api/                      Python 3.12, uv, FastAPI (Dockerfile: uv sync --frozen, non-root)
 │   ├── src/ic/
