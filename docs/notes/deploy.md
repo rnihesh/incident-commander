@@ -70,6 +70,7 @@ Set at least the following:
 | Variable | Value |
 |---|---|
 | `SITE_ADDRESS` | `commander.example.com` (Caddy serves it; CORS allows `https://commander.example.com`) |
+| `API_SITE_ADDRESS` | optional, e.g. `api.commander.example.com`: a second hostname that serves only the API, for direct clients. Needs its own DNS record. The web app keeps calling `/api` on `SITE_ADDRESS` |
 | `ACME_EMAIL` | your email, for Let's Encrypt |
 | `IC_COOKIE_DOMAIN` | empty (host-only cookie; Secure and SameSite=Lax) |
 | `FALKORDB_IC_PASSWORD` | `openssl rand -hex 32` (it goes into a URL, so keep it hex) |
@@ -77,10 +78,12 @@ Set at least the following:
 | `IC_MAX_SESSIONS`, `FALKORDB_MAXMEMORY` | sized to the host (section 1) |
 | `IC_TRUSTED_PROXIES` | leave as `["172.30.213.10"]` (Caddy's fixed edge address in `docker-compose.yml`) |
 | `IC_ALERT_HMAC_SECRET` | `openssl rand -hex 32` if you want signed alerts; leave empty to refuse them all |
-| `IC_LLM_API_KEY` | optional (see section 9). Without it, the deterministic agent runs and verdicts are tagged DEGRADED |
+| `IC_LLM_PROVIDER`, `IC_LLM_MODEL`, `IC_LLM_API_KEY` | optional (see section 9). The public instance uses `anthropic` and `claude-haiku-5-5`. Without a key, the deterministic agent runs and verdicts are tagged DEGRADED |
+| `IC_EMBEDDING_PROVIDER` | `hashing`: seeding makes no embedding calls and the seed hash stays the documented one |
+| `IC_ADMIN_TOKEN` | `openssl rand -hex 32`: the bearer token for `/admin` and `/api/admin/*`. Unset, the admin API is off |
 | `IC_GITHUB_TOKEN`, `IC_GITHUB_REPO` | optional (see section 10). Without them, PRs and statuses are simulated |
 | `IC_DISCORD_WEBHOOK_URL` | optional. Without it, pages are simulated |
-| Limits | the defaults are the public limits (KTD10): `IC_ACTIONS_PER_HOUR=20`, per-IP/session run caps, `IC_PROOF_VERIFIES_PER_IP_HOUR=12`. Keep `IC_DAILY_USD_BREAKER` above 0: the breaker trips when spend reaches the cap |
+| Limits | the defaults are the public limits (KTD10): `IC_ACTIONS_PER_HOUR=20`, per-IP/session run caps, `IC_PROOF_VERIFIES_PER_IP_HOUR=12`. `IC_DAILY_USD_BREAKER` is the daily LLM spend cap; keep it above 0, because the breaker trips when spend reaches the cap |
 
 `docker-compose.yml` overrides the container-specific values itself: `IC_FALKORDB_URL` (the
 `ic` user), `IC_STORE_PATH=/app/data/ic.sqlite3`, `IC_WEB_ORIGIN=https://${SITE_ADDRESS}`
@@ -138,7 +141,9 @@ console errors. In DevTools, the `ic_sid` cookie is host-only, Secure and HttpOn
 SSHes into the host with a dedicated key, fast-forwards the checkout to the tested commit,
 runs `docker compose --profile prod up -d --build --remove-orphans`, prunes dangling images
 and old build cache, and then polls `/health` and `/` until both answer. A `deploy-prod`
-concurrency group keeps deploys from overlapping.
+concurrency group keeps deploys from overlapping: a deploy that is running always finishes,
+and when several pushes land back to back only the newest waiting deploy runs (it includes
+the earlier commits).
 
 Repository secrets:
 
@@ -239,6 +244,8 @@ On the public instance:
 - An injected `bad_deploy` run streams over SSE through Caddy to RESOLVED and LEARNED, both
   from `curl` and from the browser console (no console or CSP errors). The `ic_sid` cookie is
   host-only, Secure, HttpOnly and SameSite=Lax.
+- `https://api.commander.niheshr.com/health` answers from the API alone, with its own
+  certificate.
 - From outside, only 22, 80 and 443 accept connections; 6379, 3000 and 8000 do not. API
   responses carry `Content-Security-Policy: default-src 'none'`; web pages carry their own
   `default-src 'self'` policy.
